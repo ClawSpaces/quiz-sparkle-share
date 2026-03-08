@@ -60,7 +60,7 @@ export const categories: Category[] = [
     slug: "athlitika",
     description: "Δοκίμασε τις γνώσεις σου στον αθλητισμό",
     icon: "⚽",
-    image: "https://images.unsplash.com/photo-1461896836934-bd45ba8e0e0c?w=400&h=300&fit=crop",
+    image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&h=300&fit=crop",
     color: "quiz-green",
     quizCount: 15,
   },
