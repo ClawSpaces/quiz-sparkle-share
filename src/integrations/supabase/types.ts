@@ -62,6 +62,59 @@ export type Database = {
           },
         ]
       }
+      buzz_chat_replies: {
+        Row: {
+          buzz_chat_id: string
+          created_at: string
+          id: string
+          reply_text: string
+        }
+        Insert: {
+          buzz_chat_id: string
+          created_at?: string
+          id?: string
+          reply_text: string
+        }
+        Update: {
+          buzz_chat_id?: string
+          created_at?: string
+          id?: string
+          reply_text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "buzz_chat_replies_buzz_chat_id_fkey"
+            columns: ["buzz_chat_id"]
+            isOneToOne: false
+            referencedRelation: "buzz_chats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      buzz_chats: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          question: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          question: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          question?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           color: string | null
@@ -97,6 +150,88 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      post_reactions: {
+        Row: {
+          count: number
+          emoji: string
+          id: string
+          post_id: string
+        }
+        Insert: {
+          count?: number
+          emoji: string
+          id?: string
+          post_id: string
+        }
+        Update: {
+          count?: number
+          emoji?: string
+          id?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_reactions_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          category_id: string | null
+          content: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_published: boolean
+          is_trending: boolean
+          post_type: Database["public"]["Enums"]["post_type"]
+          title: string
+          updated_at: string
+          views_count: number
+        }
+        Insert: {
+          category_id?: string | null
+          content?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          is_trending?: boolean
+          post_type?: Database["public"]["Enums"]["post_type"]
+          title: string
+          updated_at?: string
+          views_count?: number
+        }
+        Update: {
+          category_id?: string | null
+          content?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          is_trending?: boolean
+          post_type?: Database["public"]["Enums"]["post_type"]
+          title?: string
+          updated_at?: string
+          views_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       questions: {
         Row: {
@@ -294,9 +429,15 @@ export type Database = {
         Returns: boolean
       }
       increment_plays: { Args: { quiz_id_param: string }; Returns: undefined }
+      increment_views: { Args: { post_id_param: string }; Returns: undefined }
+      upsert_reaction: {
+        Args: { p_emoji: string; p_post_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "moderator"
+      post_type: "article" | "shopping" | "celebrity" | "trending_news"
       quiz_type: "personality" | "trivia"
     }
     CompositeTypes: {
@@ -426,6 +567,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator"],
+      post_type: ["article", "shopping", "celebrity", "trending_news"],
       quiz_type: ["personality", "trivia"],
     },
   },
