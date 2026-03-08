@@ -10,6 +10,7 @@ import TrendingPage from "./pages/TrendingPage";
 import ShoppingPage from "./pages/ShoppingPage";
 import CelebrityPage from "./pages/CelebrityPage";
 import BuzzChatPage from "./pages/BuzzChatPage";
+import QuizzesPage from "./pages/QuizzesPage";
 import PostPage from "./pages/PostPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/category/:slug" element={<CategoryPage />} />
           <Route path="/categories" element={<CategoriesPage />} />
+          <Route path="/quizzes" element={<QuizzesPage />} />
           <Route path="/trending" element={<TrendingPage />} />
           <Route path="/shopping" element={<ShoppingPage />} />
           <Route path="/celebrity" element={<CelebrityPage />} />
