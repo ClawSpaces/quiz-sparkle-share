@@ -9,6 +9,7 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   const lastCheckedUserId = useRef<string | null>(null);
+  const initialSessionChecked = useRef(false);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -21,6 +22,11 @@ export function useAuth() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+      initialSessionChecked.current = true;
+      // Only set loading=false if there's NO user (no role check needed)
+      if (!session?.user) {
+        setLoading(false);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -40,7 +46,7 @@ export function useAuth() {
           }
           setLoading(false);
         });
-    } else if (!user) {
+    } else if (!user && initialSessionChecked.current) {
       lastCheckedUserId.current = null;
       setIsAdmin(false);
       setLoading(false);
