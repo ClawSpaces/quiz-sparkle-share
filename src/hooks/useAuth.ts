@@ -8,41 +8,42 @@ export function useAuth() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Effect 1: Track auth state only (no async Supabase calls)
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-
-        if (session?.user) {
-          const { data } = await supabase.rpc("has_role", {
-            _user_id: session.user.id,
-            _role: "admin",
-          });
-          setIsAdmin(!!data);
-        } else {
-          setIsAdmin(false);
-        }
-        setLoading(false);
       }
     );
 
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-
-      if (session?.user) {
-        const { data } = await supabase.rpc("has_role", {
-          _user_id: session.user.id,
-          _role: "admin",
-        });
-        setIsAdmin(!!data);
-      }
-      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Effect 2: Check admin role when user changes
+  useEffect(() => {
+    if (user) {
+      supabase
+        .rpc("has_role", { _user_id: user.id, _role: "admin" })
+        .then(({ data, error }) => {
+          if (error) {
+            console.error("has_role error:", error);
+            setIsAdmin(false);
+          } else {
+            setIsAdmin(!!data);
+          }
+          setLoading(false);
+        });
+    } else {
+      setIsAdmin(false);
+      setLoading(false);
+    }
+  }, [user]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
