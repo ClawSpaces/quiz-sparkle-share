@@ -7,6 +7,7 @@ import { samplePosts, formatViews } from "@/data/samplePosts";
 import { Eye, Calendar } from "lucide-react";
 import ReadyForMore from "@/components/ReadyForMore";
 import MoreFromSite from "@/components/MoreFromSite";
+import ContentSidebar from "@/components/ContentSidebar";
 
 const PostPage = () => {
   const { id } = useParams();
