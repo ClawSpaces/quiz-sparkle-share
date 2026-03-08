@@ -5,6 +5,7 @@ import PostCard from "@/components/PostCard";
 import CategoryCard from "@/components/CategoryCard";
 import BuzzChatCard from "@/components/BuzzChatCard";
 import AdPlaceholder from "@/components/AdPlaceholder";
+import ReactionBar from "@/components/ReactionBar";
 import { categories, getTrendingQuizzes, getPopularQuizzes } from "@/data/sampleQuizzes";
 import { getTrendingPosts, getPostsByType, sampleBuzzChats } from "@/data/samplePosts";
 import { ArrowRight } from "lucide-react";
