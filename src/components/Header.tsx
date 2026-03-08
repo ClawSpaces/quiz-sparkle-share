@@ -1,33 +1,41 @@
 import { Link, useLocation } from "react-router-dom";
-import { Search, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { Search, X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const navItems = [
-  { label: "Quizzes", path: "/", icon: "🧠" },
-  { label: "Trending", path: "/trending", icon: "🔥" },
-  { label: "Shopping", path: "/shopping", icon: "🛍️" },
-  { label: "Celebrity", path: "/celebrity", icon: "⭐" },
-  { label: "Buzz Chat", path: "/buzzchat", icon: "💬" },
+  { label: "Trending", path: "/trending" },
+  { label: "Quizzes", path: "/" },
+  { label: "Shopping", path: "/shopping" },
+  { label: "Celebrity", path: "/celebrity" },
+  { label: "Buzz Chat", path: "/buzzchat" },
 ];
 
 const Header = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const location = useLocation();
+  const activeRef = useRef<HTMLAnchorElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Scroll active tab into view on mobile
+  useEffect(() => {
+    if (activeRef.current && scrollRef.current) {
+      activeRef.current.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
+  }, [location.pathname]);
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
-      <div className="container flex h-14 items-center justify-between gap-4">
-        {/* Logo */}
+    <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
+      {/* Top bar: Logo + Search */}
+      <div className="container flex h-12 items-center justify-between gap-4 md:h-14">
         <Link to="/" className="flex items-center gap-2 flex-shrink-0">
           <span className="font-display text-xl font-black tracking-tight text-primary">
             Quiz<span className="text-secondary">Mania</span>
           </span>
         </Link>
 
-        {/* Desktop Nav - BuzzFeed style tabs */}
+        {/* Desktop Nav */}
         <nav className="hidden items-center gap-0 md:flex">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
@@ -50,13 +58,13 @@ const Header = () => {
           })}
         </nav>
 
-        {/* Search & Mobile Menu */}
+        {/* Search */}
         <div className="flex items-center gap-2">
           {searchOpen ? (
             <div className="flex items-center gap-2">
               <Input
                 placeholder="Αναζήτηση..."
-                className="w-48 md:w-64"
+                className="w-40 md:w-64"
                 autoFocus
               />
               <Button variant="ghost" size="icon" onClick={() => setSearchOpen(false)}>
@@ -68,32 +76,34 @@ const Header = () => {
               <Search className="h-4 w-4" />
             </Button>
           )}
-
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-72">
-              <nav className="mt-8 flex flex-col gap-1">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`rounded-lg px-4 py-3 text-base font-semibold transition-colors hover:bg-muted ${
-                      location.pathname === item.path
-                        ? "text-primary bg-primary/5"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    {item.icon} {item.label}
-                  </Link>
-                ))}
-              </nav>
-            </SheetContent>
-          </Sheet>
         </div>
+      </div>
+
+      {/* Mobile scrollable tab bar */}
+      <div
+        ref={scrollRef}
+        className="flex md:hidden overflow-x-auto scrollbar-none border-t border-border"
+      >
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              ref={isActive ? activeRef : undefined}
+              className={`relative flex-shrink-0 px-4 py-2.5 text-xs font-bold uppercase tracking-wide transition-colors ${
+                isActive
+                  ? "text-primary"
+                  : "text-muted-foreground"
+              }`}
+            >
+              {item.label}
+              {isActive && (
+                <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary" />
+              )}
+            </Link>
+          );
+        })}
       </div>
     </header>
   );

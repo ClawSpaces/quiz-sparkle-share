@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Eye } from "lucide-react";
 import ReactionBar from "@/components/ReactionBar";
 import type { Post } from "@/data/samplePosts";
-import { formatViews } from "@/data/samplePosts";
+import { formatViews, timeAgo } from "@/data/samplePosts";
 
 const typeLabels: Record<Post["postType"], string> = {
   article: "Άρθρο",
@@ -20,7 +20,7 @@ const typeColors: Record<Post["postType"], string> = {
 
 interface PostCardProps {
   post: Post;
-  variant?: "default" | "large" | "compact";
+  variant?: "default" | "large" | "compact" | "list";
 }
 
 const PostCard = ({ post, variant = "default" }: PostCardProps) => {
@@ -28,7 +28,7 @@ const PostCard = ({ post, variant = "default" }: PostCardProps) => {
     return (
       <Link
         to={`/post/${post.id}`}
-        className="group relative block overflow-hidden rounded-xl bg-card shadow-md transition-all hover:shadow-xl hover:-translate-y-1"
+        className="group relative block overflow-hidden rounded-lg bg-card shadow-md transition-all hover:shadow-xl hover:-translate-y-0.5"
       >
         <div className="aspect-[16/10] overflow-hidden">
           <img
@@ -39,18 +39,44 @@ const PostCard = ({ post, variant = "default" }: PostCardProps) => {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
         </div>
-        <div className="absolute bottom-0 left-0 right-0 p-5">
-          <span className={`mb-2 inline-block rounded-full px-3 py-1 text-xs font-semibold ${typeColors[post.postType]}`}>
+        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">
+          <span className={`mb-2 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${typeColors[post.postType]}`}>
             {typeLabels[post.postType]}
           </span>
-          <h3 className="font-display text-xl font-bold leading-tight text-primary-foreground md:text-2xl">
+          <h3 className="font-display text-lg font-bold leading-tight text-primary-foreground md:text-2xl">
             {post.title}
           </h3>
-          <div className="mt-2 flex items-center gap-3 text-sm text-primary-foreground/80">
+          <div className="mt-1.5 flex items-center gap-3 text-xs text-primary-foreground/70">
+            <span>{timeAgo(post.createdAt)}</span>
             <span className="flex items-center gap-1">
               <Eye className="h-3 w-3" /> {formatViews(post.views)}
             </span>
           </div>
+        </div>
+      </Link>
+    );
+  }
+
+  // News-list variant: horizontal card for feed
+  if (variant === "list") {
+    return (
+      <Link
+        to={`/post/${post.id}`}
+        className="group flex gap-3 border-b border-border py-3 transition-colors last:border-b-0"
+      >
+        <div className="h-20 w-28 flex-shrink-0 overflow-hidden rounded-lg">
+          <img src={post.image} alt={post.title} className="h-full w-full object-cover" loading="lazy" />
+        </div>
+        <div className="flex flex-1 flex-col justify-center gap-1">
+          <span className={`self-start rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${typeColors[post.postType]}`}>
+            {typeLabels[post.postType]}
+          </span>
+          <h4 className="text-sm font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">
+            {post.title}
+          </h4>
+          <span className="text-[11px] text-muted-foreground">
+            {timeAgo(post.createdAt)} · {formatViews(post.views)} views
+          </span>
         </div>
       </Link>
     );
@@ -80,7 +106,7 @@ const PostCard = ({ post, variant = "default" }: PostCardProps) => {
   return (
     <Link
       to={`/post/${post.id}`}
-      className="group block overflow-hidden rounded-xl bg-card shadow-sm transition-all hover:shadow-lg hover:-translate-y-1"
+      className="group block overflow-hidden rounded-lg bg-card shadow-sm transition-all hover:shadow-lg hover:-translate-y-0.5"
     >
       <div className="aspect-[16/10] overflow-hidden">
         <img
@@ -90,20 +116,21 @@ const PostCard = ({ post, variant = "default" }: PostCardProps) => {
           loading="lazy"
         />
       </div>
-      <div className="p-4">
-        <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${typeColors[post.postType]}`}>
+      <div className="p-3 md:p-4">
+        <span className={`inline-block rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${typeColors[post.postType]}`}>
           {typeLabels[post.postType]}
         </span>
-        <h3 className="mt-2 font-display text-base font-bold leading-tight text-foreground group-hover:text-primary md:text-lg">
+        <h3 className="mt-1.5 font-display text-sm font-bold leading-tight text-foreground group-hover:text-primary md:text-base">
           {post.title}
         </h3>
-        <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{post.description}</p>
-        <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
+        <p className="mt-1 text-xs text-muted-foreground line-clamp-2">{post.description}</p>
+        <div className="mt-2 flex items-center gap-3 text-[11px] text-muted-foreground">
+          <span>{timeAgo(post.createdAt)}</span>
           <span className="flex items-center gap-1">
             <Eye className="h-3 w-3" /> {formatViews(post.views)}
           </span>
         </div>
-        <div className="mt-3">
+        <div className="mt-2">
           <ReactionBar reactions={post.reactions} compact />
         </div>
       </div>

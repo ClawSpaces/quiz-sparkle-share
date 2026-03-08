@@ -140,3 +140,18 @@ export const formatViews = (n: number) => {
   if (n >= 1000) return `${(n / 1000).toFixed(0)}K`;
   return n.toString();
 };
+
+export const timeAgo = (dateStr: string): string => {
+  const now = new Date();
+  const date = new Date(dateStr);
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 60) return `${Math.max(1, diffMins)} λεπτά πριν`;
+  if (diffHours < 24) return `${diffHours} ώρες πριν`;
+  if (diffDays === 1) return "χθες";
+  if (diffDays < 7) return `${diffDays} μέρες πριν`;
+  return `${Math.floor(diffDays / 7)} εβδομάδες πριν`;
+};
