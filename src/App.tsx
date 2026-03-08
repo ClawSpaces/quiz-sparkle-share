@@ -32,6 +32,8 @@ const App = () => (
           <Route path="/celebrity" element={<CelebrityPage />} />
           <Route path="/buzzchat" element={<BuzzChatPage />} />
           <Route path="/post/:id" element={<PostPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
