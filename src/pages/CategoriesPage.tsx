@@ -19,7 +19,7 @@ const CategoriesPage = () => {
           </div>
         </section>
         <section className="container py-10">
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5">
             {categories.map((cat) => (
               <CategoryCard key={cat.id} category={cat} />
             ))}

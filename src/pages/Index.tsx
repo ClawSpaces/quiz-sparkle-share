@@ -226,7 +226,7 @@ const Index = () => {
         <section className="border-t border-border bg-muted/30 py-4 md:py-8">
           <div className="container">
             <SectionHeader title="Quiz Categories" link="/categories" linkText="Όλες" />
-            <div className="grid grid-cols-3 gap-3 md:grid-cols-6 md:gap-4">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5">
               {categories.map((cat) => (
                 <CategoryCard key={cat.id} category={cat} />
               ))}
