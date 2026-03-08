@@ -40,32 +40,64 @@ const Index = () => {
         <section className="container py-4 md:py-6">
           <SectionHeader title="Trending Now" link="/trending" />
 
-          {/* Desktop: 4-col BuzzFeed-style grid */}
-          <div className="hidden md:grid md:grid-cols-4 md:gap-4">
-            {trendingPosts.slice(0, 4).map((post, i) => (
+          {/* Desktop: 1 large left + 2×2 grid right */}
+          <div className="hidden md:grid md:grid-cols-2 md:gap-4">
+            {/* Featured large article */}
+            {trendingPosts.slice(0, 1).map((post) => (
               <Link
                 key={post.id}
                 to={`/post/${post.id}`}
-                className="group flex flex-col overflow-hidden"
+                className="group relative block overflow-hidden rounded-lg"
               >
-                <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
+                <div className="relative h-full min-h-[380px] overflow-hidden rounded-lg">
                   <img
                     src={post.image}
                     alt={post.title}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <span className="absolute bottom-2 left-2 font-display text-4xl font-black leading-none text-primary-foreground/30">
-                    {i + 1}
-                  </span>
-                </div>
-                <h3 className={`mt-2 font-bold leading-tight text-foreground group-hover:text-primary ${i === 0 ? "text-base" : "text-sm"}`}>
-                  {post.title}
-                </h3>
-                <div className="mt-1.5">
-                  <ReactionBar reactions={post.reactions} compact />
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <span className="inline-block rounded bg-destructive px-2 py-0.5 text-[10px] font-bold uppercase text-destructive-foreground">
+                      Trending
+                    </span>
+                    <h3 className="mt-1.5 font-display text-xl font-bold leading-tight text-primary-foreground">
+                      {post.title}
+                    </h3>
+                    <div className="mt-2">
+                      <ReactionBar reactions={post.reactions} compact />
+                    </div>
+                  </div>
                 </div>
               </Link>
             ))}
+
+            {/* 2×2 grid of smaller articles */}
+            <div className="grid grid-cols-2 gap-4">
+              {trendingPosts.slice(1, 5).map((post, i) => (
+                <Link
+                  key={post.id}
+                  to={`/post/${post.id}`}
+                  className="group flex flex-col overflow-hidden"
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <span className="absolute bottom-2 left-2 font-display text-3xl font-black leading-none text-primary-foreground/30">
+                      {i + 2}
+                    </span>
+                  </div>
+                  <h3 className="mt-2 text-sm font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">
+                    {post.title}
+                  </h3>
+                  <div className="mt-1.5">
+                    <ReactionBar reactions={post.reactions} compact />
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
 
           {/* Mobile: #1 full-width hero + #2-#4 horizontal list */}
