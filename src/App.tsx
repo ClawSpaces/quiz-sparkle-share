@@ -10,6 +10,7 @@ import TrendingPage from "./pages/TrendingPage";
 import ShoppingPage from "./pages/ShoppingPage";
 import CelebrityPage from "./pages/CelebrityPage";
 import BuzzChatPage from "./pages/BuzzChatPage";
+import QuizzesPage from "./pages/QuizzesPage";
 import PostPage from "./pages/PostPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
