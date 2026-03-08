@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 
 const navItems = [
   { label: "Trending", path: "/trending" },
-  { label: "Quizzes", path: "/" },
+  { label: "Quizzes", path: "/quizzes" },
   { label: "Shopping", path: "/shopping" },
   { label: "Celebrity", path: "/celebrity" },
   { label: "Buzz Chat", path: "/buzzchat" },
