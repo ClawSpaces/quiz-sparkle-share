@@ -11,6 +11,7 @@ import ShoppingPage from "./pages/ShoppingPage";
 import CelebrityPage from "./pages/CelebrityPage";
 import BuzzChatPage from "./pages/BuzzChatPage";
 import QuizzesPage from "./pages/QuizzesPage";
+import QuizPage from "./pages/QuizPage";
 import PostPage from "./pages/PostPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
