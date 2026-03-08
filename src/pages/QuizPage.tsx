@@ -242,6 +242,11 @@ const QuizPage = () => {
               Ξεκίνα το Quiz <ArrowRight className="h-5 w-5" />
             </Button>
           </div>
+
+          <div className="container max-w-5xl space-y-10 pb-12">
+            <ReadyForMore currentId={id!} type="quiz" categoryId={quiz.category_id} />
+            <MoreFromSite currentId={id!} currentType="quiz" />
+          </div>
         </main>
         <Footer />
       </div>
