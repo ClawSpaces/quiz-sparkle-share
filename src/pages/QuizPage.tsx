@@ -16,6 +16,7 @@ interface QuizData {
   image_url: string | null;
   type: "personality" | "trivia";
   plays_count: number;
+  category_id: string | null;
   categories: { name: string; slug: string } | null;
 }
 
