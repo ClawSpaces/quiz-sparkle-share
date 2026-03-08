@@ -1,14 +1,44 @@
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QuizCard from "@/components/QuizCard";
 import AdPlaceholder from "@/components/AdPlaceholder";
-import { getCategoryBySlug, getQuizzesByCategory } from "@/data/sampleQuizzes";
+import { supabase } from "@/integrations/supabase/client";
 
 const CategoryPage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const category = getCategoryBySlug(slug || "");
-  const quizzes = getQuizzesByCategory(slug || "");
+  const [category, setCategory] = useState<any>(null);
+  const [quizzes, setQuizzes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!slug) return;
+    const fetch = async () => {
+      const [catRes, quizRes] = await Promise.all([
+        supabase.from("categories").select("*").eq("slug", slug).single(),
+        supabase.from("quizzes").select("*, categories(name, slug)").eq("is_published", true),
+      ]);
+      if (catRes.data) setCategory(catRes.data);
+      if (quizRes.data) {
+        setQuizzes(quizRes.data.filter((q: any) => q.categories?.slug === slug));
+      }
+      setLoading(false);
+    };
+    fetch();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen flex-col bg-background">
+        <Header />
+        <main className="flex flex-1 items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!category) {
     return (
@@ -29,14 +59,13 @@ const CategoryPage = () => {
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1">
-        {/* Category Header */}
         <section className="bg-muted/40 py-10">
           <div className="container text-center">
-            <span className="text-5xl">{category.icon}</span>
+            {category.icon && <span className="text-5xl">{category.icon}</span>}
             <h1 className="mt-3 font-display text-3xl font-bold text-foreground md:text-4xl">
               {category.name}
             </h1>
-            <p className="mt-2 text-muted-foreground">{category.description}</p>
+            {category.description && <p className="mt-2 text-muted-foreground">{category.description}</p>}
             <p className="mt-1 text-sm text-muted-foreground">{quizzes.length} quizzes</p>
           </div>
         </section>
