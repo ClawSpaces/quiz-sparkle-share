@@ -40,15 +40,16 @@ const Index = () => {
         <section className="container py-4 md:py-6">
           <SectionHeader title="Trending Now" link="/trending" />
 
-          {/* Desktop: 4-col grid */}
-          <div className="hidden md:grid md:grid-cols-4 md:gap-4">
-            {trendingPosts.slice(0, 1).map((post, i) => (
+          {/* Desktop: hero left + 2 cards right */}
+          <div className="hidden md:grid md:grid-cols-3 md:gap-4">
+            {/* Hero — spans 2 cols, full height */}
+            {trendingPosts.slice(0, 1).map((post) => (
               <Link
                 key={post.id}
                 to={`/post/${post.id}`}
-                className="group relative col-span-2 overflow-hidden rounded-lg"
+                className="group relative col-span-2 row-span-2 overflow-hidden rounded-lg"
               >
-                <div className="aspect-[4/5]">
+                <div className="relative h-full min-h-[420px]">
                   <img
                     src={post.image}
                     alt={post.title}
@@ -56,9 +57,9 @@ const Index = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <span className="font-display text-6xl font-black text-primary-foreground/20">{i + 1}</span>
-                  <h2 className="font-display text-xl font-bold leading-tight text-primary-foreground">
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <span className="font-display text-6xl font-black text-primary-foreground/20">1</span>
+                  <h2 className="font-display text-2xl font-bold leading-tight text-primary-foreground">
                     {post.title}
                   </h2>
                   <div className="mt-2">
@@ -67,7 +68,8 @@ const Index = () => {
                 </div>
               </Link>
             ))}
-            {trendingPosts.slice(1, 4).map((post, i) => (
+            {/* 2 smaller cards stacked on the right */}
+            {trendingPosts.slice(1, 3).map((post) => (
               <Link
                 key={post.id}
                 to={`/post/${post.id}`}
@@ -79,9 +81,6 @@ const Index = () => {
                     alt={post.title}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <span className="absolute bottom-2 left-3 font-display text-5xl font-black text-primary-foreground/30">
-                    {i + 2}
-                  </span>
                 </div>
                 <h3 className="mt-2 text-sm font-bold leading-tight text-foreground group-hover:text-primary">
                   {post.title}
