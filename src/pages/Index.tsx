@@ -40,40 +40,13 @@ const Index = () => {
         <section className="container py-4 md:py-6">
           <SectionHeader title="Trending Now" link="/trending" />
 
-          {/* Desktop: hero left + 2 cards right */}
-          <div className="hidden md:grid md:grid-cols-3 md:gap-4">
-            {/* Hero — spans 2 cols, full height */}
-            {trendingPosts.slice(0, 1).map((post) => (
+          {/* Desktop: 4-col BuzzFeed-style grid */}
+          <div className="hidden md:grid md:grid-cols-4 md:gap-4">
+            {trendingPosts.slice(0, 4).map((post, i) => (
               <Link
                 key={post.id}
                 to={`/post/${post.id}`}
-                className="group relative col-span-2 row-span-2 overflow-hidden rounded-lg"
-              >
-                <div className="relative h-full min-h-[420px]">
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <span className="font-display text-6xl font-black text-primary-foreground/20">1</span>
-                  <h2 className="font-display text-2xl font-bold leading-tight text-primary-foreground">
-                    {post.title}
-                  </h2>
-                  <div className="mt-2">
-                    <ReactionBar reactions={post.reactions} compact />
-                  </div>
-                </div>
-              </Link>
-            ))}
-            {/* 2 smaller cards stacked on the right */}
-            {trendingPosts.slice(1, 3).map((post) => (
-              <Link
-                key={post.id}
-                to={`/post/${post.id}`}
-                className="group flex flex-col overflow-hidden rounded-lg"
+                className="group flex flex-col overflow-hidden"
               >
                 <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
                   <img
@@ -81,8 +54,11 @@ const Index = () => {
                     alt={post.title}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
+                  <span className="absolute bottom-2 left-2 font-display text-4xl font-black leading-none text-primary-foreground/30">
+                    {i + 1}
+                  </span>
                 </div>
-                <h3 className="mt-2 text-sm font-bold leading-tight text-foreground group-hover:text-primary">
+                <h3 className={`mt-2 font-bold leading-tight text-foreground group-hover:text-primary ${i === 0 ? "text-base" : "text-sm"}`}>
                   {post.title}
                 </h3>
                 <div className="mt-1.5">
