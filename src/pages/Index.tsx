@@ -22,44 +22,63 @@ const Index = () => {
       <Header />
 
       <main className="flex-1">
-        {/* Hero */}
-        <section className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-10 md:py-16">
-          <div className="container text-center">
-            <h1 className="font-display text-3xl font-black leading-tight text-foreground md:text-5xl">
-              Ανακάλυψε, Παίξε,
-              <br />
-              <span className="text-primary">Μοιράσου!</span>
-            </h1>
-            <p className="mx-auto mt-3 max-w-xl text-base text-muted-foreground">
-              Quizzes, trending news, celebrity gossip και community discussions — όλα στα Ελληνικά.
-            </p>
-          </div>
-        </section>
-
-        {/* Ad */}
-        <div className="container py-4">
-          <AdPlaceholder format="leaderboard" />
-        </div>
-
-        {/* Trending Posts */}
-        <section className="container py-8">
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="font-display text-2xl font-bold text-foreground">🔥 Trending</h2>
-            <Link to="/trending" className="flex items-center gap-1 text-sm font-medium text-primary hover:underline">
-              Όλα <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {trendingPosts.slice(0, 1).map((post) => (
-              <div key={post.id} className="md:col-span-2 lg:col-span-2">
-                <PostCard post={post} variant="large" />
-              </div>
+        {/* Trending Hero — BuzzFeed style numbered grid */}
+        <section className="container py-6">
+          <div className="grid gap-4 md:grid-cols-4 md:grid-rows-1">
+            {/* #1 — Large featured card */}
+            {trendingPosts.slice(0, 1).map((post, i) => (
+              <Link
+                key={post.id}
+                to={`/post/${post.id}`}
+                className="group relative col-span-1 row-span-1 overflow-hidden rounded-xl md:col-span-2 md:row-span-1 aspect-[4/5] md:aspect-auto"
+              >
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <span className="font-display text-5xl font-black text-white/30 md:text-7xl">{i + 1}</span>
+                  <h2 className="font-display text-lg font-bold leading-tight text-white md:text-2xl">
+                    {post.title}
+                  </h2>
+                  <div className="mt-2">
+                    <ReactionBar reactions={post.reactions} compact />
+                  </div>
+                </div>
+              </Link>
             ))}
-            <div className="flex flex-col gap-4">
-              {trendingPosts.slice(1, 4).map((post) => (
-                <PostCard key={post.id} post={post} variant="compact" />
-              ))}
-            </div>
+            {/* #2, #3, #4 — Smaller cards */}
+            {trendingPosts.slice(1, 4).map((post, i) => (
+              <Link
+                key={post.id}
+                to={`/post/${post.id}`}
+                className="group flex flex-col overflow-hidden rounded-xl"
+              >
+                <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <span className="absolute bottom-2 left-3 font-display text-4xl font-black text-white/40 md:text-5xl">
+                    {i + 2}
+                  </span>
+                </div>
+                <h3 className="mt-2 font-display text-sm font-bold leading-tight text-foreground group-hover:text-primary md:text-base">
+                  {post.title}
+                </h3>
+                <div className="mt-1.5">
+                  <ReactionBar reactions={post.reactions} compact />
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="mt-4 text-right">
+            <Link to="/trending" className="text-sm font-semibold text-primary hover:underline">
+              See All Trending <ArrowRight className="inline h-4 w-4" />
+            </Link>
           </div>
         </section>
 
