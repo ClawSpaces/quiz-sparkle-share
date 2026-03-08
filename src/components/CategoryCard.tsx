@@ -5,13 +5,22 @@ const CategoryCard = ({ category }: { category: Category }) => {
   return (
     <Link
       to={`/category/${category.slug}`}
-      className="group flex flex-col items-center gap-3 rounded-xl border bg-card p-6 text-center shadow-sm transition-all hover:shadow-md hover:-translate-y-1 hover:border-primary/30"
+      className="group flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition-all hover:shadow-md hover:-translate-y-1 hover:border-primary/30"
     >
-      <span className="text-4xl">{category.icon}</span>
-      <h3 className="font-display text-base font-bold text-foreground">
-        {category.name}
-      </h3>
-      <p className="text-xs text-muted-foreground">{category.quizCount} quizzes</p>
+      <div className="relative h-24 w-full overflow-hidden">
+        <img
+          src={category.image}
+          alt={category.name}
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+          loading="lazy"
+        />
+      </div>
+      <div className="flex flex-col items-center gap-1 p-3 text-center">
+        <h3 className="line-clamp-2 text-sm font-bold leading-tight text-foreground">
+          {category.name}
+        </h3>
+        <p className="text-xs text-muted-foreground">{category.quizCount} quizzes</p>
+      </div>
     </Link>
   );
 };
