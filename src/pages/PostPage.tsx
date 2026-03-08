@@ -29,44 +29,48 @@ const PostPage = () => {
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1">
-        <div className="container max-w-3xl py-8">
-          <div className="aspect-[16/9] overflow-hidden rounded-xl">
-            <img src={post.image} alt={post.title} className="h-full w-full object-cover" />
-          </div>
+        <div className="container py-8 md:flex md:gap-6">
+          <div className="flex-1 min-w-0 max-w-3xl">
+            <div className="aspect-[16/9] overflow-hidden rounded-xl">
+              <img src={post.image} alt={post.title} className="h-full w-full object-cover" />
+            </div>
 
-          <div className="mt-6">
-            <h1 className="font-display text-2xl font-black leading-tight text-foreground md:text-4xl">
-              {post.title}
-            </h1>
-            <div className="mt-3 flex items-center gap-4 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <Eye className="h-4 w-4" /> {formatViews(post.views)} views
-              </span>
-              <span className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" /> {post.createdAt}
-              </span>
+            <div className="mt-6">
+              <h1 className="font-display text-2xl font-black leading-tight text-foreground md:text-4xl">
+                {post.title}
+              </h1>
+              <div className="mt-3 flex items-center gap-4 text-sm text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <Eye className="h-4 w-4" /> {formatViews(post.views)} views
+                </span>
+                <span className="flex items-center gap-1">
+                  <Calendar className="h-4 w-4" /> {post.createdAt}
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <AdPlaceholder format="leaderboard" />
+            </div>
+
+            <div className="mt-6 text-foreground leading-relaxed">
+              <p className="text-lg">{post.description}</p>
+              <p className="mt-4 text-muted-foreground">
+                Αυτό είναι ένα placeholder για το πλήρες περιεχόμενο του άρθρου. Όταν συνδεθεί με τη βάση δεδομένων, εδώ θα εμφανίζεται το πλήρες κείμενο σε μορφή rich text.
+              </p>
+            </div>
+
+            <div className="mt-8 rounded-xl border bg-card p-4">
+              <p className="mb-3 text-sm font-semibold text-foreground">Πώς σε κάνει να νιώθεις αυτό το άρθρο;</p>
+              <ReactionBar reactions={post.reactions} />
+            </div>
+
+            <div className="mt-4">
+              <AdPlaceholder format="rectangle" />
             </div>
           </div>
 
-          <div className="mt-4">
-            <AdPlaceholder format="leaderboard" />
-          </div>
-
-          <div className="mt-6 text-foreground leading-relaxed">
-            <p className="text-lg">{post.description}</p>
-            <p className="mt-4 text-muted-foreground">
-              Αυτό είναι ένα placeholder για το πλήρες περιεχόμενο του άρθρου. Όταν συνδεθεί με τη βάση δεδομένων, εδώ θα εμφανίζεται το πλήρες κείμενο σε μορφή rich text.
-            </p>
-          </div>
-
-          <div className="mt-8 rounded-xl border bg-card p-4">
-            <p className="mb-3 text-sm font-semibold text-foreground">Πώς σε κάνει να νιώθεις αυτό το άρθρο;</p>
-            <ReactionBar reactions={post.reactions} />
-          </div>
-
-          <div className="mt-4">
-            <AdPlaceholder format="rectangle" />
-          </div>
+          <ContentSidebar />
         </div>
 
         <div className="container max-w-5xl space-y-10 pb-12">
