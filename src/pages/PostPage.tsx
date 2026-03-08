@@ -5,6 +5,8 @@ import ReactionBar from "@/components/ReactionBar";
 import AdPlaceholder from "@/components/AdPlaceholder";
 import { samplePosts, formatViews } from "@/data/samplePosts";
 import { Eye, Calendar } from "lucide-react";
+import ReadyForMore from "@/components/ReadyForMore";
+import MoreFromSite from "@/components/MoreFromSite";
 
 const PostPage = () => {
   const { id } = useParams();
@@ -64,6 +66,11 @@ const PostPage = () => {
           <div className="mt-4">
             <AdPlaceholder format="rectangle" />
           </div>
+        </div>
+
+        <div className="container max-w-5xl space-y-10 pb-12">
+          <ReadyForMore currentId={id!} type="post" />
+          <MoreFromSite currentId={id!} currentType="post" />
         </div>
       </main>
       <Footer />

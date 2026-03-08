@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, RotateCcw, Share2, CheckCircle2, XCircle } from "lucide-react";
+import ReadyForMore from "@/components/ReadyForMore";
+import MoreFromSite from "@/components/MoreFromSite";
 
 interface QuizData {
   id: string;
@@ -14,6 +16,7 @@ interface QuizData {
   image_url: string | null;
   type: "personality" | "trivia";
   plays_count: number;
+  category_id: string | null;
   categories: { name: string; slug: string } | null;
 }
 
@@ -240,6 +243,11 @@ const QuizPage = () => {
               Ξεκίνα το Quiz <ArrowRight className="h-5 w-5" />
             </Button>
           </div>
+
+          <div className="container max-w-5xl space-y-10 pb-12">
+            <ReadyForMore currentId={id!} type="quiz" categoryId={quiz.category_id} />
+            <MoreFromSite currentId={id!} currentType="quiz" />
+          </div>
         </main>
         <Footer />
       </div>
@@ -371,6 +379,11 @@ const QuizPage = () => {
               </Link>
             </div>
           </div>
+        </div>
+
+        <div className="container max-w-5xl space-y-10 pb-12">
+          <ReadyForMore currentId={id!} type="quiz" categoryId={quiz.category_id} />
+          <MoreFromSite currentId={id!} currentType="quiz" />
         </div>
       </main>
       <Footer />
