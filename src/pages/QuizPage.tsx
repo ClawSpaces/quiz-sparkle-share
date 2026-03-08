@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, RotateCcw, Share2, CheckCircle2, XCircle } from "lucide-react";
+import ReadyForMore from "@/components/ReadyForMore";
+import MoreFromSite from "@/components/MoreFromSite";
 
 interface QuizData {
   id: string;
