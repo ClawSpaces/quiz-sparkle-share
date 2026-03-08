@@ -5,6 +5,8 @@ import ReactionBar from "@/components/ReactionBar";
 import AdPlaceholder from "@/components/AdPlaceholder";
 import { samplePosts, formatViews } from "@/data/samplePosts";
 import { Eye, Calendar } from "lucide-react";
+import ReadyForMore from "@/components/ReadyForMore";
+import MoreFromSite from "@/components/MoreFromSite";
 
 const PostPage = () => {
   const { id } = useParams();
