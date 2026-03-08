@@ -15,6 +15,15 @@ import PostPage from "./pages/PostPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
 import NotFound from "./pages/NotFound";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminLayout from "./components/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminPosts from "./pages/admin/AdminPosts";
+import AdminPostForm from "./pages/admin/AdminPostForm";
+import AdminQuizzes from "./pages/admin/AdminQuizzes";
+import AdminQuizForm from "./pages/admin/AdminQuizForm";
+import AdminCategories from "./pages/admin/AdminCategories";
+import AdminBuzzChats from "./pages/admin/AdminBuzzChats";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +45,19 @@ const App = () => (
           <Route path="/post/:id" element={<PostPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+
+          {/* Admin routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="posts" element={<AdminPosts />} />
+            <Route path="posts/:id" element={<AdminPostForm />} />
+            <Route path="quizzes" element={<AdminQuizzes />} />
+            <Route path="quizzes/:id" element={<AdminQuizForm />} />
+            <Route path="categories" element={<AdminCategories />} />
+            <Route path="buzzchat" element={<AdminBuzzChats />} />
+          </Route>
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
