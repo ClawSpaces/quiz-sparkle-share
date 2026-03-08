@@ -67,6 +67,11 @@ const PostPage = () => {
             <AdPlaceholder format="rectangle" />
           </div>
         </div>
+
+        <div className="container max-w-5xl space-y-10 pb-12">
+          <ReadyForMore currentId={id!} type="post" />
+          <MoreFromSite currentId={id!} currentType="post" />
+        </div>
       </main>
       <Footer />
     </div>
