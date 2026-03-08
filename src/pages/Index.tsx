@@ -157,93 +157,188 @@ const Index = () => {
           </div>
         </section>
 
-        {/* ===== 2. AD ===== */}
-        <div className="container py-2">
-          <AdPlaceholder format="native" />
-        </div>
-
-        {/* ===== 3. POPULAR QUIZZES ===== */}
-        <section className="border-t border-border bg-muted/30 py-4 md:py-8">
-          <div className="container">
-            <SectionHeader title="Popular Quizzes" link="/categories" linkText="Όλα" />
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6">
-              {popular.slice(0, 3).map((quiz) => (
-                <QuizCard key={quiz.id} quiz={quiz} />
-              ))}
+        {/* ===== CONTENT + SIDEBAR LAYOUT ===== */}
+        <div className="container py-4 md:flex md:gap-6">
+          {/* ===== LEFT: MAIN CONTENT ===== */}
+          <div className="flex-1 min-w-0">
+            {/* AD */}
+            <div className="py-2">
+              <AdPlaceholder format="native" />
             </div>
-          </div>
-        </section>
 
-        {/* ===== 4. AD ===== */}
-        <div className="container py-2">
-          <AdPlaceholder format="banner" />
-        </div>
+            {/* POPULAR QUIZZES */}
+            <section className="border-t border-border bg-muted/30 py-4 md:py-8 -mx-4 px-4 md:-mx-0 md:px-0 md:rounded-lg">
+              <SectionHeader title="Popular Quizzes" link="/categories" linkText="Όλα" />
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6">
+                {popular.slice(0, 3).map((quiz) => (
+                  <QuizCard key={quiz.id} quiz={quiz} />
+                ))}
+              </div>
+            </section>
 
-        {/* ===== 5. LATEST NEWS FEED ===== */}
-        <section className="container py-4 md:py-8">
-          <SectionHeader title="Latest" link="/trending" linkText="Περισσότερα" />
-          {/* Mobile: list cards | Desktop: 3-col grid */}
-          <div className="md:hidden">
-            {latestPosts.map((post) => (
-              <PostCard key={post.id} post={post} variant="list" />
-            ))}
-          </div>
-          <div className="hidden md:grid md:grid-cols-3 md:gap-5">
-            {latestPosts.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-          </div>
-        </section>
-
-        {/* ===== 6. BUZZ CHAT ===== */}
-        <section className="border-t border-border bg-muted/30 py-4 md:py-8">
-          <div className="container">
-            <SectionHeader title="Buzz Chat" link="/buzzchat" linkText="Όλα" />
-            <div className="grid gap-4 md:grid-cols-2">
-              {sampleBuzzChats.slice(0, 2).map((chat) => (
-                <BuzzChatCard key={chat.id} chat={chat} variant="featured" />
-              ))}
+            {/* AD */}
+            <div className="py-2">
+              <AdPlaceholder format="banner" />
             </div>
-          </div>
-        </section>
 
-        {/* ===== 7. SHOPPING + CELEBRITY ===== */}
-        <section className="container py-4 md:py-8">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div>
-              <SectionHeader title="Shopping" link="/shopping" linkText="Όλα" />
-              <div className="flex flex-col">
-                {shoppingPosts.map((post) => (
+            {/* LATEST NEWS FEED */}
+            <section className="py-4 md:py-8">
+              <SectionHeader title="Latest" link="/trending" linkText="Περισσότερα" />
+              <div className="md:hidden">
+                {latestPosts.map((post) => (
                   <PostCard key={post.id} post={post} variant="list" />
                 ))}
               </div>
-            </div>
-            <div>
-              <SectionHeader title="Celebrity" link="/celebrity" linkText="Όλα" />
-              <div className="flex flex-col">
-                {celebrityPosts.map((post) => (
-                  <PostCard key={post.id} post={post} variant="list" />
+              <div className="hidden md:grid md:grid-cols-2 md:gap-5">
+                {latestPosts.map((post) => (
+                  <PostCard key={post.id} post={post} />
                 ))}
               </div>
+            </section>
+
+            {/* BUZZ CHAT */}
+            <section className="border-t border-border bg-muted/30 py-4 md:py-8 -mx-4 px-4 md:-mx-0 md:px-0 md:rounded-lg">
+              <SectionHeader title="Buzz Chat" link="/buzzchat" linkText="Όλα" />
+              <div className="grid gap-4 md:grid-cols-2">
+                {sampleBuzzChats.slice(0, 2).map((chat) => (
+                  <BuzzChatCard key={chat.id} chat={chat} variant="featured" />
+                ))}
+              </div>
+            </section>
+
+            {/* SHOPPING + CELEBRITY */}
+            <section className="py-4 md:py-8">
+              <div className="grid gap-6 md:grid-cols-2">
+                <div>
+                  <SectionHeader title="Shopping" link="/shopping" linkText="Όλα" />
+                  <div className="flex flex-col">
+                    {shoppingPosts.map((post) => (
+                      <PostCard key={post.id} post={post} variant="list" />
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <SectionHeader title="Celebrity" link="/celebrity" linkText="Όλα" />
+                  <div className="flex flex-col">
+                    {celebrityPosts.map((post) => (
+                      <PostCard key={post.id} post={post} variant="list" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* QUIZ CATEGORIES */}
+            <section className="border-t border-border bg-muted/30 py-4 md:py-8 -mx-4 px-4 md:-mx-0 md:px-0 md:rounded-lg">
+              <SectionHeader title="Quiz Categories" link="/categories" linkText="Όλες" />
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5">
+                {categories.map((cat) => (
+                  <CategoryCard key={cat.id} category={cat} />
+                ))}
+              </div>
+            </section>
+
+            {/* AD */}
+            <div className="py-4">
+              <AdPlaceholder format="leaderboard" />
             </div>
           </div>
-        </section>
 
-        {/* ===== 8. QUIZ CATEGORIES ===== */}
-        <section className="border-t border-border bg-muted/30 py-4 md:py-8">
-          <div className="container">
-            <SectionHeader title="Quiz Categories" link="/categories" linkText="Όλες" />
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5">
-              {categories.map((cat) => (
-                <CategoryCard key={cat.id} category={cat} />
-              ))}
+          {/* ===== RIGHT: SIDEBAR (25%) ===== */}
+          <aside className="hidden md:block md:w-[25%] flex-shrink-0">
+            <div className="sticky top-4 space-y-6">
+              {/* Sidebar Ad */}
+              <AdPlaceholder format="rectangle" />
+
+              {/* Latest Posts Widget */}
+              <div className="overflow-hidden rounded-lg border border-border">
+                <div className="bg-foreground px-4 py-2.5">
+                  <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">
+                    Τελευταία Άρθρα
+                  </h3>
+                </div>
+                <div className="divide-y divide-border">
+                  {latestPosts.slice(0, 5).map((post, i) => (
+                    <Link
+                      key={post.id}
+                      to={`/post/${post.id}`}
+                      className="group flex items-start gap-3 p-3 transition-colors hover:bg-muted/50"
+                    >
+                      <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-destructive text-xs font-bold text-destructive-foreground">
+                        {i + 1}
+                      </span>
+                      <div className="h-12 w-16 flex-shrink-0 overflow-hidden rounded">
+                        <img src={post.image} alt={post.title} className="h-full w-full object-cover" loading="lazy" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-xs font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">
+                          {post.title}
+                        </h4>
+                        <span className="mt-0.5 block text-[10px] text-muted-foreground">
+                          {timeAgo(post.createdAt)}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Trending Widget */}
+              <div className="overflow-hidden rounded-lg border border-border">
+                <div className="bg-foreground px-4 py-2.5">
+                  <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">
+                    Trending
+                  </h3>
+                </div>
+                <div className="divide-y divide-border">
+                  {trendingPosts.slice(0, 5).map((post, i) => (
+                    <Link
+                      key={post.id}
+                      to={`/post/${post.id}`}
+                      className="group flex items-start gap-3 p-3 transition-colors hover:bg-muted/50"
+                    >
+                      <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-primary text-xs font-bold text-primary-foreground">
+                        {i + 1}
+                      </span>
+                      <div className="h-12 w-16 flex-shrink-0 overflow-hidden rounded">
+                        <img src={post.image} alt={post.title} className="h-full w-full object-cover" loading="lazy" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-xs font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">
+                          {post.title}
+                        </h4>
+                        <span className="mt-0.5 block text-[10px] text-muted-foreground">
+                          {formatViews(post.views)} views
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Categories Widget */}
+              <div className="overflow-hidden rounded-lg border border-border">
+                <div className="bg-foreground px-4 py-2.5">
+                  <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">
+                    Κατηγορίες
+                  </h3>
+                </div>
+                <div className="p-3">
+                  <div className="flex flex-wrap gap-2">
+                    {categories.map((cat) => (
+                      <Link
+                        key={cat.id}
+                        to={`/category/${cat.id}`}
+                        className="rounded-full border border-border bg-muted/50 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
+                      >
+                        {cat.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </section>
-
-        {/* ===== 9. AD ===== */}
-        <div className="container py-4">
-          <AdPlaceholder format="leaderboard" />
+          </aside>
         </div>
       </main>
 
