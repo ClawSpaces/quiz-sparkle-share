@@ -11,6 +11,8 @@ import ShoppingPage from "./pages/ShoppingPage";
 import CelebrityPage from "./pages/CelebrityPage";
 import BuzzChatPage from "./pages/BuzzChatPage";
 import PostPage from "./pages/PostPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsPage from "./pages/TermsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
