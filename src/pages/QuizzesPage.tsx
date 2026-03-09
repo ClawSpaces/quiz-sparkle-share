@@ -150,9 +150,9 @@ const QuizzesPage = () => {
             </h2>
             <div className="grid gap-4 sm:grid-cols-2">
               {trending.slice(1, 5).map((quiz) => (
-                <Link
+                <a
                   key={quiz.id}
-                  to={`/quiz/${quiz.id}`}
+                  href={`/quiz/${quiz.id}`}
                   className="group flex gap-4 rounded-xl bg-card p-3 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
                 >
                   <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg">
