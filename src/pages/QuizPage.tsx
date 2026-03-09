@@ -4,8 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ContentSidebar from "@/components/ContentSidebar";
-import AdSlot from "@/components/AdSlot";
-import ReadyForMore from "@/components/ReadyForMore";
+import AdSlot from "@/components/AdSlotyForMore from "@/components/ReadyForMore";
 import MoreFromSite from "@/components/MoreFromSite";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -304,7 +303,7 @@ const QuizPage = () => {
               )}
             </div>
 
-            <AdPlaceholder format="leaderboard" className="mb-8" />
+            <AdPlaceholder foSlotrboard" className="mb-8" />
 
             {/* Questions */}
             <div className="space-y-8">
