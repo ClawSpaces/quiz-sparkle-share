@@ -2,6 +2,7 @@ export interface Post {
   id: string;
   title: string;
   description: string | null;
+  content?: string | null;
   image_url: string | null;
   post_type: "article" | "shopping" | "celebrity" | "trending_news";
   views_count: number;
