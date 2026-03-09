@@ -18,9 +18,10 @@ serve(async (req) => {
     );
 
     // Fetch records missing image_url
+    const selectCols = type === "results" ? "id, title, description" : "id, text";
     const { data: records, error: fetchError } = await supabase
       .from(type)
-      .select("id, text" + (type === "results" ? ", title, description" : ""))
+      .select(selectCols)
       .is("image_url", null)
       .range(offset, offset + limit - 1);
 
