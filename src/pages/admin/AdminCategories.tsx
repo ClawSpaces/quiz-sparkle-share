@@ -42,6 +42,7 @@ export default function AdminCategories() {
         description: form.description || null,
         icon: form.icon || "📂",
         color: form.color || "primary",
+        image_url: form.image_url || null,
       };
 
       if (editId) {
