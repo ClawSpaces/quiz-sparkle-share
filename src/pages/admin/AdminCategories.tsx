@@ -14,6 +14,7 @@ interface CategoryForm {
   description: string;
   icon: string;
   color: string;
+  image_url: string;
 }
 
 export default function AdminCategories() {
