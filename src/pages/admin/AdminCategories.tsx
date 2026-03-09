@@ -88,6 +88,7 @@ export default function AdminCategories() {
       description: cat.description ?? "",
       icon: cat.icon ?? "📂",
       color: cat.color ?? "primary",
+      image_url: cat.image_url ?? "",
     });
     setShowCreate(true);
   };
