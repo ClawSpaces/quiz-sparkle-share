@@ -142,7 +142,7 @@ serve(async (req) => {
     const createdQuizIds: string[] = [];
 
     // Generate each quiz one by one to avoid timeout
-    for (const theme of batchConfig.themes) {
+    for (const theme of themes) {
       const isPersonality = quizType === "personality";
 
       const systemPrompt = `You are a BuzzFeed-style quiz content creator writing in GREEK (ελληνικά). 
