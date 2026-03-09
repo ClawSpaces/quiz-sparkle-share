@@ -71,7 +71,7 @@ const CategoryPage = () => {
         </section>
 
         <div className="container py-4">
-          <AdPlaceholder format="leaderboard" />
+          <AdSlot format="leaderboard" />
         </div>
 
         <section className="container py-8">

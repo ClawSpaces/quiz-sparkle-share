@@ -31,7 +31,7 @@ const BuzzChatPage = () => {
             <p className="mx-auto mt-3 max-w-lg text-muted-foreground">Μπες στη συζήτηση! Μοιράσου τη γνώμη σου και δες τι λένε οι υπόλοιποι.</p>
           </div>
         </section>
-        <div className="container py-4"><AdPlaceholder format="leaderboard" /></div>
+        <div className="container py-4"><AdSlot format="leaderboard" /></div>
         <section className="container py-8">
           <div className="grid gap-6 md:grid-cols-2">
             {chats.map((chat) => (<BuzzChatCard key={chat.id} chat={chat} variant="featured" />))}

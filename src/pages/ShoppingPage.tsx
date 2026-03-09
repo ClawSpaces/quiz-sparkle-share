@@ -32,7 +32,7 @@ const ShoppingPage = () => {
             <p className="mx-auto mt-3 max-w-lg text-muted-foreground">Τα καλύτερα προϊόντα, deals και recommendations που αξίζουν τα λεφτά τους.</p>
           </div>
         </section>
-        <div className="container py-4"><AdPlaceholder format="leaderboard" /></div>
+        <div className="container py-4"><AdSlot format="leaderboard" /></div>
         <section className="container py-8">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (<PostCard key={post.id} post={post} />))}
