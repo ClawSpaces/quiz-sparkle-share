@@ -437,29 +437,77 @@ const QuizPage = () => {
               </div>
             )}
 
-            {/* Result card */}
+            {/* BuzzFeed-style Result Card */}
             {finished && finalResult && (
-              <div ref={resultRef} className="mt-10 rounded-2xl bg-card p-6 shadow-lg md:p-10 text-center border border-border animate-in fade-in slide-in-from-bottom-4 duration-500">
-                {quiz.type === "trivia" ? (
-                  <>
-                    <div className="mb-4 text-6xl font-black text-primary">{score}/{questions.length}</div>
-                    <h2 className="font-display text-2xl font-bold text-foreground md:text-3xl">{finalResult.title}</h2>
-                    {finalResult.description && <p className="mt-3 text-muted-foreground">{finalResult.description}</p>}
-                  </>
-                ) : (
-                  <>
-                    {finalResult.image_url && (
-                      <div className="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full">
-                        <img src={finalResult.image_url} alt="" className="h-full w-full object-cover" />
-                      </div>
-                    )}
-                    <p className="mb-1 text-sm text-muted-foreground">Το αποτέλεσμά σου:</p>
-                    <h2 className="font-display text-2xl font-bold text-foreground md:text-3xl">{finalResult.title}</h2>
-                    {finalResult.description && <p className="mt-3 text-muted-foreground">{finalResult.description}</p>}
-                  </>
-                )}
+              <div ref={resultRef} className="mt-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                {/* Sunburst background container */}
+                <div
+                  className="relative overflow-hidden rounded-2xl p-6 md:p-10"
+                  style={{
+                    background: `
+                      repeating-conic-gradient(
+                        hsl(var(--primary)) 0deg 10deg,
+                        hsl(var(--primary) / 0.7) 10deg 20deg
+                      ),
+                      hsl(var(--primary))
+                    `,
+                  }}
+                >
+                  {/* Vertical "QUIZ RESULT" label */}
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 hidden md:flex flex-col items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-primary-foreground/80" />
+                    <span
+                      className="text-xs font-black tracking-[0.3em] text-primary-foreground/80 uppercase"
+                      style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}
+                    >
+                      Quiz Result
+                    </span>
+                    <Sparkles className="h-4 w-4 text-primary-foreground/80" />
+                  </div>
 
-                <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                  {/* Inner white card */}
+                  <div className="relative mx-auto max-w-lg rounded-xl bg-card p-6 shadow-xl md:ml-12">
+                    {quiz.type === "trivia" ? (
+                      <>
+                        <div className="mb-3 text-6xl font-black text-primary">{score}/{questions.length}</div>
+                        <h2 className="font-display text-2xl font-bold text-foreground md:text-3xl">{finalResult.title}</h2>
+                        {finalResult.description && <p className="mt-3 text-muted-foreground">{finalResult.description}</p>}
+                      </>
+                    ) : (
+                      <>
+                        <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Το αποτέλεσμά σου:</p>
+                        <h2 className="font-display text-2xl font-bold text-foreground md:text-3xl">{finalResult.title}</h2>
+                        {finalResult.image_url && (
+                          <div className="mt-4 overflow-hidden rounded-lg">
+                            <img src={finalResult.image_url} alt={finalResult.title} className="w-full object-cover" />
+                          </div>
+                        )}
+                        {finalResult.description && <p className="mt-4 text-muted-foreground leading-relaxed">{finalResult.description}</p>}
+                      </>
+                    )}
+
+                    {/* Share row inside card */}
+                    <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
+                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Μοιράσου το</span>
+                      <ShareButtons
+                        text={
+                          quiz.type === "personality"
+                            ? `Πήρα "${finalResult.title}" στο quiz "${quiz.title}"! Δοκίμασε κι εσύ!`
+                            : `Πήρα ${score}/${questions.length} στο quiz "${quiz.title}"! Δοκίμασε κι εσύ!`
+                        }
+                        imageUrl={finalResult.image_url || quiz.image_url || undefined}
+                      />
+                    </div>
+                  </div>
+
+                  {/* "SHARE WITH FRIENDS" floating badge */}
+                  <div className="absolute -bottom-2 -right-2 md:bottom-4 md:right-4 flex h-20 w-20 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-lg rotate-12">
+                    <span className="text-[10px] font-black uppercase leading-tight text-center">Share<br />with<br />friends!</span>
+                  </div>
+                </div>
+
+                {/* Action buttons below */}
+                <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
                   <Button onClick={resetQuiz} variant="outline" className="gap-2">
                     <RotateCcw className="h-4 w-4" /> Δοκίμασε ξανά
                   </Button>
@@ -469,6 +517,9 @@ const QuizPage = () => {
                 </div>
               </div>
             )}
+
+            {/* Comments */}
+            <CommentsSection contentType="quiz" contentId={id!} />
 
             {/* Ready for more + More from site */}
             <div className="mt-12 space-y-10">
