@@ -22,7 +22,7 @@ export default function AdminCategories() {
   const queryClient = useQueryClient();
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [editId, setEditId] = useState<string | null>(null);
-  const [form, setForm] = useState<CategoryForm>({ name: "", slug: "", description: "", icon: "📂", color: "primary" });
+  const [form, setForm] = useState<CategoryForm>({ name: "", slug: "", description: "", icon: "📂", color: "primary", image_url: "" });
   const [showCreate, setShowCreate] = useState(false);
 
   const { data: categories, isLoading } = useQuery({
