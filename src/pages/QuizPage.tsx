@@ -1,23 +1,30 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, RotateCcw, Share2, CheckCircle2, XCircle } from "lucide-react";
+import ContentSidebar from "@/components/ContentSidebar";
+import AdPlaceholder from "@/components/AdPlaceholder";
 import ReadyForMore from "@/components/ReadyForMore";
 import MoreFromSite from "@/components/MoreFromSite";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { RotateCcw, Share2, Facebook, Link2, CheckCircle2, XCircle } from "lucide-react";
+import { format } from "date-fns";
+import { el } from "date-fns/locale";
 
 interface QuizData {
   id: string;
   title: string;
   description: string | null;
   image_url: string | null;
+  instructions: string | null;
   type: "personality" | "trivia";
   plays_count: number;
   category_id: string | null;
+  created_at: string;
   categories: { name: string; slug: string } | null;
+  profiles: { name: string; title: string | null; avatar_url: string | null } | null;
 }
 
 interface Question {
@@ -31,6 +38,7 @@ interface Question {
 interface Answer {
   id: string;
   text: string;
+  image_url: string | null;
   is_correct: boolean | null;
   result_id: string | null;
   sort_order: number;
@@ -43,8 +51,6 @@ interface Result {
   image_url: string | null;
 }
 
-type Phase = "intro" | "playing" | "result";
-
 const QuizPage = () => {
   const { id } = useParams<{ id: string }>();
   const [quiz, setQuiz] = useState<QuizData | null>(null);
@@ -52,19 +58,22 @@ const QuizPage = () => {
   const [results, setResults] = useState<Result[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [phase, setPhase] = useState<Phase>("intro");
-  const [currentQ, setCurrentQ] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [showFeedback, setShowFeedback] = useState(false);
+  // Per-question selected answer
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [showTrivia, setShowTrivia] = useState<Record<string, boolean>>({});
   const [score, setScore] = useState(0);
-  const [resultTally, setResultTally] = useState<Record<string, number>>({});
+  const [finished, setFinished] = useState(false);
   const [finalResult, setFinalResult] = useState<Result | null>(null);
+  const [playsIncremented, setPlaysIncremented] = useState(false);
+
+  const questionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const resultRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!id) return;
     const fetchQuiz = async () => {
       const [quizRes, questionsRes, resultsRes] = await Promise.all([
-        supabase.from("quizzes").select("*, categories(name, slug)").eq("id", id).single(),
+        supabase.from("quizzes").select("*, categories(name, slug), profiles(name, title, avatar_url)").eq("id", id).single(),
         supabase.from("questions").select("*, answers(*)").eq("quiz_id", id).order("sort_order"),
         supabase.from("results").select("*").eq("quiz_id", id).order("sort_order"),
       ]);
@@ -83,86 +92,90 @@ const QuizPage = () => {
     fetchQuiz();
   }, [id]);
 
-  const startQuiz = () => {
-    setPhase("playing");
-    setCurrentQ(0);
-    setScore(0);
-    setResultTally({});
-    setSelectedAnswer(null);
-    setShowFeedback(false);
-    supabase.rpc("increment_plays", { quiz_id_param: id! });
-  };
+  const answeredCount = Object.keys(answers).length;
 
-  const handleAnswer = (answer: Answer) => {
-    if (showFeedback) return;
-    setSelectedAnswer(answer.id);
+  const handleAnswer = useCallback((question: Question, answer: Answer) => {
+    if (answers[question.id]) return; // already answered
+
+    // Increment plays on first answer
+    if (!playsIncremented) {
+      supabase.rpc("increment_plays", { quiz_id_param: id! });
+      setPlaysIncremented(true);
+    }
+
+    const newAnswers = { ...answers, [question.id]: answer.id };
+    setAnswers(newAnswers);
 
     if (quiz?.type === "trivia") {
       if (answer.is_correct) setScore((s) => s + 1);
-      setShowFeedback(true);
-      setTimeout(() => advanceOrFinish(answer), 1200);
-    } else {
-      // personality — tally result_id
-      if (answer.result_id) {
-        setResultTally((prev) => ({
-          ...prev,
-          [answer.result_id!]: (prev[answer.result_id!] || 0) + 1,
-        }));
+      setShowTrivia((prev) => ({ ...prev, [question.id]: true }));
+    }
+
+    const totalAnswered = Object.keys(newAnswers).length;
+
+    if (totalAnswered < questions.length) {
+      // Scroll to next unanswered question
+      const nextQ = questions.find((q) => !newAnswers[q.id]);
+      if (nextQ) {
+        setTimeout(() => {
+          questionRefs.current[nextQ.id]?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, quiz?.type === "trivia" ? 800 : 400);
       }
-      setTimeout(() => advanceOrFinish(answer), 600);
-    }
-  };
-
-  const advanceOrFinish = (lastAnswer: Answer) => {
-    if (currentQ < questions.length - 1) {
-      setCurrentQ((c) => c + 1);
-      setSelectedAnswer(null);
-      setShowFeedback(false);
     } else {
-      finishQuiz(lastAnswer);
+      // All answered — compute result
+      setTimeout(() => computeResult(newAnswers, answer), quiz?.type === "trivia" ? 800 : 400);
     }
-  };
+  }, [answers, questions, quiz, id, playsIncremented]);
 
-  const finishQuiz = (lastAnswer: Answer) => {
+  const computeResult = (allAnswers: Record<string, string>, lastAnswer: Answer) => {
     let resultId: string | null = null;
+    let finalScore = score;
 
-    if (quiz?.type === "personality") {
-      // include last answer in tally
-      const finalTally = { ...resultTally };
-      if (lastAnswer.result_id) {
-        finalTally[lastAnswer.result_id] = (finalTally[lastAnswer.result_id] || 0) + 1;
-      }
-      // find most common result
-      let maxCount = 0;
-      for (const [rid, count] of Object.entries(finalTally)) {
-        if (count > maxCount) {
-          maxCount = count;
-          resultId = rid;
-        }
-      }
-      const found = results.find((r) => r.id === resultId);
-      setFinalResult(found || results[0] || null);
-    } else {
-      // trivia — find matching score-based result
-      const finalScore = score + (lastAnswer.is_correct ? 1 : 0);
-      // Use score thresholds based on results count
-      const total = questions.length;
-      const pct = finalScore / total;
+    if (quiz?.type === "trivia") {
+      finalScore = score + (lastAnswer.is_correct ? 1 : 0);
+      setScore(finalScore);
+      const pct = finalScore / questions.length;
       if (pct >= 0.9) setFinalResult(results[0] || null);
       else if (pct >= 0.5) setFinalResult(results[1] || null);
       else setFinalResult(results[2] || results[results.length - 1] || null);
-      setScore(finalScore);
-      resultId = finalResult?.id ?? null;
+    } else {
+      // Personality — tally result_ids
+      const tally: Record<string, number> = {};
+      questions.forEach((q) => {
+        const selectedId = allAnswers[q.id];
+        const ans = q.answers.find((a) => a.id === selectedId);
+        if (ans?.result_id) {
+          tally[ans.result_id] = (tally[ans.result_id] || 0) + 1;
+        }
+      });
+      let maxCount = 0;
+      for (const [rid, count] of Object.entries(tally)) {
+        if (count > maxCount) { maxCount = count; resultId = rid; }
+      }
+      const found = results.find((r) => r.id === resultId);
+      setFinalResult(found || results[0] || null);
     }
 
     // Save attempt
     supabase.from("quiz_attempts").insert({
       quiz_id: id!,
-      score: quiz?.type === "trivia" ? score + (lastAnswer.is_correct ? 1 : 0) : null,
+      score: quiz?.type === "trivia" ? finalScore : null,
       result_id: resultId,
     });
 
-    setPhase("result");
+    setFinished(true);
+    setTimeout(() => {
+      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 300);
+  };
+
+  const resetQuiz = () => {
+    setAnswers({});
+    setShowTrivia({});
+    setScore(0);
+    setFinished(false);
+    setFinalResult(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleShare = () => {
@@ -174,6 +187,14 @@ const QuizPage = () => {
     } else {
       navigator.clipboard.writeText(`${text} ${window.location.href}`);
     }
+  };
+
+  const shareFacebook = () => {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, "_blank");
+  };
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
   };
 
   if (loading) {
@@ -194,196 +215,271 @@ const QuizPage = () => {
         <Header />
         <main className="flex flex-1 flex-col items-center justify-center gap-4">
           <p className="text-lg text-muted-foreground">Το quiz δεν βρέθηκε.</p>
-          <Link to="/quizzes">
-            <Button>Πίσω στα Quizzes</Button>
-          </Link>
+          <Link to="/quizzes"><Button>Πίσω στα Quizzes</Button></Link>
         </main>
         <Footer />
       </div>
     );
   }
 
-  // INTRO
-  if (phase === "intro") {
-    return (
-      <div className="flex min-h-screen flex-col bg-background">
-        <Header />
-        <main className="flex-1">
-          <div className="relative">
-            <div className="aspect-[21/9] overflow-hidden md:aspect-[3/1]">
-              <img
-                src={quiz.image_url || "/placeholder.svg"}
-                alt={quiz.title}
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
-            </div>
-            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
-              {quiz.categories && (
-                <span className="mb-2 inline-block rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase text-primary-foreground">
-                  {quiz.categories.name}
-                </span>
-              )}
-              <h1 className="font-display text-2xl font-black leading-tight text-primary-foreground md:text-4xl">
-                {quiz.title}
-              </h1>
-              {quiz.description && (
-                <p className="mt-2 max-w-xl text-sm text-primary-foreground/80 md:text-base">
-                  {quiz.description}
-                </p>
-              )}
-              <div className="mt-3 text-sm text-primary-foreground/70">
-                {questions.length} ερωτήσεις · {quiz.type === "trivia" ? "Trivia" : "Personality"}
-              </div>
-            </div>
-          </div>
+  const hasImageAnswers = questions.some((q) => q.answers.some((a) => a.image_url));
 
-          <div className="container py-8 text-center">
-            <Button size="lg" onClick={startQuiz} className="gap-2 text-lg">
-              Ξεκίνα το Quiz <ArrowRight className="h-5 w-5" />
-            </Button>
-          </div>
-
-          <div className="container max-w-5xl space-y-10 pb-12">
-            <ReadyForMore currentId={id!} type="quiz" categoryId={quiz.category_id} />
-            <MoreFromSite currentId={id!} currentType="quiz" />
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  // PLAYING
-  if (phase === "playing") {
-    const q = questions[currentQ];
-    const progress = ((currentQ) / questions.length) * 100;
-
-    return (
-      <div className="flex min-h-screen flex-col bg-background">
-        <Header />
-        <main className="flex-1">
-          <div className="container max-w-2xl py-6 md:py-10">
-            {/* Progress */}
-            <div className="mb-2 flex items-center justify-between text-sm text-muted-foreground">
-              <span>Ερώτηση {currentQ + 1}/{questions.length}</span>
-              <span>{quiz.title}</span>
-            </div>
-            <Progress value={progress} className="mb-8 h-2" />
-
-            {/* Question */}
-            {q.image_url && (
-              <div className="mb-4 overflow-hidden rounded-xl">
-                <img src={q.image_url} alt="" className="h-48 w-full object-cover md:h-64" />
-              </div>
-            )}
-            <h2 className="mb-6 font-display text-xl font-bold text-foreground md:text-2xl">
-              {q.text}
-            </h2>
-
-            {/* Answers */}
-            <div className="grid gap-3">
-              {q.answers.map((ans) => {
-                let btnClass =
-                  "w-full rounded-xl border-2 border-border bg-card p-4 text-left text-sm font-medium transition-all hover:border-primary hover:bg-primary/5 md:text-base";
-
-                if (selectedAnswer === ans.id) {
-                  if (quiz.type === "trivia" && showFeedback) {
-                    btnClass = ans.is_correct
-                      ? "w-full rounded-xl border-2 border-green-500 bg-green-50 dark:bg-green-950 p-4 text-left text-sm font-medium md:text-base"
-                      : "w-full rounded-xl border-2 border-destructive bg-destructive/10 p-4 text-left text-sm font-medium md:text-base";
-                  } else {
-                    btnClass =
-                      "w-full rounded-xl border-2 border-primary bg-primary/10 p-4 text-left text-sm font-medium md:text-base";
-                  }
-                } else if (showFeedback && quiz.type === "trivia" && ans.is_correct) {
-                  btnClass =
-                    "w-full rounded-xl border-2 border-green-500 bg-green-50 dark:bg-green-950 p-4 text-left text-sm font-medium md:text-base";
-                }
-
-                return (
-                  <button
-                    key={ans.id}
-                    onClick={() => handleAnswer(ans)}
-                    disabled={showFeedback || (quiz.type === "personality" && !!selectedAnswer)}
-                    className={btnClass}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="flex-1">{ans.text}</span>
-                      {showFeedback && quiz.type === "trivia" && ans.is_correct && (
-                        <CheckCircle2 className="h-5 w-5 text-green-600" />
-                      )}
-                      {showFeedback && quiz.type === "trivia" && selectedAnswer === ans.id && !ans.is_correct && (
-                        <XCircle className="h-5 w-5 text-destructive" />
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  // RESULT
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1">
-        <div className="container max-w-2xl py-8 md:py-12">
-          <div className="rounded-2xl bg-card p-6 shadow-lg md:p-10 text-center">
-            {quiz.type === "trivia" ? (
-              <>
-                <div className="mb-4 text-6xl font-black text-primary">
-                  {score}/{questions.length}
+        <div className="container py-6 md:py-10 md:flex md:gap-8">
+          {/* Main content column */}
+          <div className="flex-1 min-w-0">
+            {/* Quiz header */}
+            <div className="mb-6">
+              {/* Badges */}
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                <Badge variant="default" className="uppercase text-[10px] tracking-wider">Quiz</Badge>
+                {quiz.categories && (
+                  <Link to={`/category/${quiz.categories.slug}`}>
+                    <Badge variant="secondary" className="uppercase text-[10px] tracking-wider">
+                      {quiz.categories.name}
+                    </Badge>
+                  </Link>
+                )}
+                {quiz.type === "trivia" && (
+                  <Badge variant="outline" className="uppercase text-[10px] tracking-wider">Trivia</Badge>
+                )}
+              </div>
+
+              {/* Title */}
+              <h1 className="font-display text-2xl font-black leading-tight text-foreground md:text-4xl lg:text-5xl">
+                {quiz.title}
+              </h1>
+
+              {/* Description */}
+              {quiz.description && (
+                <p className="mt-3 text-base text-muted-foreground md:text-lg leading-relaxed">
+                  {quiz.description}
+                </p>
+              )}
+
+              {/* Author + Date */}
+              <div className="mt-4 flex items-center gap-3">
+                {quiz.profiles && (
+                  <>
+                    <div className="h-9 w-9 overflow-hidden rounded-full bg-muted">
+                      {quiz.profiles.avatar_url ? (
+                        <img src={quiz.profiles.avatar_url} alt={quiz.profiles.name} className="h-full w-full object-cover" />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-sm font-bold text-muted-foreground">
+                          {quiz.profiles.name.charAt(0)}
+                        </div>
+                      )}
+                    </div>
+                    <div className="text-sm">
+                      <span className="font-semibold text-foreground">{quiz.profiles.name}</span>
+                      {quiz.profiles.title && (
+                        <span className="text-muted-foreground">, {quiz.profiles.title}</span>
+                      )}
+                    </div>
+                    <span className="text-muted-foreground">·</span>
+                  </>
+                )}
+                <span className="text-sm text-muted-foreground">
+                  {format(new Date(quiz.created_at), "d MMM yyyy", { locale: el })}
+                </span>
+              </div>
+
+              {/* Share buttons */}
+              <div className="mt-4 flex items-center gap-2">
+                <button onClick={shareFacebook} className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground" aria-label="Share on Facebook">
+                  <Facebook className="h-4 w-4" />
+                </button>
+                <button onClick={copyLink} className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground" aria-label="Copy link">
+                  <Link2 className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Hero image */}
+              {quiz.image_url && (
+                <div className="mt-6 overflow-hidden rounded-xl">
+                  <img src={quiz.image_url} alt={quiz.title} className="w-full object-cover" />
                 </div>
-                <h2 className="font-display text-2xl font-bold text-foreground md:text-3xl">
-                  {finalResult?.title || "Αποτέλεσμα"}
-                </h2>
-                {finalResult?.description && (
-                  <p className="mt-3 text-muted-foreground">{finalResult.description}</p>
-                )}
-              </>
-            ) : (
-              <>
-                {finalResult?.image_url && (
-                  <div className="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full">
-                    <img src={finalResult.image_url} alt="" className="h-full w-full object-cover" />
+              )}
+
+              {/* Instructions */}
+              {quiz.instructions && (
+                <div className="mt-6 rounded-lg border border-border bg-muted/50 p-4">
+                  <p className="text-sm font-medium text-foreground">{quiz.instructions}</p>
+                </div>
+              )}
+            </div>
+
+            <AdPlaceholder format="leaderboard" className="mb-8" />
+
+            {/* Questions */}
+            <div className="space-y-8">
+              {questions.map((q, qIdx) => {
+                const isAnswered = !!answers[q.id];
+                const selectedId = answers[q.id];
+                const hasImages = q.answers.some((a) => a.image_url);
+                const isTriviaFeedback = isAnswered && quiz.type === "trivia" && showTrivia[q.id];
+
+                return (
+                  <div key={q.id}>
+                    <div
+                      ref={(el) => { questionRefs.current[q.id] = el; }}
+                      className={`rounded-xl border border-border bg-card p-5 md:p-6 transition-opacity ${isAnswered ? "opacity-80" : ""}`}
+                    >
+                      {/* Question number + text */}
+                      <div className="mb-4 flex items-start gap-3">
+                        <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                          {qIdx + 1}
+                        </span>
+                        <h2 className="font-display text-lg font-bold text-foreground md:text-xl">
+                          {q.text}
+                        </h2>
+                      </div>
+
+                      {/* Question image */}
+                      {q.image_url && (
+                        <div className="mb-4 overflow-hidden rounded-lg">
+                          <img src={q.image_url} alt="" className="w-full object-cover max-h-80" />
+                        </div>
+                      )}
+
+                      {/* Answers */}
+                      {hasImages ? (
+                        /* Image grid answers */
+                        <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+                          {q.answers.map((ans) => {
+                            const isSelected = selectedId === ans.id;
+                            const isCorrect = ans.is_correct;
+
+                            let borderClass = "border-border hover:border-primary";
+                            if (isAnswered) {
+                              if (isTriviaFeedback) {
+                                if (isCorrect) borderClass = "border-green-500 ring-2 ring-green-500/30";
+                                else if (isSelected && !isCorrect) borderClass = "border-destructive ring-2 ring-destructive/30";
+                                else borderClass = "border-border";
+                              } else if (isSelected) {
+                                borderClass = "border-primary ring-2 ring-primary/30";
+                              } else {
+                                borderClass = "border-border";
+                              }
+                            }
+
+                            return (
+                              <button
+                                key={ans.id}
+                                onClick={() => handleAnswer(q, ans)}
+                                disabled={isAnswered}
+                                className={`group overflow-hidden rounded-xl border-2 bg-card transition-all ${borderClass} ${isAnswered && !isSelected && !isCorrect ? "opacity-50" : ""}`}
+                              >
+                                {ans.image_url && (
+                                  <div className="aspect-square overflow-hidden">
+                                    <img src={ans.image_url} alt={ans.text} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+                                  </div>
+                                )}
+                                <div className="flex items-center justify-between p-2.5">
+                                  <span className="text-xs font-semibold text-foreground md:text-sm">{ans.text}</span>
+                                  {isTriviaFeedback && isCorrect && <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-green-600" />}
+                                  {isTriviaFeedback && isSelected && !isCorrect && <XCircle className="h-4 w-4 flex-shrink-0 text-destructive" />}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        /* Text-only answers */
+                        <div className="grid gap-2.5">
+                          {q.answers.map((ans) => {
+                            const isSelected = selectedId === ans.id;
+                            const isCorrect = ans.is_correct;
+
+                            let cls = "w-full rounded-xl border-2 border-border bg-card p-3.5 text-left text-sm font-medium transition-all hover:border-primary hover:bg-primary/5 md:text-base";
+
+                            if (isAnswered) {
+                              if (isTriviaFeedback) {
+                                if (isCorrect) cls = "w-full rounded-xl border-2 border-green-500 bg-green-50 dark:bg-green-950 p-3.5 text-left text-sm font-medium md:text-base";
+                                else if (isSelected) cls = "w-full rounded-xl border-2 border-destructive bg-destructive/10 p-3.5 text-left text-sm font-medium md:text-base";
+                                else cls = "w-full rounded-xl border-2 border-border bg-card p-3.5 text-left text-sm font-medium opacity-50 md:text-base";
+                              } else if (isSelected) {
+                                cls = "w-full rounded-xl border-2 border-primary bg-primary/10 p-3.5 text-left text-sm font-medium md:text-base";
+                              } else {
+                                cls = "w-full rounded-xl border-2 border-border bg-card p-3.5 text-left text-sm font-medium opacity-50 md:text-base";
+                              }
+                            }
+
+                            return (
+                              <button key={ans.id} onClick={() => handleAnswer(q, ans)} disabled={isAnswered} className={cls}>
+                                <div className="flex items-center gap-3">
+                                  <span className="flex-1">{ans.text}</span>
+                                  {isTriviaFeedback && isCorrect && <CheckCircle2 className="h-5 w-5 text-green-600" />}
+                                  {isTriviaFeedback && isSelected && !isCorrect && <XCircle className="h-5 w-5 text-destructive" />}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Ad every 5 questions */}
+                    {(qIdx + 1) % 5 === 0 && qIdx < questions.length - 1 && (
+                      <AdPlaceholder format="rectangle" className="mt-8" />
+                    )}
                   </div>
-                )}
-                <p className="mb-1 text-sm text-muted-foreground">Το αποτέλεσμά σου:</p>
-                <h2 className="font-display text-2xl font-bold text-foreground md:text-3xl">
-                  {finalResult?.title || "Δεν βρέθηκε αποτέλεσμα"}
-                </h2>
-                {finalResult?.description && (
-                  <p className="mt-3 text-muted-foreground">{finalResult.description}</p>
-                )}
-              </>
+                );
+              })}
+            </div>
+
+            {/* Progress indicator */}
+            {!finished && answeredCount > 0 && (
+              <div className="mt-6 text-center text-sm text-muted-foreground">
+                {answeredCount}/{questions.length} ερωτήσεις απαντημένες
+              </div>
             )}
 
-            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <Button onClick={startQuiz} variant="outline" className="gap-2">
-                <RotateCcw className="h-4 w-4" /> Δοκίμασε ξανά
-              </Button>
-              <Button onClick={handleShare} className="gap-2">
-                <Share2 className="h-4 w-4" /> Μοιράσου το
-              </Button>
-            </div>
+            {/* Result card */}
+            {finished && finalResult && (
+              <div ref={resultRef} className="mt-10 rounded-2xl bg-card p-6 shadow-lg md:p-10 text-center border border-border animate-in fade-in slide-in-from-bottom-4 duration-500">
+                {quiz.type === "trivia" ? (
+                  <>
+                    <div className="mb-4 text-6xl font-black text-primary">{score}/{questions.length}</div>
+                    <h2 className="font-display text-2xl font-bold text-foreground md:text-3xl">{finalResult.title}</h2>
+                    {finalResult.description && <p className="mt-3 text-muted-foreground">{finalResult.description}</p>}
+                  </>
+                ) : (
+                  <>
+                    {finalResult.image_url && (
+                      <div className="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full">
+                        <img src={finalResult.image_url} alt="" className="h-full w-full object-cover" />
+                      </div>
+                    )}
+                    <p className="mb-1 text-sm text-muted-foreground">Το αποτέλεσμά σου:</p>
+                    <h2 className="font-display text-2xl font-bold text-foreground md:text-3xl">{finalResult.title}</h2>
+                    {finalResult.description && <p className="mt-3 text-muted-foreground">{finalResult.description}</p>}
+                  </>
+                )}
 
-            <div className="mt-6">
-              <Link to="/quizzes" className="text-sm font-medium text-primary hover:underline">
-                ← Πίσω στα Quizzes
-              </Link>
+                <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                  <Button onClick={resetQuiz} variant="outline" className="gap-2">
+                    <RotateCcw className="h-4 w-4" /> Δοκίμασε ξανά
+                  </Button>
+                  <Button onClick={handleShare} className="gap-2">
+                    <Share2 className="h-4 w-4" /> Μοιράσου το
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Ready for more + More from site */}
+            <div className="mt-12 space-y-10">
+              <ReadyForMore currentId={id!} type="quiz" categoryId={quiz.category_id} />
+              <MoreFromSite currentId={id!} currentType="quiz" />
             </div>
           </div>
-        </div>
 
-        <div className="container max-w-5xl space-y-10 pb-12">
-          <ReadyForMore currentId={id!} type="quiz" categoryId={quiz.category_id} />
-          <MoreFromSite currentId={id!} currentType="quiz" />
+          {/* Desktop sidebar */}
+          <ContentSidebar />
         </div>
       </main>
       <Footer />
