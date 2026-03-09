@@ -304,8 +304,7 @@ const QuizPage = () => {
               )}
             </div>
 
-            <AdSlot format="leaderboard" className="mb-8" />
-
+            <AdSlot format="leaderboard" className="mb
             {/* Questions */}
             <div className="space-y-8">
               {questions.map((q, qIdx) => {
@@ -416,7 +415,7 @@ const QuizPage = () => {
 
                     {/* Ad after every question (BuzzFeed style) */}
                     {qIdx < questions.length - 1 && (
-                  Slot format="rectangle" c="rSlotlassName="mt-8" />
+                  Slot fo<AdSlot format="rectangle" ce="mt-8" />
                     )}
                   </div>
                 );
