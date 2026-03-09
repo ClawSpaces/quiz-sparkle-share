@@ -422,8 +422,8 @@ const QuizPage = () => {
                       )}
                     </div>
 
-                    {/* Ad every 5 questions */}
-                    {(qIdx + 1) % 5 === 0 && qIdx < questions.length - 1 && (
+                    {/* Ad after every question (BuzzFeed style) */}
+                    {qIdx < questions.length - 1 && (
                       <AdPlaceholder format="rectangle" className="mt-8" />
                     )}
                   </div>
