@@ -8,6 +8,8 @@ import { Eye, Calendar } from "lucide-react";
 import ReadyForMore from "@/components/ReadyForMore";
 import MoreFromSite from "@/components/MoreFromSite";
 import ContentSidebar from "@/components/ContentSidebar";
+import ShareButtons from "@/components/ShareButtons";
+import CommentsSection from "@/components/CommentsSection";
 
 const PostPage = () => {
   const { id } = useParams();
