@@ -151,6 +151,33 @@ export type Database = {
         }
         Relationships: []
       }
+      comments: {
+        Row: {
+          author_name: string
+          comment_text: string
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          author_name: string
+          comment_text: string
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          author_name?: string
+          comment_text?: string
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
       post_reactions: {
         Row: {
           count: number

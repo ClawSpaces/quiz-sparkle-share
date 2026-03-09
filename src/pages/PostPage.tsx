@@ -8,6 +8,8 @@ import { Eye, Calendar } from "lucide-react";
 import ReadyForMore from "@/components/ReadyForMore";
 import MoreFromSite from "@/components/MoreFromSite";
 import ContentSidebar from "@/components/ContentSidebar";
+import ShareButtons from "@/components/ShareButtons";
+import CommentsSection from "@/components/CommentsSection";
 
 const PostPage = () => {
   const { id } = useParams();
@@ -60,6 +62,12 @@ const PostPage = () => {
               </p>
             </div>
 
+            {/* Share buttons */}
+            <div className="mt-6 flex items-center gap-3">
+              <span className="text-sm font-semibold text-muted-foreground">Μοιράσου το:</span>
+              <ShareButtons text={post.title} imageUrl={post.image} />
+            </div>
+
             <div className="mt-8 rounded-xl border bg-card p-4">
               <p className="mb-3 text-sm font-semibold text-foreground">Πώς σε κάνει να νιώθεις αυτό το άρθρο;</p>
               <ReactionBar reactions={post.reactions} />
@@ -68,6 +76,9 @@ const PostPage = () => {
             <div className="mt-4">
               <AdPlaceholder format="rectangle" />
             </div>
+
+            {/* Comments */}
+            <CommentsSection contentType="post" contentId={id!} />
           </div>
 
           <ContentSidebar />
