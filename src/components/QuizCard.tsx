@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { Play } from "lucide-react";
 
 interface QuizCardQuiz {
@@ -24,11 +23,12 @@ const formatPlays = (n: number) => {
 const QuizCard = ({ quiz, variant = "default" }: QuizCardProps) => {
   const image = quiz.image_url || "/placeholder.svg";
   const category = quiz.categories?.name;
+  const href = `/quiz/${quiz.id}`;
 
   if (variant === "large") {
     return (
-      <Link
-        to={`/quiz/${quiz.id}`}
+      <a
+        href={href}
         className="group relative block overflow-hidden rounded-xl bg-card shadow-md transition-all hover:shadow-xl hover:-translate-y-1"
       >
         <div className="aspect-[16/10] overflow-hidden">
@@ -42,13 +42,13 @@ const QuizCard = ({ quiz, variant = "default" }: QuizCardProps) => {
             <span className="flex items-center gap-1"><Play className="h-3 w-3" /> {formatPlays(quiz.plays_count)} plays</span>
           </div>
         </div>
-      </Link>
+      </a>
     );
   }
 
   if (variant === "compact") {
     return (
-      <Link to={`/quiz/${quiz.id}`} className="group flex gap-3 rounded-lg p-2 transition-colors hover:bg-muted">
+      <a href={href} className="group flex gap-3 rounded-lg p-2 transition-colors hover:bg-muted">
         <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg">
           <img src={image} alt={quiz.title} className="h-full w-full object-cover" loading="lazy" />
         </div>
@@ -56,12 +56,12 @@ const QuizCard = ({ quiz, variant = "default" }: QuizCardProps) => {
           <h4 className="text-sm font-semibold leading-tight text-foreground group-hover:text-primary">{quiz.title}</h4>
           <span className="mt-1 text-xs text-muted-foreground">{formatPlays(quiz.plays_count)} plays</span>
         </div>
-      </Link>
+      </a>
     );
   }
 
   return (
-    <Link to={`/quiz/${quiz.id}`} className="group block overflow-hidden rounded-xl bg-card shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
+    <a href={href} className="group block overflow-hidden rounded-xl bg-card shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
       <div className="aspect-[16/10] overflow-hidden">
         <img src={image} alt={quiz.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
       </div>
@@ -72,7 +72,7 @@ const QuizCard = ({ quiz, variant = "default" }: QuizCardProps) => {
           <span className="flex items-center gap-1"><Play className="h-3 w-3" /> {formatPlays(quiz.plays_count)}</span>
         </div>
       </div>
-    </Link>
+    </a>
   );
 };
 

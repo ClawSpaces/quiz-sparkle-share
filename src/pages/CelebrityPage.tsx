@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PostCard from "@/components/PostCard";
-import AdPlaceholder from "@/components/AdPlaceholder";
+import AdSlot from "@/components/AdSlot";
 import { supabase } from "@/integrations/supabase/client";
 import type { Post } from "@/data/samplePosts";
 
@@ -32,7 +32,7 @@ const CelebrityPage = () => {
             <p className="mx-auto mt-3 max-w-lg text-muted-foreground">Τα τελευταία νέα, gossip και viral στιγμές από τους αγαπημένους σου stars.</p>
           </div>
         </section>
-        <div className="container py-4"><AdPlaceholder format="leaderboard" /></div>
+        <div className="container py-4"><AdSlot format="leaderboard" /></div>
         <section className="container py-8">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (<PostCard key={post.id} post={post} />))}

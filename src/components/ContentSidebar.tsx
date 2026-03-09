@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { formatViews, timeAgo, type Post } from "@/data/samplePosts";
-import AdPlaceholder from "@/components/AdPlaceholder";
+import AdSlot from "@/components/AdSlot";
 
 const ContentSidebar = () => {
   const [popularQuizzes, setPopularQuizzes] = useState<any[]>([]);
@@ -26,7 +25,7 @@ const ContentSidebar = () => {
   return (
     <aside className="hidden md:block md:w-[25%] flex-shrink-0">
       <div className="sticky top-4 space-y-6">
-        <AdPlaceholder format="rectangle" />
+        <AdSlot format="rectangle" />
 
         <div className="overflow-hidden rounded-lg border border-border">
           <div className="bg-foreground px-4 py-2.5">
@@ -34,7 +33,7 @@ const ContentSidebar = () => {
           </div>
           <div className="divide-y divide-border">
             {latestPosts.map((post, i) => (
-              <Link key={post.id} to={`/post/${post.id}`} className="group flex items-start gap-3 p-3 transition-colors hover:bg-muted/50">
+              <a key={post.id} href={`/post/${post.id}`} className="group flex items-start gap-3 p-3 transition-colors hover:bg-muted/50">
                 <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-destructive text-xs font-bold text-destructive-foreground">{i + 1}</span>
                 <div className="h-12 w-16 flex-shrink-0 overflow-hidden rounded">
                   <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover" loading="lazy" />
@@ -43,7 +42,7 @@ const ContentSidebar = () => {
                   <h4 className="text-xs font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">{post.title}</h4>
                   <span className="mt-0.5 block text-[10px] text-muted-foreground">{timeAgo(post.created_at)}</span>
                 </div>
-              </Link>
+              </a>
             ))}
           </div>
         </div>
@@ -55,7 +54,7 @@ const ContentSidebar = () => {
             </div>
             <div className="divide-y divide-border">
               {popularQuizzes.map((quiz, i) => (
-                <Link key={quiz.id} to={`/quiz/${quiz.id}`} className="group flex items-start gap-3 p-3 transition-colors hover:bg-muted/50">
+                <a key={quiz.id} href={`/quiz/${quiz.id}`} className="group flex items-start gap-3 p-3 transition-colors hover:bg-muted/50">
                   <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-primary text-xs font-bold text-primary-foreground">{i + 1}</span>
                   {quiz.image_url && (
                     <div className="h-12 w-16 flex-shrink-0 overflow-hidden rounded">
@@ -66,7 +65,7 @@ const ContentSidebar = () => {
                     <h4 className="text-xs font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">{quiz.title}</h4>
                     <span className="mt-0.5 block text-[10px] text-muted-foreground">{formatViews(quiz.plays_count)} plays</span>
                   </div>
-                </Link>
+                </a>
               ))}
             </div>
           </div>
@@ -80,16 +79,16 @@ const ContentSidebar = () => {
             <div className="p-3">
               <div className="flex flex-wrap gap-2">
                 {categories.map((cat) => (
-                  <Link key={cat.id} to={`/category/${cat.slug}`} className="rounded-full border border-border bg-muted/50 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:bg-primary hover:text-primary-foreground">
+                  <a key={cat.id} href={`/category/${cat.slug}`} className="rounded-full border border-border bg-muted/50 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:bg-primary hover:text-primary-foreground">
                     {cat.name}
-                  </Link>
+                  </a>
                 ))}
               </div>
             </div>
           </div>
         )}
 
-        <AdPlaceholder format="rectangle" />
+        <AdSlot format="rectangle" />
       </div>
     </aside>
   );

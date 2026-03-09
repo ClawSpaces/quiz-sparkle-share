@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ContentSidebar from "@/components/ContentSidebar";
-import AdPlaceholder from "@/components/AdPlaceholder";
+import AdSlot from "@/components/AdSlot";
 import ReadyForMore from "@/components/ReadyForMore";
 import MoreFromSite from "@/components/MoreFromSite";
 import { Button } from "@/components/ui/button";
@@ -304,7 +304,7 @@ const QuizPage = () => {
               )}
             </div>
 
-            <AdPlaceholder format="leaderboard" className="mb-8" />
+            <AdSlot format="leaderboard" className="mb-8" />
 
             {/* Questions */}
             <div className="space-y-8">
@@ -416,7 +416,7 @@ const QuizPage = () => {
 
                     {/* Ad after every question (BuzzFeed style) */}
                     {qIdx < questions.length - 1 && (
-                      <AdPlaceholder format="rectangle" className="mt-8" />
+                  <AdSlot format="rectangle" className="mt-8" />
                     )}
                   </div>
                 );

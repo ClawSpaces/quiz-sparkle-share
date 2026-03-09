@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ReactionBar from "@/components/ReactionBar";
-import AdPlaceholder from "@/components/AdPlaceholder";
+import AdSlot from "@/components/AdSlot";
 import { supabase } from "@/integrations/supabase/client";
 import { formatViews, timeAgo, reactionsToRecord, type Post } from "@/data/samplePosts";
 import { Eye, Calendar } from "lucide-react";
@@ -81,7 +81,7 @@ const PostPage = () => {
               </div>
             </div>
 
-            <div className="mt-4"><AdPlaceholder format="leaderboard" /></div>
+            <div className="mt-4"><AdSlot format="leaderboard" /></div>
 
             <div className="mt-6 text-foreground leading-relaxed">
               <p className="text-lg">{post.description}</p>
@@ -103,7 +103,7 @@ const PostPage = () => {
               <ReactionBar reactions={reactions} />
             </div>
 
-            <div className="mt-4"><AdPlaceholder format="rectangle" /></div>
+            <div className="mt-4"><AdSlot format="rectangle" /></div>
 
             <CommentsSection contentType="post" contentId={id!} />
           </div>
