@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ContentSidebar from "@/components/ContentSidebar";
-import AdPlaceholder from "@/components/AdPlaceholder";
+import AdSlot from "@/components/AdSlot";
 import ReadyForMore from "@/components/ReadyForMore";
 import MoreFromSite from "@/components/MoreFromSite";
 import { Button } from "@/components/ui/button";
