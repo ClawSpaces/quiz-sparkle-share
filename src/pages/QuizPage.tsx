@@ -9,7 +9,9 @@ import ReadyForMore from "@/components/ReadyForMore";
 import MoreFromSite from "@/components/MoreFromSite";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { RotateCcw, Share2, Facebook, Link2, CheckCircle2, XCircle } from "lucide-react";
+import { RotateCcw, Share2, CheckCircle2, XCircle, Sparkles } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
+import CommentsSection from "@/components/CommentsSection";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
 
