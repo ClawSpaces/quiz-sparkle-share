@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PostCard from "@/components/PostCard";
-import AdPlaceholder from "@/components/AdPlaceholder";
+import AdSlot from "@/components/AdSlot";
 import { supabase } from "@/integrations/supabase/client";
 import type { Post } from "@/data/samplePosts";
 

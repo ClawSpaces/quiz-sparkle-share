@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QuizCard from "@/components/QuizCard";
-import AdPlaceholder from "@/components/AdPlaceholder";
+import AdSlot from "@/components/AdSlot";
 import { supabase } from "@/integrations/supabase/client";
 
 const CategoryPage = () => {
