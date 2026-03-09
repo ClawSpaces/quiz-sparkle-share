@@ -25,6 +25,7 @@ import AdminQuizzes from "./pages/admin/AdminQuizzes";
 import AdminQuizForm from "./pages/admin/AdminQuizForm";
 import AdminCategories from "./pages/admin/AdminCategories";
 import AdminBuzzChats from "./pages/admin/AdminBuzzChats";
+import CookieConsent from "./components/CookieConsent";
 
 const queryClient = new QueryClient();
 
