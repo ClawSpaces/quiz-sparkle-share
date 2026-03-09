@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QuizCard from "@/components/QuizCard";
@@ -112,8 +111,8 @@ const QuizzesPage = () => {
 
         {featured && activeFilter === "all" && (
           <section className="container py-8">
-            <Link
-              to={`/quiz/${featured.id}`}
+            <a
+              href={`/quiz/${featured.id}`}
               className="group relative block overflow-hidden rounded-2xl bg-card shadow-lg transition-all hover:shadow-xl"
             >
               <div className="aspect-[21/9] overflow-hidden md:aspect-[3/1]">
@@ -140,7 +139,7 @@ const QuizzesPage = () => {
                   </span>
                 </div>
               </div>
-            </Link>
+            </a>
           </section>
         )}
 
@@ -151,9 +150,9 @@ const QuizzesPage = () => {
             </h2>
             <div className="grid gap-4 sm:grid-cols-2">
               {trending.slice(1, 5).map((quiz) => (
-                <Link
+                <a
                   key={quiz.id}
-                  to={`/quiz/${quiz.id}`}
+                  href={`/quiz/${quiz.id}`}
                   className="group flex gap-4 rounded-xl bg-card p-3 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
                 >
                   <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg">
@@ -175,7 +174,7 @@ const QuizzesPage = () => {
                       <Play className="h-3 w-3" /> {formatPlays(quiz.plays_count)} plays
                     </span>
                   </div>
-                </Link>
+                </a>
               ))}
             </div>
           </section>
