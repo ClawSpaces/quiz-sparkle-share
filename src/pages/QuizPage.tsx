@@ -191,13 +191,6 @@ const QuizPage = () => {
     }
   };
 
-  const shareFacebook = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, "_blank");
-  };
-
-  const copyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-  };
 
   if (loading) {
     return (
