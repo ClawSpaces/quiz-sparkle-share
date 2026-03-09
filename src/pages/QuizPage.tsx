@@ -304,7 +304,8 @@ const QuizPage = () => {
               )}
             </div>
 
-            <AdSlot format="leaderboard" className="mb
+            <AdSlot format="leaderboard" className="mb-8" />
+
             {/* Questions */}
             <div className="space-y-8">
               {questions.map((q, qIdx) => {
