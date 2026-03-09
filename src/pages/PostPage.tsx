@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ReactionBar from "@/components/ReactionBar";
-import AdPlaceholder from "@/components/AdPlaceholder";
+import AdSlot from "@/components/AdSlot";
 import { supabase } from "@/integrations/supabase/client";
 import { formatViews, timeAgo, reactionsToRecord, type Post } from "@/data/samplePosts";
 import { Eye, Calendar } from "lucide-react";
