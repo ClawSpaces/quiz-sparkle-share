@@ -75,7 +75,7 @@ export default function AdminCategories() {
   });
 
   const resetForm = () => {
-    setForm({ name: "", slug: "", description: "", icon: "📂", color: "primary" });
+    setForm({ name: "", slug: "", description: "", icon: "📂", color: "primary", image_url: "" });
     setEditId(null);
     setShowCreate(false);
   };
