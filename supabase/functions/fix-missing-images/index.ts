@@ -10,7 +10,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { type = "answers", offset = 0, limit = 50 } = await req.json();
+    const { type = "answers", offset = 0, limit = 25 } = await req.json();
     
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
