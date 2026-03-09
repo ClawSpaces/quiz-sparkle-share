@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ReactionBar from "@/components/ReactionBar";
-import AdSlot from "@/components/AdSlot";
-import { supabase } from "@/integrations/supabase/client";
+import AdSlot from "@/components/AdSlotpabase } from "@/integrations/supabase/client";
 import { formatViews, timeAgo, reactionsToRecord, type Post } from "@/data/samplePosts";
 import { Eye, Calendar } from "lucide-react";
 import ReadyForMore from "@/components/ReadyForMore";
@@ -81,7 +80,7 @@ const PostPage = () => {
               </div>
             </div>
 
-            <div className="mt-4"><AdPlaceholder format="leaderboard" /></div>
+            <div className="mt-4"><AdPlaceholder foSlotrboard" /></div>
 
             <div className="mt-6 text-foreground leading-relaxed">
               <p className="text-lg">{post.description}</p>
