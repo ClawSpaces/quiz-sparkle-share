@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { Eye } from "lucide-react";
 import ReactionBar from "@/components/ReactionBar";
 import type { Post } from "@/data/samplePosts";
@@ -26,10 +25,11 @@ interface PostCardProps {
 const PostCard = ({ post, variant = "default" }: PostCardProps) => {
   const reactions = post.reactions ?? reactionsToRecord(post.post_reactions);
   const image = post.image_url || "/placeholder.svg";
+  const href = `/post/${post.id}`;
 
   if (variant === "large") {
     return (
-      <Link to={`/post/${post.id}`} className="group relative block overflow-hidden rounded-lg bg-card shadow-md transition-all hover:shadow-xl hover:-translate-y-0.5">
+      <a href={href} className="group relative block overflow-hidden rounded-lg bg-card shadow-md transition-all hover:shadow-xl hover:-translate-y-0.5">
         <div className="aspect-[16/10] overflow-hidden">
           <img src={image} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
@@ -42,13 +42,13 @@ const PostCard = ({ post, variant = "default" }: PostCardProps) => {
             <span className="flex items-center gap-1"><Eye className="h-3 w-3" /> {formatViews(post.views_count)}</span>
           </div>
         </div>
-      </Link>
+      </a>
     );
   }
 
   if (variant === "list") {
     return (
-      <Link to={`/post/${post.id}`} className="group flex gap-3 border-b border-border py-3 transition-colors last:border-b-0">
+      <a href={href} className="group flex gap-3 border-b border-border py-3 transition-colors last:border-b-0">
         <div className="h-20 w-28 flex-shrink-0 overflow-hidden rounded-lg">
           <img src={image} alt={post.title} className="h-full w-full object-cover" loading="lazy" />
         </div>
@@ -57,13 +57,13 @@ const PostCard = ({ post, variant = "default" }: PostCardProps) => {
           <h4 className="text-sm font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">{post.title}</h4>
           <span className="text-[11px] text-muted-foreground">{timeAgo(post.created_at)} · {formatViews(post.views_count)} views</span>
         </div>
-      </Link>
+      </a>
     );
   }
 
   if (variant === "compact") {
     return (
-      <Link to={`/post/${post.id}`} className="group flex gap-3 rounded-lg p-2 transition-colors hover:bg-muted">
+      <a href={href} className="group flex gap-3 rounded-lg p-2 transition-colors hover:bg-muted">
         <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg">
           <img src={image} alt={post.title} className="h-full w-full object-cover" loading="lazy" />
         </div>
@@ -71,12 +71,12 @@ const PostCard = ({ post, variant = "default" }: PostCardProps) => {
           <h4 className="text-sm font-semibold leading-tight text-foreground group-hover:text-primary">{post.title}</h4>
           <span className="mt-1 text-xs text-muted-foreground">{formatViews(post.views_count)} views</span>
         </div>
-      </Link>
+      </a>
     );
   }
 
   return (
-    <Link to={`/post/${post.id}`} className="group block overflow-hidden rounded-lg bg-card shadow-sm transition-all hover:shadow-lg hover:-translate-y-0.5">
+    <a href={href} className="group block overflow-hidden rounded-lg bg-card shadow-sm transition-all hover:shadow-lg hover:-translate-y-0.5">
       <div className="aspect-[16/10] overflow-hidden">
         <img src={image} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
       </div>
@@ -90,7 +90,7 @@ const PostCard = ({ post, variant = "default" }: PostCardProps) => {
         </div>
         <div className="mt-2"><ReactionBar reactions={reactions} compact /></div>
       </div>
-    </Link>
+    </a>
   );
 };
 
