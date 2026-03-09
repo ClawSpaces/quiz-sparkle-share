@@ -111,8 +111,8 @@ const QuizzesPage = () => {
 
         {featured && activeFilter === "all" && (
           <section className="container py-8">
-            <Link
-              to={`/quiz/${featured.id}`}
+            <a
+              href={`/quiz/${featured.id}`}
               className="group relative block overflow-hidden rounded-2xl bg-card shadow-lg transition-all hover:shadow-xl"
             >
               <div className="aspect-[21/9] overflow-hidden md:aspect-[3/1]">
