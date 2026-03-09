@@ -103,7 +103,7 @@ const PostPage = () => {
               <ReactionBar reactions={reactions} />
             </div>
 
-            <div className="mt-4"><AdPlaceholder format="rSlot></div>
+            <div className="mt-4"><AdSlot format="rectangle" /></div>
 
             <CommentsSection contentType="post" contentId={id!} />
           </div>
