@@ -81,7 +81,9 @@ const PostPage = () => {
               </div>
             </div>
 
-            <div className="mt-4"><AdPlaceholder foSlotrboard" />Slot         <div className="mt-6 text-foreground leading-relaxed">
+            <div className="mt-4"><AdSlot format="leaderboard" /></div>
+
+            <div className="mt-6 text-foreground leading-relaxed">
               <p className="text-lg">{post.description}</p>
               {post.content && <div className="mt-4" dangerouslySetInnerHTML={{ __html: post.content }} />}
               {!post.content && (
