@@ -14,6 +14,7 @@ interface CategoryForm {
   description: string;
   icon: string;
   color: string;
+  image_url: string;
 }
 
 export default function AdminCategories() {
@@ -21,7 +22,7 @@ export default function AdminCategories() {
   const queryClient = useQueryClient();
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [editId, setEditId] = useState<string | null>(null);
-  const [form, setForm] = useState<CategoryForm>({ name: "", slug: "", description: "", icon: "📂", color: "primary" });
+  const [form, setForm] = useState<CategoryForm>({ name: "", slug: "", description: "", icon: "📂", color: "primary", image_url: "" });
   const [showCreate, setShowCreate] = useState(false);
 
   const { data: categories, isLoading } = useQuery({
@@ -41,6 +42,7 @@ export default function AdminCategories() {
         description: form.description || null,
         icon: form.icon || "📂",
         color: form.color || "primary",
+        image_url: form.image_url || null,
       };
 
       if (editId) {
@@ -73,7 +75,7 @@ export default function AdminCategories() {
   });
 
   const resetForm = () => {
-    setForm({ name: "", slug: "", description: "", icon: "📂", color: "primary" });
+    setForm({ name: "", slug: "", description: "", icon: "📂", color: "primary", image_url: "" });
     setEditId(null);
     setShowCreate(false);
   };
@@ -86,6 +88,7 @@ export default function AdminCategories() {
       description: cat.description ?? "",
       icon: cat.icon ?? "📂",
       color: cat.color ?? "primary",
+      image_url: cat.image_url ?? "",
     });
     setShowCreate(true);
   };
@@ -109,6 +112,7 @@ export default function AdminCategories() {
               <Input placeholder="Icon" value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} className="w-20" />
               <Input placeholder="Color" value={form.color} onChange={(e) => setForm({ ...form, color: e.target.value })} />
             </div>
+            <Input placeholder="Image URL" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
           </div>
           <div className="flex gap-2">
             <Button size="sm" onClick={() => saveMutation.mutate()} disabled={!form.name || !form.slug}>
