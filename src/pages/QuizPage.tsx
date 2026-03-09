@@ -304,7 +304,7 @@ const QuizPage = () => {
               )}
             </div>
 
-            <AdPlaceholder foSlotrboard" clSlot-8" />
+            <AdSlot format="leaderboard" className="mb-8" />
 
             {/* Questions */}
             <div className="space-y-8">
