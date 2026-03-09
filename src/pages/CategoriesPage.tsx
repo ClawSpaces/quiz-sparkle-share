@@ -1,9 +1,18 @@
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CategoryCard from "@/components/CategoryCard";
-import { categories } from "@/data/sampleQuizzes";
+import { supabase } from "@/integrations/supabase/client";
 
 const CategoriesPage = () => {
+  const [categories, setCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    supabase.from("categories").select("*").order("sort_order").then(({ data }) => {
+      if (data) setCategories(data);
+    });
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
