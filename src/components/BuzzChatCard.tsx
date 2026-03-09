@@ -17,9 +17,9 @@ const BuzzChatCard = ({ chat, variant = "default" }: BuzzChatCardProps) => {
 
   return (
     <div className={`overflow-hidden rounded-xl border bg-card shadow-sm ${isFeatured ? "border-primary/30" : ""}`}>
-      {chat.image && (
+      {chat.image_url && (
         <div className={`overflow-hidden ${isFeatured ? "aspect-[16/8]" : "aspect-[16/10]"}`}>
-          <img src={chat.image} alt="" className="h-full w-full object-cover" loading="lazy" />
+          <img src={chat.image_url} alt="" className="h-full w-full object-cover" loading="lazy" />
         </div>
       )}
       <div className="p-4">
@@ -31,27 +31,16 @@ const BuzzChatCard = ({ chat, variant = "default" }: BuzzChatCardProps) => {
         </h3>
         <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
           <MessageCircle className="h-4 w-4" />
-          <span>{chat.repliesCount.toLocaleString()} απαντήσεις</span>
+          <span>{(chat.reply_count ?? 0).toLocaleString()} απαντήσεις</span>
         </div>
 
         {showInput ? (
           <div className="mt-3 flex gap-2">
-            <Input
-              value={reply}
-              onChange={(e) => setReply(e.target.value)}
-              placeholder="Γράψε την απάντησή σου..."
-              className="flex-1"
-            />
-            <Button size="sm" onClick={() => { setReply(""); setShowInput(false); }}>
-              Στείλε
-            </Button>
+            <Input value={reply} onChange={(e) => setReply(e.target.value)} placeholder="Γράψε την απάντησή σου..." className="flex-1" />
+            <Button size="sm" onClick={() => { setReply(""); setShowInput(false); }}>Στείλε</Button>
           </div>
         ) : (
-          <Button
-            variant="outline"
-            className="mt-3 w-full border-primary/30 text-primary hover:bg-primary/10"
-            onClick={() => setShowInput(true)}
-          >
+          <Button variant="outline" className="mt-3 w-full border-primary/30 text-primary hover:bg-primary/10" onClick={() => setShowInput(true)}>
             Πρόσθεσε την απάντησή σου
           </Button>
         )}
