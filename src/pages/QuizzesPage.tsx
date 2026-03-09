@@ -139,7 +139,7 @@ const QuizzesPage = () => {
                   </span>
                 </div>
               </div>
-            </Link>
+            </a>
           </section>
         )}
 
