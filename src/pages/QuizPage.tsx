@@ -290,14 +290,11 @@ const QuizPage = () => {
               </div>
 
               {/* Share buttons */}
-              <div className="mt-4 flex items-center gap-2">
-                <button onClick={shareFacebook} className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground" aria-label="Share on Facebook">
-                  <Facebook className="h-4 w-4" />
-                </button>
-                <button onClick={copyLink} className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground" aria-label="Copy link">
-                  <Link2 className="h-4 w-4" />
-                </button>
-              </div>
+              <ShareButtons
+                text={quiz.title}
+                imageUrl={quiz.image_url || undefined}
+                className="mt-4"
+              />
 
               {/* Hero image */}
               {quiz.image_url && (
