@@ -416,7 +416,7 @@ const QuizPage = () => {
 
                     {/* Ad after every question (BuzzFeed style) */}
                     {qIdx < questions.length - 1 && (
-                  Slot fo<AdSlot format="rectangle" ce="mt-8" />
+                  <AdSlot format="rectangle" className="mt-8" />
                     )}
                   </div>
                 );
