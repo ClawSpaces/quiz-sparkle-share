@@ -233,6 +233,36 @@ export type Database = {
           },
         ]
       }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string | null
+          id: string
+          name: string
+          title: string | null
+          user_id: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          id?: string
+          name: string
+          title?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          id?: string
+          name?: string
+          title?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       questions: {
         Row: {
           created_at: string
@@ -309,11 +339,13 @@ export type Database = {
       }
       quizzes: {
         Row: {
+          author_id: string | null
           category_id: string | null
           created_at: string
           description: string | null
           id: string
           image_url: string | null
+          instructions: string | null
           is_published: boolean
           is_trending: boolean
           plays_count: number
@@ -322,11 +354,13 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          author_id?: string | null
           category_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
           image_url?: string | null
+          instructions?: string | null
           is_published?: boolean
           is_trending?: boolean
           plays_count?: number
@@ -335,11 +369,13 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          author_id?: string | null
           category_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
           image_url?: string | null
+          instructions?: string | null
           is_published?: boolean
           is_trending?: boolean
           plays_count?: number
@@ -348,6 +384,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "quizzes_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "quizzes_category_id_fkey"
             columns: ["category_id"]
