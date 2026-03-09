@@ -1,12 +1,31 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { categories } from "@/data/sampleQuizzes";
+import { supabase } from "@/integrations/supabase/client";
+
+interface FooterCategory {
+  id: string;
+  name: string;
+  slug: string;
+  icon: string | null;
+}
 
 const Footer = () => {
+  const [categories, setCategories] = useState<FooterCategory[]>([]);
+
+  useEffect(() => {
+    supabase
+      .from("categories")
+      .select("id, name, slug, icon")
+      .order("sort_order")
+      .then(({ data }) => {
+        if (data) setCategories(data);
+      });
+  }, []);
+
   return (
     <footer className="border-t bg-card">
       <div className="container py-12">
         <div className="grid gap-8 md:grid-cols-4">
-          {/* Brand */}
           <div className="md:col-span-1">
             <Link to="/" className="font-display text-xl font-black text-primary">
               Quiz<span className="text-secondary">Mania</span>
@@ -16,7 +35,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Categories */}
           <div>
             <h4 className="font-display text-sm font-bold uppercase tracking-wider text-foreground">
               Κατηγορίες
@@ -34,7 +52,6 @@ const Footer = () => {
             </nav>
           </div>
 
-          {/* Links */}
           <div>
             <h4 className="font-display text-sm font-bold uppercase tracking-wider text-foreground">
               Σύνδεσμοι
@@ -55,7 +72,6 @@ const Footer = () => {
             </nav>
           </div>
 
-          {/* Legal */}
           <div>
             <h4 className="font-display text-sm font-bold uppercase tracking-wider text-foreground">
               Νομικά

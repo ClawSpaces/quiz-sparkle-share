@@ -174,7 +174,7 @@ const QuizzesPage = () => {
                       <Play className="h-3 w-3" /> {formatPlays(quiz.plays_count)} plays
                     </span>
                   </div>
-                </Link>
+                </a>
               ))}
             </div>
           </section>
