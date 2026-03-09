@@ -115,7 +115,7 @@ serve(async (req) => {
   }
 
   try {
-    const { batch } = await req.json();
+    const { batch, theme_index } = await req.json();
     const batchConfig = BATCHES[batch];
     if (!batchConfig) {
       return new Response(JSON.stringify({ error: "Invalid batch (1-8)" }), {
@@ -123,6 +123,11 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    
+    // If theme_index specified, only generate that one quiz from the batch
+    const themes = theme_index != null 
+      ? [batchConfig.themes[theme_index]].filter(Boolean)
+      : batchConfig.themes;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
