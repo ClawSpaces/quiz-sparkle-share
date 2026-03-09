@@ -15,9 +15,9 @@ const CategoryCard = ({ category }: { category: CategoryCardCategory }) => {
       to={`/category/${category.slug}`}
       className="group relative flex aspect-[4/3] overflow-hidden rounded-xl shadow-sm transition-all hover:shadow-lg hover:-translate-y-1"
     >
-      {category.image ? (
+      {category.image_url ? (
         <img
-          src={category.image}
+          src={category.image_url}
           alt={category.name}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
           loading="lazy"
@@ -27,7 +27,6 @@ const CategoryCard = ({ category }: { category: CategoryCardCategory }) => {
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/25 to-black/10" />
       <div className="relative z-10 flex h-full w-full flex-col items-center justify-center gap-1 p-4 text-center">
-        {category.icon && <span className="text-2xl">{category.icon}</span>}
         <h3 className="line-clamp-2 text-base font-bold leading-tight text-white drop-shadow-md md:text-lg">
           {category.name}
         </h3>

@@ -112,6 +112,7 @@ export default function AdminCategories() {
               <Input placeholder="Icon" value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} className="w-20" />
               <Input placeholder="Color" value={form.color} onChange={(e) => setForm({ ...form, color: e.target.value })} />
             </div>
+            <Input placeholder="Image URL" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
           </div>
           <div className="flex gap-2">
             <Button size="sm" onClick={() => saveMutation.mutate()} disabled={!form.name || !form.slug}>
