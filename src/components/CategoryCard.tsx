@@ -6,8 +6,7 @@ interface CategoryCardCategory {
   slug: string;
   icon?: string | null;
   description?: string | null;
-  image?: string;
-  // quizCount is no longer used from hardcoded data
+  image_url?: string | null;
 }
 
 const CategoryCard = ({ category }: { category: CategoryCardCategory }) => {
