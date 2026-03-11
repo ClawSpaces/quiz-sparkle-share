@@ -34,7 +34,7 @@ export default function AdminPosts() {
       if (error) throw error;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-posts"] }),
-    onError: (err: any) => toast({ title: "Σφάλμα", description: err.message, variant: "destructive" }),
+    onError: (err: any) => toast({ title: "Error", description: err.message, variant: "destructive" }),
   });
 
   const deleteMutation = useMutation({
@@ -44,10 +44,10 @@ export default function AdminPosts() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-posts"] });
-      toast({ title: "Διαγράφηκε" });
+      toast({ title: "Deleted" });
       setDeleteId(null);
     },
-    onError: (err: any) => toast({ title: "Σφάλμα", description: err.message, variant: "destructive" }),
+    onError: (err: any) => toast({ title: "Error", description: err.message, variant: "destructive" }),
   });
 
   const postTypeLabels: Record<string, string> = {
@@ -62,23 +62,23 @@ export default function AdminPosts() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Posts</h1>
         <Button onClick={() => navigate("/admin/posts/new")}>
-          <Plus className="h-4 w-4 mr-2" /> Νέο Post
+          <Plus className="h-4 w-4 mr-2" /> New Post
         </Button>
       </div>
 
       {isLoading ? (
-        <p className="text-muted-foreground">Φόρτωση...</p>
+        <p className="text-muted-foreground">Loading...</p>
       ) : (
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Τίτλος</TableHead>
-              <TableHead>Τύπος</TableHead>
-              <TableHead>Κατηγορία</TableHead>
+              <TableHead>Title</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Category</TableHead>
               <TableHead>Published</TableHead>
               <TableHead>Trending</TableHead>
               <TableHead>Views</TableHead>
-              <TableHead className="text-right">Ενέργειες</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -119,13 +119,13 @@ export default function AdminPosts() {
       <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Διαγραφή Post</DialogTitle>
+            <DialogTitle>Delete Post</DialogTitle>
           </DialogHeader>
-          <p>Είστε σίγουροι ότι θέλετε να διαγράψετε αυτό το post;</p>
+          <p>Are you sure you want to delete this post?</p>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteId(null)}>Ακύρωση</Button>
+            <Button variant="outline" onClick={() => setDeleteId(null)}>Cancel</Button>
             <Button variant="destructive" onClick={() => deleteId && deleteMutation.mutate(deleteId)}>
-              Διαγραφή
+              Delete
             </Button>
           </DialogFooter>
         </DialogContent>

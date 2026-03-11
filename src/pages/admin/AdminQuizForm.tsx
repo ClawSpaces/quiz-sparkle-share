@@ -199,10 +199,10 @@ export default function AdminQuizForm() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-quizzes"] });
-      toast({ title: isEdit ? "Ενημερώθηκε" : "Δημιουργήθηκε" });
+      toast({ title: isEdit ? "Updated" : "Created" });
       navigate("/admin/quizzes");
     },
-    onError: (err: any) => toast({ title: "Σφάλμα", description: err.message, variant: "destructive" }),
+    onError: (err: any) => toast({ title: "Error", description: err.message, variant: "destructive" }),
   });
 
   const addResult = () => {
@@ -222,21 +222,20 @@ export default function AdminQuizForm() {
   return (
     <div className="max-w-3xl">
       <Button variant="ghost" className="mb-4" onClick={() => navigate("/admin/quizzes")}>
-        <ArrowLeft className="h-4 w-4 mr-2" /> Πίσω
+        <ArrowLeft className="h-4 w-4 mr-2" /> Back
       </Button>
-      <h1 className="text-2xl font-bold mb-6">{isEdit ? "Επεξεργασία Quiz" : "Νέο Quiz"}</h1>
+      <h1 className="text-2xl font-bold mb-6">{isEdit ? "Edit Quiz" : "New Quiz"}</h1>
 
       <div className="space-y-6">
-        {/* Basic info */}
         <Card>
-          <CardHeader><CardTitle>Βασικά στοιχεία</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Basic Info</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Τίτλος</Label>
+              <Label>Title</Label>
               <Input value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>Περιγραφή</Label>
+              <Label>Description</Label>
               <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} />
             </div>
             <div className="space-y-2">
@@ -245,7 +244,7 @@ export default function AdminQuizForm() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Τύπος</Label>
+                <Label>Type</Label>
                 <Select value={quizType} onValueChange={(v) => setQuizType(v as QuizType)}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -255,9 +254,9 @@ export default function AdminQuizForm() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Κατηγορία</Label>
+                <Label>Category</Label>
                 <Select value={categoryId} onValueChange={setCategoryId}>
-                  <SelectTrigger><SelectValue placeholder="Επιλέξτε..." /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger>
                   <SelectContent>
                     {categories?.map((c) => (
                       <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
@@ -279,7 +278,6 @@ export default function AdminQuizForm() {
           </CardContent>
         </Card>
 
-        {/* Results */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Results</CardTitle>
@@ -291,10 +289,10 @@ export default function AdminQuizForm() {
             {results.map((r, i) => (
               <div key={i} className="flex gap-2 items-start">
                 <div className="flex-1 space-y-2">
-                  <Input placeholder="Τίτλος result" value={r.title} onChange={(e) => {
+                  <Input placeholder="Result title" value={r.title} onChange={(e) => {
                     const u = [...results]; u[i].title = e.target.value; setResults(u);
                   }} />
-                  <Input placeholder="Περιγραφή" value={r.description} onChange={(e) => {
+                  <Input placeholder="Description" value={r.description} onChange={(e) => {
                     const u = [...results]; u[i].description = e.target.value; setResults(u);
                   }} />
                 </div>
@@ -306,12 +304,11 @@ export default function AdminQuizForm() {
           </CardContent>
         </Card>
 
-        {/* Questions */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Ερωτήσεις</CardTitle>
+            <CardTitle>Questions</CardTitle>
             <Button size="sm" variant="outline" onClick={addQuestion}>
-              <Plus className="h-4 w-4 mr-1" /> Ερώτηση
+              <Plus className="h-4 w-4 mr-1" /> Question
             </Button>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -320,7 +317,7 @@ export default function AdminQuizForm() {
                 <CardContent className="pt-4 space-y-3">
                   <div className="flex gap-2 items-start">
                     <div className="flex-1">
-                      <Input placeholder={`Ερώτηση ${qi + 1}`} value={q.text} onChange={(e) => {
+                      <Input placeholder={`Question ${qi + 1}`} value={q.text} onChange={(e) => {
                         const u = [...questions]; u[qi].text = e.target.value; setQuestions(u);
                       }} />
                     </div>
@@ -330,14 +327,14 @@ export default function AdminQuizForm() {
                   </div>
                   <div className="pl-4 space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label className="text-sm text-muted-foreground">Απαντήσεις</Label>
+                      <Label className="text-sm text-muted-foreground">Answers</Label>
                       <Button size="sm" variant="ghost" onClick={() => addAnswer(qi)}>
-                        <Plus className="h-3 w-3 mr-1" /> Απάντηση
+                        <Plus className="h-3 w-3 mr-1" /> Answer
                       </Button>
                     </div>
                     {q.answers.map((a, ai) => (
                       <div key={ai} className="flex gap-2 items-center">
-                        <Input className="flex-1" placeholder={`Απάντηση ${ai + 1}`} value={a.text} onChange={(e) => {
+                        <Input className="flex-1" placeholder={`Answer ${ai + 1}`} value={a.text} onChange={(e) => {
                           const u = [...questions]; u[qi].answers[ai].text = e.target.value; setQuestions(u);
                         }} />
                         {quizType === "trivia" ? (
@@ -345,7 +342,7 @@ export default function AdminQuizForm() {
                             <Switch checked={a.is_correct} onCheckedChange={(v) => {
                               const u = [...questions]; u[qi].answers[ai].is_correct = v; setQuestions(u);
                             }} />
-                            <span className="text-xs text-muted-foreground">Σωστή</span>
+                            <span className="text-xs text-muted-foreground">Correct</span>
                           </div>
                         ) : (
                           <Select value={a.result_id} onValueChange={(v) => {
@@ -374,7 +371,7 @@ export default function AdminQuizForm() {
         </Card>
 
         <Button onClick={() => saveMutation.mutate()} disabled={!title || saveMutation.isPending} className="w-full">
-          {saveMutation.isPending ? "Αποθήκευση..." : "Αποθήκευση"}
+          {saveMutation.isPending ? "Saving..." : "Save"}
         </Button>
       </div>
     </div>

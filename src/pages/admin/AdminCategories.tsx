@@ -55,10 +55,10 @@ export default function AdminCategories() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
-      toast({ title: editId ? "Ενημερώθηκε" : "Δημιουργήθηκε" });
+      toast({ title: editId ? "Updated" : "Created" });
       resetForm();
     },
-    onError: (err: any) => toast({ title: "Σφάλμα", description: err.message, variant: "destructive" }),
+    onError: (err: any) => toast({ title: "Error", description: err.message, variant: "destructive" }),
   });
 
   const deleteMutation = useMutation({
@@ -68,10 +68,10 @@ export default function AdminCategories() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
-      toast({ title: "Διαγράφηκε" });
+      toast({ title: "Deleted" });
       setDeleteId(null);
     },
-    onError: (err: any) => toast({ title: "Σφάλμα", description: err.message, variant: "destructive" }),
+    onError: (err: any) => toast({ title: "Error", description: err.message, variant: "destructive" }),
   });
 
   const resetForm = () => {
@@ -98,16 +98,16 @@ export default function AdminCategories() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Categories</h1>
         <Button onClick={() => { resetForm(); setShowCreate(true); }}>
-          <Plus className="h-4 w-4 mr-2" /> Νέα Κατηγορία
+          <Plus className="h-4 w-4 mr-2" /> New Category
         </Button>
       </div>
 
       {showCreate && (
         <div className="mb-6 p-4 border rounded-lg bg-card space-y-3">
           <div className="grid grid-cols-2 gap-3">
-            <Input placeholder="Όνομα" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <Input placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
             <Input placeholder="Slug" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} />
-            <Input placeholder="Περιγραφή" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+            <Input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             <div className="flex gap-2">
               <Input placeholder="Icon" value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} className="w-20" />
               <Input placeholder="Color" value={form.color} onChange={(e) => setForm({ ...form, color: e.target.value })} />
@@ -116,26 +116,26 @@ export default function AdminCategories() {
           </div>
           <div className="flex gap-2">
             <Button size="sm" onClick={() => saveMutation.mutate()} disabled={!form.name || !form.slug}>
-              <Check className="h-4 w-4 mr-1" /> {editId ? "Ενημέρωση" : "Δημιουργία"}
+              <Check className="h-4 w-4 mr-1" /> {editId ? "Update" : "Create"}
             </Button>
             <Button size="sm" variant="ghost" onClick={resetForm}>
-              <X className="h-4 w-4 mr-1" /> Ακύρωση
+              <X className="h-4 w-4 mr-1" /> Cancel
             </Button>
           </div>
         </div>
       )}
 
       {isLoading ? (
-        <p className="text-muted-foreground">Φόρτωση...</p>
+        <p className="text-muted-foreground">Loading...</p>
       ) : (
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Icon</TableHead>
-              <TableHead>Όνομα</TableHead>
+              <TableHead>Name</TableHead>
               <TableHead>Slug</TableHead>
-              <TableHead>Περιγραφή</TableHead>
-              <TableHead className="text-right">Ενέργειες</TableHead>
+              <TableHead>Description</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -162,13 +162,13 @@ export default function AdminCategories() {
       <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Διαγραφή Κατηγορίας</DialogTitle>
+            <DialogTitle>Delete Category</DialogTitle>
           </DialogHeader>
-          <p>Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή την κατηγορία;</p>
+          <p>Are you sure you want to delete this category?</p>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteId(null)}>Ακύρωση</Button>
+            <Button variant="outline" onClick={() => setDeleteId(null)}>Cancel</Button>
             <Button variant="destructive" onClick={() => deleteId && deleteMutation.mutate(deleteId)}>
-              Διαγραφή
+              Delete
             </Button>
           </DialogFooter>
         </DialogContent>
