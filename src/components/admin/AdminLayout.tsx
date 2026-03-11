@@ -26,7 +26,7 @@ export default function AdminLayout() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-muted">
-        <p className="text-muted-foreground">Φόρτωση...</p>
+        <p className="text-muted-foreground">Loading...</p>
       </div>
     );
   }
@@ -35,7 +35,6 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen flex bg-muted">
-      {/* Sidebar */}
       <aside className="w-64 bg-card border-r flex flex-col">
         <div className="p-4 border-b">
           <h1 className="text-lg font-bold text-foreground">BuzzFeed Admin</h1>
@@ -64,12 +63,10 @@ export default function AdminLayout() {
           <p className="text-xs text-muted-foreground mb-2 truncate">{user?.email}</p>
           <Button variant="ghost" size="sm" className="w-full justify-start" onClick={signOut}>
             <LogOut className="h-4 w-4 mr-2" />
-            Αποσύνδεση
+            Sign Out
           </Button>
         </div>
       </aside>
-
-      {/* Main content */}
       <main className="flex-1 overflow-auto">
         <div className="p-6">
           <Outlet />

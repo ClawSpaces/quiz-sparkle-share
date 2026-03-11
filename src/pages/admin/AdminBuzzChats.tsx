@@ -48,10 +48,10 @@ export default function AdminBuzzChats() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-buzzchats"] });
-      toast({ title: editId ? "Ενημερώθηκε" : "Δημιουργήθηκε" });
+      toast({ title: editId ? "Updated" : "Created" });
       resetForm();
     },
-    onError: (err: any) => toast({ title: "Σφάλμα", description: err.message, variant: "destructive" }),
+    onError: (err: any) => toast({ title: "Error", description: err.message, variant: "destructive" }),
   });
 
   const toggleActiveMutation = useMutation({
@@ -60,7 +60,7 @@ export default function AdminBuzzChats() {
       if (error) throw error;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-buzzchats"] }),
-    onError: (err: any) => toast({ title: "Σφάλμα", description: err.message, variant: "destructive" }),
+    onError: (err: any) => toast({ title: "Error", description: err.message, variant: "destructive" }),
   });
 
   const deleteMutation = useMutation({
@@ -70,10 +70,10 @@ export default function AdminBuzzChats() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-buzzchats"] });
-      toast({ title: "Διαγράφηκε" });
+      toast({ title: "Deleted" });
       setDeleteId(null);
     },
-    onError: (err: any) => toast({ title: "Σφάλμα", description: err.message, variant: "destructive" }),
+    onError: (err: any) => toast({ title: "Error", description: err.message, variant: "destructive" }),
   });
 
   const resetForm = () => {
@@ -97,14 +97,14 @@ export default function AdminBuzzChats() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">BuzzChat</h1>
         <Button onClick={() => { resetForm(); setShowForm(true); }}>
-          <Plus className="h-4 w-4 mr-2" /> Νέο BuzzChat
+          <Plus className="h-4 w-4 mr-2" /> New BuzzChat
         </Button>
       </div>
 
       {showForm && (
         <div className="mb-6 p-4 border rounded-lg bg-card space-y-3">
           <div className="space-y-2">
-            <Label>Ερώτηση</Label>
+            <Label>Question</Label>
             <Input value={question} onChange={(e) => setQuestion(e.target.value)} />
           </div>
           <div className="space-y-2">
@@ -117,25 +117,25 @@ export default function AdminBuzzChats() {
           </div>
           <div className="flex gap-2">
             <Button size="sm" onClick={() => saveMutation.mutate()} disabled={!question}>
-              <Check className="h-4 w-4 mr-1" /> {editId ? "Ενημέρωση" : "Δημιουργία"}
+              <Check className="h-4 w-4 mr-1" /> {editId ? "Update" : "Create"}
             </Button>
             <Button size="sm" variant="ghost" onClick={resetForm}>
-              <X className="h-4 w-4 mr-1" /> Ακύρωση
+              <X className="h-4 w-4 mr-1" /> Cancel
             </Button>
           </div>
         </div>
       )}
 
       {isLoading ? (
-        <p className="text-muted-foreground">Φόρτωση...</p>
+        <p className="text-muted-foreground">Loading...</p>
       ) : (
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Ερώτηση</TableHead>
+              <TableHead>Question</TableHead>
               <TableHead>Active</TableHead>
-              <TableHead>Ημερομηνία</TableHead>
-              <TableHead className="text-right">Ενέργειες</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -168,13 +168,13 @@ export default function AdminBuzzChats() {
       <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Διαγραφή BuzzChat</DialogTitle>
+            <DialogTitle>Delete BuzzChat</DialogTitle>
           </DialogHeader>
-          <p>Είστε σίγουροι ότι θέλετε να διαγράψετε αυτό το BuzzChat;</p>
+          <p>Are you sure you want to delete this BuzzChat?</p>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteId(null)}>Ακύρωση</Button>
+            <Button variant="outline" onClick={() => setDeleteId(null)}>Cancel</Button>
             <Button variant="destructive" onClick={() => deleteId && deleteMutation.mutate(deleteId)}>
-              Διαγραφή
+              Delete
             </Button>
           </DialogFooter>
         </DialogContent>

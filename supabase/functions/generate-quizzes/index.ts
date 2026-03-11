@@ -7,104 +7,103 @@ const corsHeaders = {
 };
 
 const CATEGORY_IDS: Record<string, string> = {
-  prosopikotita: "bdd4f991-5183-4f7a-96ea-0fe2c34bfc01",
-  diasimotites: "be22ca94-6583-4ded-9a13-0f8f3dafc224",
-  tainies: "f8b86b33-ebcd-4c5a-b8d8-affb650a1eec",
-  athlitika: "502d0599-dc01-44bd-a65c-e444240dc752",
-  mousiki: "2e760a3d-00df-4d22-ad10-93b033ad8dc0",
-  genikes: "89ec286a-38ce-4ff6-b973-5a25dec23fb1",
+  personality: "bdd4f991-5183-4f7a-96ea-0fe2c34bfc01",
+  celebrities: "be22ca94-6583-4ded-9a13-0f8f3dafc224",
+  movies: "f8b86b33-ebcd-4c5a-b8d8-affb650a1eec",
+  sports: "502d0599-dc01-44bd-a65c-e444240dc752",
+  music: "2e760a3d-00df-4d22-ad10-93b033ad8dc0",
+  general: "89ec286a-38ce-4ff6-b973-5a25dec23fb1",
 };
 
 const AUTHOR_ID = "8c272f0d-9852-48c0-ae62-b422d49f8d30";
 
-// Batch definitions: each batch has a category + quiz themes
 const BATCHES: Record<number, { category: string; type: "personality" | "trivia"; themes: string[] }> = {
   1: {
-    category: "prosopikotita",
+    category: "personality",
     type: "personality",
     themes: [
-      "Ποιο ανοιξιάτικο λουλούδι είσαι; (Επέλεξε εικόνες με γλυκά, τοπία, ρούχα)",
-      "Τι χρώμα αντιπροσωπεύει την ψυχή σου; (Επέλεξε αποχρώσεις, αισθητικές, outfits)",
-      "Ποιο ελληνικό νησί σου ταιριάζει; (Φαγητά, δραστηριότητες, τοπία)",
-      "Σχεδίασε το ιδανικό σπίτι σου και θα σου πω την aura σου (Δωμάτια, έπιπλα, χρώματα)",
-      "Τι είδους φίλος/η είσαι; (Σενάρια, αντιδράσεις, επιλογές)",
+      "Which spring flower are you? (Pick sweets, landscapes, outfits)",
+      "What color represents your soul? (Pick shades, aesthetics, outfits)",
+      "Which Greek island suits you best? (Food, activities, landscapes)",
+      "Design your dream home and we'll tell you your aura (Rooms, furniture, colors)",
+      "What kind of friend are you? (Scenarios, reactions, choices)",
     ],
   },
   2: {
-    category: "prosopikotita",
+    category: "personality",
     type: "personality",
     themes: [
-      "Διάλεξε ανοιξιάτικα γλυκά και θα σου πω τι πεταλούδα είσαι",
-      "Φτιάξε την τέλεια ανοιξιάτικη μέρα και θα μάθεις τι τύπος ενέργειας έχεις",
-      "Ποιο ζώο σε εκφράζει; (Επέλεξε φαγητά, χόμπι, μουσική)",
-      "Ποιος Disney χαρακτήρας είσαι; (Σενάρια και αντιδράσεις)",
-      "Τι dessert ταιριάζει στην προσωπικότητά σου;",
+      "Pick spring desserts and we'll tell you what butterfly you are",
+      "Build the perfect spring day and discover your energy type",
+      "Which animal represents you? (Pick food, hobbies, music)",
+      "Which Disney character are you? (Scenarios and reactions)",
+      "What dessert matches your personality?",
     ],
   },
   3: {
-    category: "diasimotites",
+    category: "celebrities",
     type: "personality",
     themes: [
-      "Ποιος Έλληνας διάσημος σου μοιάζει; (Στυλ, μουσική, φαγητό)",
-      "Θα επιβίωνες μια μέρα ως celebrity; (Σενάρια, πίεση, ρούχα)",
-      "Ποιο celebrity couple σου ταιριάζει; (Ρομαντικές επιλογές)",
-      "Αναγνώρισε τον Έλληνα celebrity από την περιγραφή",
-      "Ποιος pop star θα ήταν ο κολλητός σου;",
+      "Which celebrity do you resemble? (Style, music, food)",
+      "Could you survive a day as a celebrity? (Scenarios, pressure, outfits)",
+      "Which celebrity couple suits you? (Romantic choices)",
+      "Guess the celebrity from the description",
+      "Which pop star would be your BFF?",
     ],
   },
   4: {
-    category: "tainies",
+    category: "movies",
     type: "personality",
     themes: [
-      "Ποιος χαρακτήρας Stranger Things είσαι; (Σενάρια, αντιδράσεις)",
-      "Συμπλήρωσε τους στίχους Disney τραγουδιών (ελληνικά)",
-      "Ποιος χαρακτήρας Friends είσαι; (Επιλογές και σενάρια)",
-      "Netflix Μαρτίου 2026: Πόσο καλά ξέρεις τις νέες σειρές;",
-      "Ποια ταινία του 2026 πρέπει να δεις πρώτα;",
+      "Which Stranger Things character are you? (Scenarios, reactions)",
+      "Complete the Disney song lyrics",
+      "Which Friends character are you? (Choices and scenarios)",
+      "Netflix March 2026: How well do you know the new shows?",
+      "Which 2026 movie should you watch first?",
     ],
   },
   5: {
-    category: "athlitika",
+    category: "sports",
     type: "trivia",
     themes: [
-      "Champions League 2025-26: Πόσο καλά τα ξέρεις;",
-      "Ολυμπιακοί Αγώνες: Trivia από όλες τις εποχές",
-      "Formula 1 2026: Νέοι κανονισμοί και ομάδες",
-      "Ελληνικό ποδόσφαιρο: Πόσο superfan είσαι;",
+      "Champions League 2025-26: How well do you know it?",
+      "Olympics: Trivia from all eras",
+      "Formula 1 2026: New regulations and teams",
+      "Football trivia: How big of a superfan are you?",
       "NBA 2025-26 season trivia",
     ],
   },
   6: {
-    category: "mousiki",
+    category: "music",
     type: "trivia",
     themes: [
-      "Eurovision 2026: Πόσο καλά ξέρεις τους υποψήφιους;",
-      "90s Greek hits: Συμπλήρωσε τον στίχο",
-      "K-pop quiz: Πόσο ARMY/BLINK είσαι;",
-      "Αναγνώρισε το τραγούδι από ένα emoji sequence",
-      "2026 Top Hits: Ποιος τραγουδάει αυτόν τον στίχο;",
+      "Eurovision 2026: How well do you know the contestants?",
+      "90s pop hits: Complete the lyric",
+      "K-pop quiz: How ARMY/BLINK are you?",
+      "Guess the song from an emoji sequence",
+      "2026 Top Hits: Who sings this lyric?",
     ],
   },
   7: {
-    category: "genikes",
+    category: "general",
     type: "trivia",
     themes: [
-      "St. Patrick's Day trivia: Πόσα ξέρεις για την Ιρλανδία;",
-      "Παγκόσμια γεωγραφία: Αναγνώρισε τη χώρα από τον χάρτη",
-      "Ιστορία της Ελλάδας: Μόνο 10% βγάζει 10/10",
-      "Spring Equinox: Επιστημονικά facts για την Άνοιξη",
-      "Φαγητά του κόσμου: Από ποια χώρα είναι;",
+      "St. Patrick's Day trivia: How much do you know about Ireland?",
+      "World geography: Guess the country from the map",
+      "Ancient history: Only 10% score 10/10",
+      "Spring Equinox: Scientific facts about Spring",
+      "World cuisine: Which country is this from?",
     ],
   },
   8: {
-    category: "genikes",
+    category: "general",
     type: "trivia",
     themes: [
-      "Ελληνική μυθολογία: Πόσο καλά την ξέρεις;",
-      "Viral trends 2026: Τι θυμάσαι;",
-      "Τεχνολογία 2026: AI, gadgets και νέα trends",
-      "Ζώα και φύση: Αληθινά ή ψεύτικα facts;",
-      "Πρωτεύουσες του κόσμου: Μόνο genius βρίσκει 10/10",
+      "Greek mythology: How well do you know it?",
+      "Viral trends 2026: What do you remember?",
+      "Technology 2026: AI, gadgets and new trends",
+      "Animals & nature: Real or fake facts?",
+      "World capitals: Only a genius scores 10/10",
     ],
   },
 };
@@ -124,7 +123,6 @@ serve(async (req) => {
       });
     }
     
-    // If theme_index specified, only generate that one quiz from the batch
     const themes = theme_index != null 
       ? [batchConfig.themes[theme_index]].filter(Boolean)
       : batchConfig.themes;
@@ -141,21 +139,20 @@ serve(async (req) => {
 
     const createdQuizIds: string[] = [];
 
-    // Generate each quiz one by one to avoid timeout
     for (const theme of themes) {
       const isPersonality = quizType === "personality";
 
-      const systemPrompt = `You are a BuzzFeed-style quiz content creator writing in GREEK (ελληνικά). 
-You create fun, engaging, viral quizzes. Current date: March 9, 2026.
-All text MUST be in Greek. Quiz titles should be catchy and clickable.
+      const systemPrompt = `You are a BuzzFeed-style quiz content creator writing in ENGLISH. 
+You create fun, engaging, viral quizzes. Current date: March 11, 2026.
+All text MUST be in English. Quiz titles should be catchy and clickable.
 For image_url fields, use real Unsplash URLs in format: https://images.unsplash.com/photo-{ID}?w=600&h=400&fit=crop
 Use diverse, relevant photo IDs for each answer/question.`;
 
       const userPrompt = `Create a ${isPersonality ? "personality" : "trivia"} quiz about: "${theme}"
 
 Requirements:
-- Title: catchy, in Greek
-- Description: 1-2 sentences in Greek
+- Title: catchy, in English
+- Description: 1-2 sentences in English
 - ${isPersonality ? "4 personality results with title, description, and image_url" : "No results needed for trivia"}
 - 8 questions, each with 6 answer options
 - ${isPersonality ? "Each answer must link to a result (result_index 0-3)" : "Each answer must have is_correct true/false (exactly 1 correct per question)"}
@@ -171,10 +168,10 @@ Requirements:
           parameters: {
             type: "object",
             properties: {
-              title: { type: "string", description: "Quiz title in Greek" },
-              description: { type: "string", description: "Quiz description in Greek" },
+              title: { type: "string", description: "Quiz title in English" },
+              description: { type: "string", description: "Quiz description in English" },
               image_url: { type: "string", description: "Main quiz image from Unsplash" },
-              instructions: { type: "string", description: "Short instructions in Greek" },
+              instructions: { type: "string", description: "Short instructions in English" },
               results: {
                 type: "array",
                 items: {
@@ -237,7 +234,7 @@ Requirements:
       if (!aiResponse.ok) {
         const errText = await aiResponse.text();
         console.error(`AI error for "${theme}":`, aiResponse.status, errText);
-        continue; // skip this quiz, try next
+        continue;
       }
 
       const aiData = await aiResponse.json();
@@ -255,7 +252,6 @@ Requirements:
         continue;
       }
 
-      // Insert quiz
       const { data: quiz, error: quizErr } = await supabase
         .from("quizzes")
         .insert({
@@ -277,7 +273,6 @@ Requirements:
         continue;
       }
 
-      // Insert results (personality only)
       const resultIds: string[] = [];
       if (isPersonality && quizData.results?.length) {
         for (let ri = 0; ri < quizData.results.length; ri++) {
@@ -302,7 +297,6 @@ Requirements:
         }
       }
 
-      // Insert questions and answers
       for (let qi = 0; qi < (quizData.questions || []).length; qi++) {
         const q = quizData.questions[qi];
         const { data: question, error: qErr } = await supabase
@@ -321,8 +315,7 @@ Requirements:
           continue;
         }
 
-        // Insert answers
-        const answers = (q.answers || []).slice(0, 8); // max 8 answers
+        const answers = (q.answers || []).slice(0, 8);
         for (let ai = 0; ai < answers.length; ai++) {
           const a = answers[ai];
           const answerData: any = {

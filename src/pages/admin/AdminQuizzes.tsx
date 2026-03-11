@@ -34,7 +34,7 @@ export default function AdminQuizzes() {
       if (error) throw error;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-quizzes"] }),
-    onError: (err: any) => toast({ title: "Σφάλμα", description: err.message, variant: "destructive" }),
+    onError: (err: any) => toast({ title: "Error", description: err.message, variant: "destructive" }),
   });
 
   const deleteMutation = useMutation({
@@ -44,10 +44,10 @@ export default function AdminQuizzes() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-quizzes"] });
-      toast({ title: "Διαγράφηκε" });
+      toast({ title: "Deleted" });
       setDeleteId(null);
     },
-    onError: (err: any) => toast({ title: "Σφάλμα", description: err.message, variant: "destructive" }),
+    onError: (err: any) => toast({ title: "Error", description: err.message, variant: "destructive" }),
   });
 
   return (
@@ -55,23 +55,23 @@ export default function AdminQuizzes() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Quizzes</h1>
         <Button onClick={() => navigate("/admin/quizzes/new")}>
-          <Plus className="h-4 w-4 mr-2" /> Νέο Quiz
+          <Plus className="h-4 w-4 mr-2" /> New Quiz
         </Button>
       </div>
 
       {isLoading ? (
-        <p className="text-muted-foreground">Φόρτωση...</p>
+        <p className="text-muted-foreground">Loading...</p>
       ) : (
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Τίτλος</TableHead>
-              <TableHead>Τύπος</TableHead>
-              <TableHead>Κατηγορία</TableHead>
+              <TableHead>Title</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Category</TableHead>
               <TableHead>Published</TableHead>
               <TableHead>Trending</TableHead>
               <TableHead>Plays</TableHead>
-              <TableHead className="text-right">Ενέργειες</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -112,13 +112,13 @@ export default function AdminQuizzes() {
       <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Διαγραφή Quiz</DialogTitle>
+            <DialogTitle>Delete Quiz</DialogTitle>
           </DialogHeader>
-          <p>Είστε σίγουροι ότι θέλετε να διαγράψετε αυτό το quiz;</p>
+          <p>Are you sure you want to delete this quiz?</p>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteId(null)}>Ακύρωση</Button>
+            <Button variant="outline" onClick={() => setDeleteId(null)}>Cancel</Button>
             <Button variant="destructive" onClick={() => deleteId && deleteMutation.mutate(deleteId)}>
-              Διαγραφή
+              Delete
             </Button>
           </DialogFooter>
         </DialogContent>

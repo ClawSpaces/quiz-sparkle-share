@@ -84,32 +84,32 @@ export default function AdminPostForm() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-posts"] });
-      toast({ title: isEdit ? "Ενημερώθηκε" : "Δημιουργήθηκε" });
+      toast({ title: isEdit ? "Updated" : "Created" });
       navigate("/admin/posts");
     },
-    onError: (err: any) => toast({ title: "Σφάλμα", description: err.message, variant: "destructive" }),
+    onError: (err: any) => toast({ title: "Error", description: err.message, variant: "destructive" }),
   });
 
   return (
     <div className="max-w-2xl">
       <Button variant="ghost" className="mb-4" onClick={() => navigate("/admin/posts")}>
-        <ArrowLeft className="h-4 w-4 mr-2" /> Πίσω
+        <ArrowLeft className="h-4 w-4 mr-2" /> Back
       </Button>
-      <h1 className="text-2xl font-bold mb-6">{isEdit ? "Επεξεργασία Post" : "Νέο Post"}</h1>
+      <h1 className="text-2xl font-bold mb-6">{isEdit ? "Edit Post" : "New Post"}</h1>
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label>Τίτλος</Label>
+          <Label>Title</Label>
           <Input value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
 
         <div className="space-y-2">
-          <Label>Περιγραφή</Label>
+          <Label>Description</Label>
           <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} />
         </div>
 
         <div className="space-y-2">
-          <Label>Περιεχόμενο</Label>
+          <Label>Content</Label>
           <Textarea value={content} onChange={(e) => setContent(e.target.value)} rows={10} />
         </div>
 
@@ -120,7 +120,7 @@ export default function AdminPostForm() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label>Τύπος</Label>
+            <Label>Type</Label>
             <Select value={postType} onValueChange={(v) => setPostType(v as PostType)}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -133,9 +133,9 @@ export default function AdminPostForm() {
           </div>
 
           <div className="space-y-2">
-            <Label>Κατηγορία</Label>
+            <Label>Category</Label>
             <Select value={categoryId} onValueChange={setCategoryId}>
-              <SelectTrigger><SelectValue placeholder="Επιλέξτε..." /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger>
               <SelectContent>
                 {categories?.map((c) => (
                   <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
@@ -157,7 +157,7 @@ export default function AdminPostForm() {
         </div>
 
         <Button onClick={() => saveMutation.mutate()} disabled={!title || saveMutation.isPending}>
-          {saveMutation.isPending ? "Αποθήκευση..." : "Αποθήκευση"}
+          {saveMutation.isPending ? "Saving..." : "Save"}
         </Button>
       </div>
     </div>

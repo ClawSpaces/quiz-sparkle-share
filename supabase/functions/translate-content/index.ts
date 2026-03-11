@@ -51,8 +51,26 @@ serve(async (req) => {
         .range(offset, offset + limit - 1);
       if (error) throw error;
       rows = data || [];
+    } else if (table === "posts") {
+      fieldsToTranslate = ["content"];
+      const { data, error } = await supabase
+        .from("posts")
+        .select("id, title, content")
+        .order("created_at")
+        .range(offset, offset + limit - 1);
+      if (error) throw error;
+      rows = data || [];
+    } else if (table === "quizzes") {
+      fieldsToTranslate = ["instructions"];
+      const { data, error } = await supabase
+        .from("quizzes")
+        .select("id, title, instructions")
+        .order("created_at")
+        .range(offset, offset + limit - 1);
+      if (error) throw error;
+      rows = data || [];
     } else {
-      return new Response(JSON.stringify({ error: "Invalid table" }), {
+      return new Response(JSON.stringify({ error: "Invalid table. Supported: questions, answers, results, posts, quizzes" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -65,7 +83,6 @@ serve(async (req) => {
       );
     }
 
-    // Check if content is already in English (simple heuristic)
     const greekPattern = /[\u0370-\u03FF\u1F00-\u1FFF]/;
     const greekRows = rows.filter(row => {
       return fieldsToTranslate.some(field => row[field] && greekPattern.test(row[field]));
@@ -78,12 +95,15 @@ serve(async (req) => {
       );
     }
 
-    // Build translation request
     const itemsToTranslate = greekRows.map(row => {
       const obj: any = { id: row.id };
       fieldsToTranslate.forEach(f => { obj[f] = row[f] || ""; });
       return obj;
     });
+
+    const extraInstruction = table === "posts" 
+      ? "Preserve ALL HTML tags exactly as they are. Only translate the text content inside the tags. Keep the same HTML structure."
+      : "";
 
     const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -96,7 +116,7 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `You are a translator. Translate Greek text to natural, engaging English. Keep the same tone and style. For quiz questions, keep them fun and BuzzFeed-style. Return a JSON array with the same structure as input, with translated text. Keep the id field unchanged. Only output valid JSON, no markdown.`
+            content: `You are a translator. Translate Greek text to natural, engaging English. Keep the same tone and style. For quiz content, keep it fun and BuzzFeed-style. ${extraInstruction} Return a JSON array with the same structure as input, with translated text. Keep the id field unchanged. Only output valid JSON, no markdown.`
           },
           {
             role: "user",
@@ -115,7 +135,6 @@ serve(async (req) => {
     const aiData = await aiResponse.json();
     let content = aiData.choices?.[0]?.message?.content || "";
     
-    // Clean markdown code blocks if present
     content = content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
     
     let translated: any[];
@@ -126,7 +145,6 @@ serve(async (req) => {
       throw new Error("Failed to parse translation response");
     }
 
-    // Update each row
     let updated = 0;
     for (const item of translated) {
       const updateData: any = {};
