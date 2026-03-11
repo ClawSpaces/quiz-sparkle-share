@@ -43,9 +43,9 @@ export const timeAgo = (dateStr: string): string => {
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
 
-  if (diffMins < 60) return `${Math.max(1, diffMins)} λεπτά πριν`;
-  if (diffHours < 24) return `${diffHours} ώρες πριν`;
-  if (diffDays === 1) return "χθες";
-  if (diffDays < 7) return `${diffDays} μέρες πριν`;
-  return `${Math.floor(diffDays / 7)} εβδομάδες πριν`;
+  if (diffMins < 60) return `${Math.max(1, diffMins)} minutes ago`;
+  if (diffHours < 24) return `${diffHours} hours ago`;
+  if (diffDays === 1) return "yesterday";
+  if (diffDays < 7) return `${diffDays} days ago`;
+  return `${Math.floor(diffDays / 7)} weeks ago`;
 };

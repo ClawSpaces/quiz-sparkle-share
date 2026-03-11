@@ -6,94 +6,94 @@ const TermsPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container max-w-3xl py-10">
-        <h1 className="font-display text-3xl font-black text-foreground mb-2">Όροι Χρήσης</h1>
-        <p className="text-sm text-muted-foreground mb-8">Τελευταία ενημέρωση: {new Date().toLocaleDateString("el-GR")}</p>
+        <h1 className="font-display text-3xl font-black text-foreground mb-2">Terms of Use</h1>
+        <p className="text-sm text-muted-foreground mb-8">Last updated: {new Date().toLocaleDateString("en-US")}</p>
 
         <div className="prose prose-sm max-w-none space-y-8 text-foreground/90">
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">1. Αποδοχή Όρων</h2>
-            <p>Με την πρόσβαση και χρήση της ιστοσελίδας QuizMania (εφεξής «η Ιστοσελίδα»), αποδέχεστε πλήρως και ανεπιφύλακτα τους παρόντες Όρους Χρήσης. Εάν δεν συμφωνείτε με οποιονδήποτε από αυτούς τους όρους, παρακαλούμε μην χρησιμοποιείτε την Ιστοσελίδα.</p>
+            <h2 className="font-display text-xl font-bold text-foreground">1. Acceptance of Terms</h2>
+            <p>By accessing and using the QuizMania website (hereinafter "the Website"), you fully and unconditionally accept these Terms of Use. If you do not agree with any of these terms, please do not use the Website.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">2. Περιγραφή Υπηρεσίας</h2>
-            <p>Η Ιστοσελίδα παρέχει ψυχαγωγικό περιεχόμενο, συμπεριλαμβανομένων quizzes προσωπικότητας, quizzes γνώσεων, άρθρων, ειδήσεων και σχετικού περιεχομένου. Η υπηρεσία παρέχεται δωρεάν και υποστηρίζεται από διαφημίσεις.</p>
+            <h2 className="font-display text-xl font-bold text-foreground">2. Service Description</h2>
+            <p>The Website provides entertainment content, including personality quizzes, trivia quizzes, articles, news, and related content. The service is provided free of charge and is supported by advertisements.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">3. Πνευματικά Δικαιώματα</h2>
-            <p>Όλο το περιεχόμενο της Ιστοσελίδας — συμπεριλαμβανομένων κειμένων, γραφικών, φωτογραφιών, εικονογραφήσεων, λογοτύπων, σχεδίων, quizzes και λογισμικού — προστατεύεται από τους νόμους περί πνευματικής ιδιοκτησίας της Ελλάδας, της Ευρωπαϊκής Ένωσης και διεθνείς συμβάσεις.</p>
-            <p>Απαγορεύεται η αναπαραγωγή, αντιγραφή, τροποποίηση, δημοσίευση, μετάδοση, διανομή ή εκμετάλλευση οποιουδήποτε περιεχομένου χωρίς προηγούμενη γραπτή άδεια.</p>
+            <h2 className="font-display text-xl font-bold text-foreground">3. Intellectual Property</h2>
+            <p>All content on the Website — including text, graphics, photographs, illustrations, logos, designs, quizzes, and software — is protected by intellectual property laws and international conventions.</p>
+            <p>Reproduction, copying, modification, publication, transmission, distribution, or exploitation of any content without prior written permission is prohibited.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">4. Κανόνες Χρήσης</h2>
-            <p>Κατά τη χρήση της Ιστοσελίδας, συμφωνείτε να μην:</p>
+            <h2 className="font-display text-xl font-bold text-foreground">4. Rules of Use</h2>
+            <p>When using the Website, you agree not to:</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li>Χρησιμοποιείτε την Ιστοσελίδα για παράνομους σκοπούς</li>
-              <li>Παρεμβαίνετε στη λειτουργία ή την ασφάλεια της Ιστοσελίδας</li>
-              <li>Χρησιμοποιείτε αυτοματοποιημένα μέσα (bots, scrapers) για πρόσβαση στο περιεχόμενο</li>
-              <li>Δημοσιεύετε ψευδές, παραπλανητικό ή προσβλητικό περιεχόμενο</li>
-              <li>Παραβιάζετε τα δικαιώματα πνευματικής ιδιοκτησίας τρίτων</li>
-              <li>Συλλέγετε προσωπικά δεδομένα άλλων χρηστών χωρίς τη συγκατάθεσή τους</li>
+              <li>Use the Website for illegal purposes</li>
+              <li>Interfere with the operation or security of the Website</li>
+              <li>Use automated means (bots, scrapers) to access content</li>
+              <li>Publish false, misleading, or offensive content</li>
+              <li>Violate third-party intellectual property rights</li>
+              <li>Collect personal data of other users without their consent</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">5. Περιεχόμενο Χρηστών</h2>
-            <p>Εάν υποβάλετε περιεχόμενο (σχόλια, απαντήσεις σε quizzes, αντιδράσεις), μας παραχωρείτε μη αποκλειστική, παγκόσμια, δωρεάν άδεια χρήσης, αναπαραγωγής και δημοσίευσης αυτού του περιεχομένου στο πλαίσιο λειτουργίας της Ιστοσελίδας.</p>
-            <p>Είστε αποκλειστικά υπεύθυνοι για το περιεχόμενο που υποβάλλετε. Διατηρούμε το δικαίωμα να αφαιρούμε οποιοδήποτε περιεχόμενο κρίνουμε ακατάλληλο.</p>
+            <h2 className="font-display text-xl font-bold text-foreground">5. User Content</h2>
+            <p>If you submit content (comments, quiz answers, reactions), you grant us a non-exclusive, worldwide, royalty-free license to use, reproduce, and publish that content in connection with the operation of the Website.</p>
+            <p>You are solely responsible for the content you submit. We reserve the right to remove any content we deem inappropriate.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">6. Διαφημίσεις</h2>
-            <p>Η Ιστοσελίδα περιλαμβάνει διαφημίσεις από τρίτους παρόχους, συμπεριλαμβανομένων των Google AdSense, Taboola και άλλων διαφημιστικών δικτύων. Αυτές οι διαφημίσεις ενδέχεται να χρησιμοποιούν cookies και τεχνολογίες παρακολούθησης (βλ. <a href="/privacy" className="text-primary hover:underline">Πολιτική Απορρήτου</a>).</p>
-            <p>Δεν φέρουμε ευθύνη για το περιεχόμενο ή τις πρακτικές των διαφημιζομένων ή τρίτων ιστοσελίδων στις οποίες παραπέμπουν οι διαφημίσεις.</p>
+            <h2 className="font-display text-xl font-bold text-foreground">6. Advertisements</h2>
+            <p>The Website includes advertisements from third-party providers, including Google AdSense, Taboola, and other advertising networks. These advertisements may use cookies and tracking technologies (see <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>).</p>
+            <p>We are not responsible for the content or practices of advertisers or third-party websites linked through advertisements.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">7. Σύνδεσμοι προς Τρίτους</h2>
-            <p>Η Ιστοσελίδα ενδέχεται να περιέχει συνδέσμους προς ιστοσελίδες τρίτων. Δεν ελέγχουμε και δεν φέρουμε ευθύνη για το περιεχόμενο, τις πολιτικές απορρήτου ή τις πρακτικές αυτών των ιστοσελίδων.</p>
+            <h2 className="font-display text-xl font-bold text-foreground">7. Third-Party Links</h2>
+            <p>The Website may contain links to third-party websites. We do not control and are not responsible for the content, privacy policies, or practices of these websites.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">8. Αποποίηση Ευθυνών</h2>
-            <p>Το περιεχόμενο της Ιστοσελίδας παρέχεται «ως έχει» και «ως είναι διαθέσιμο», χωρίς εγγυήσεις οποιουδήποτε είδους, ρητές ή σιωπηρές. Ειδικότερα:</p>
+            <h2 className="font-display text-xl font-bold text-foreground">8. Disclaimer</h2>
+            <p>The content of the Website is provided "as is" and "as available," without warranties of any kind, express or implied. Specifically:</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li>Τα αποτελέσματα quizzes είναι αποκλειστικά ψυχαγωγικού χαρακτήρα και δεν αποτελούν επαγγελματική αξιολόγηση ή συμβουλή.</li>
-              <li>Τα άρθρα και οι ειδήσεις έχουν ενημερωτικό χαρακτήρα και δεν αποτελούν επαγγελματική συμβουλή.</li>
-              <li>Δεν εγγυόμαστε την ακρίβεια, πληρότητα ή επικαιρότητα του περιεχομένου.</li>
-              <li>Δεν εγγυόμαστε ότι η Ιστοσελίδα θα λειτουργεί αδιαλείπτως ή χωρίς σφάλματα.</li>
+              <li>Quiz results are purely for entertainment purposes and do not constitute professional assessment or advice.</li>
+              <li>Articles and news are informational in nature and do not constitute professional advice.</li>
+              <li>We do not guarantee the accuracy, completeness, or timeliness of the content.</li>
+              <li>We do not guarantee that the Website will operate without interruption or errors.</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">9. Περιορισμός Ευθύνης</h2>
-            <p>Στο μέγιστο βαθμό που επιτρέπεται από τη νομοθεσία, δεν φέρουμε ευθύνη για οποιαδήποτε άμεση, έμμεση, τυχαία, ειδική, αποθετική ή παραδειγματική ζημία που προκύπτει από:</p>
+            <h2 className="font-display text-xl font-bold text-foreground">9. Limitation of Liability</h2>
+            <p>To the maximum extent permitted by law, we shall not be liable for any direct, indirect, incidental, special, consequential, or exemplary damages arising from:</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li>Τη χρήση ή αδυναμία χρήσης της Ιστοσελίδας</li>
-              <li>Οποιοδήποτε περιεχόμενο ή πληροφορία που λαμβάνεται μέσω της Ιστοσελίδας</li>
-              <li>Μη εξουσιοδοτημένη πρόσβαση σε δεδομένα</li>
-              <li>Ενέργειες τρίτων μέσω της Ιστοσελίδας</li>
+              <li>Use or inability to use the Website</li>
+              <li>Any content or information obtained through the Website</li>
+              <li>Unauthorized access to data</li>
+              <li>Actions of third parties through the Website</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">10. Τροποποίηση Όρων</h2>
-            <p>Διατηρούμε το δικαίωμα να τροποποιούμε τους παρόντες Όρους Χρήσης ανά πάσα στιγμή, χωρίς προηγούμενη ειδοποίηση. Οι αλλαγές τίθενται σε ισχύ από τη στιγμή δημοσίευσής τους στην Ιστοσελίδα. Η συνεχιζόμενη χρήση της Ιστοσελίδας μετά τις αλλαγές συνιστά αποδοχή των νέων όρων.</p>
+            <h2 className="font-display text-xl font-bold text-foreground">10. Modification of Terms</h2>
+            <p>We reserve the right to modify these Terms of Use at any time without prior notice. Changes take effect from the moment of publication on the Website. Continued use of the Website after changes constitutes acceptance of the new terms.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">11. Εφαρμοστέο Δίκαιο & Δικαιοδοσία</h2>
-            <p>Οι παρόντες Όροι Χρήσης διέπονται από το Ελληνικό Δίκαιο. Για οποιαδήποτε διαφορά προκύψει από τη χρήση της Ιστοσελίδας, αρμόδια ορίζονται τα δικαστήρια της Αθήνας, Ελλάδα.</p>
+            <h2 className="font-display text-xl font-bold text-foreground">11. Governing Law & Jurisdiction</h2>
+            <p>These Terms of Use are governed by applicable law. For any dispute arising from the use of the Website, the competent courts shall have jurisdiction.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">12. Επικοινωνία</h2>
-            <p>Εάν έχετε ερωτήσεις σχετικά με τους παρόντες Όρους Χρήσης, επικοινωνήστε μαζί μας:</p>
+            <h2 className="font-display text-xl font-bold text-foreground">12. Contact</h2>
+            <p>If you have questions regarding these Terms of Use, please contact us:</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li><strong>Email:</strong> contact@quizmania.gr</li>
-              <li><strong>Ιστοσελίδα:</strong> quizmania.gr</li>
+              <li><strong>Email:</strong> contact@quizmania.com</li>
+              <li><strong>Website:</strong> quizmania.com</li>
             </ul>
           </section>
         </div>

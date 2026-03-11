@@ -6,7 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { MessageCircle, Send } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
-import { el } from "date-fns/locale";
 
 interface Comment {
   id: string;
@@ -40,7 +39,6 @@ const CommentsSection = ({ contentType, contentId }: CommentsSectionProps) => {
     };
     fetchComments();
 
-    // Realtime subscription
     const channel = supabase
       .channel(`comments-${contentId}`)
       .on(
@@ -75,10 +73,10 @@ const CommentsSection = ({ contentType, contentId }: CommentsSectionProps) => {
     });
 
     if (error) {
-      toast({ title: "Σφάλμα", description: "Δεν ήταν δυνατή η αποστολή του σχολίου.", variant: "destructive" });
+      toast({ title: "Error", description: "Could not submit your comment.", variant: "destructive" });
     } else {
       setText("");
-      toast({ title: "Επιτυχία!", description: "Το σχόλιό σου δημοσιεύτηκε." });
+      toast({ title: "Success!", description: "Your comment has been posted." });
     }
     setSubmitting(false);
   };
@@ -88,21 +86,20 @@ const CommentsSection = ({ contentType, contentId }: CommentsSectionProps) => {
       <div className="flex items-center gap-2 mb-6">
         <MessageCircle className="h-5 w-5 text-primary" />
         <h3 className="font-display text-xl font-bold text-foreground">
-          Σχόλια ({comments.length})
+          Comments ({comments.length})
         </h3>
       </div>
 
-      {/* Comment form */}
       <form onSubmit={handleSubmit} className="mb-8 rounded-xl border border-border bg-card p-4 space-y-3">
         <Input
-          placeholder="Το όνομά σου"
+          placeholder="Your name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           maxLength={50}
           required
         />
         <Textarea
-          placeholder="Γράψε ένα σχόλιο..."
+          placeholder="Write a comment..."
           value={text}
           onChange={(e) => setText(e.target.value)}
           maxLength={1000}
@@ -111,16 +108,15 @@ const CommentsSection = ({ contentType, contentId }: CommentsSectionProps) => {
         />
         <Button type="submit" disabled={submitting || !name.trim() || !text.trim()} className="gap-2">
           <Send className="h-4 w-4" />
-          {submitting ? "Αποστολή..." : "Δημοσίευση"}
+          {submitting ? "Submitting..." : "Post Comment"}
         </Button>
       </form>
 
-      {/* Comments list */}
       {loading ? (
-        <div className="text-center text-muted-foreground text-sm py-8">Φόρτωση σχολίων...</div>
+        <div className="text-center text-muted-foreground text-sm py-8">Loading comments...</div>
       ) : comments.length === 0 ? (
         <div className="text-center text-muted-foreground text-sm py-8 rounded-xl border border-dashed border-border">
-          Κανένα σχόλιο ακόμα. Γίνε ο πρώτος που θα σχολιάσει!
+          No comments yet. Be the first to comment!
         </div>
       ) : (
         <div className="space-y-4">
@@ -133,7 +129,7 @@ const CommentsSection = ({ contentType, contentId }: CommentsSectionProps) => {
                 <div>
                   <span className="text-sm font-semibold text-foreground">{c.author_name}</span>
                   <span className="ml-2 text-xs text-muted-foreground">
-                    {formatDistanceToNow(new Date(c.created_at), { addSuffix: true, locale: el })}
+                    {formatDistanceToNow(new Date(c.created_at), { addSuffix: true })}
                   </span>
                 </div>
               </div>

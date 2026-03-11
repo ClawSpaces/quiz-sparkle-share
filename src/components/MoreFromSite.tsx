@@ -68,9 +68,9 @@ const MoreFromSite = ({ currentId, currentType }: MoreFromSiteProps) => {
   return (
     <section className="border-t border-border pt-8">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="font-display text-xl font-black text-foreground md:text-2xl">Περισσότερα από Frenzy</h2>
+        <h2 className="font-display text-xl font-black text-foreground md:text-2xl">More from QuizMania</h2>
         <a href="/" className="flex items-center gap-1 text-sm font-semibold text-primary hover:underline">
-          Δες όλα <ArrowRight className="h-4 w-4" />
+          See all <ArrowRight className="h-4 w-4" />
         </a>
       </div>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3">

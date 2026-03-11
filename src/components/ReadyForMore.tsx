@@ -76,7 +76,7 @@ const ReadyForMore = ({ currentId, type, categoryId }: ReadyForMoreProps) => {
     <section className="border-t border-border pt-8">
       <div className="mb-6 flex items-center gap-2">
         <Sparkles className="h-5 w-5 text-primary" />
-        <h2 className="font-display text-xl font-black text-foreground md:text-2xl">Θέλεις κι άλλα;</h2>
+        <h2 className="font-display text-xl font-black text-foreground md:text-2xl">Ready for More?</h2>
       </div>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
         {type === "quiz"

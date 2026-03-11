@@ -31,17 +31,17 @@ const BuzzChatCard = ({ chat, variant = "default" }: BuzzChatCardProps) => {
         </h3>
         <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
           <MessageCircle className="h-4 w-4" />
-          <span>{(chat.reply_count ?? 0).toLocaleString()} απαντήσεις</span>
+          <span>{(chat.reply_count ?? 0).toLocaleString()} replies</span>
         </div>
 
         {showInput ? (
           <div className="mt-3 flex gap-2">
-            <Input value={reply} onChange={(e) => setReply(e.target.value)} placeholder="Γράψε την απάντησή σου..." className="flex-1" />
-            <Button size="sm" onClick={() => { setReply(""); setShowInput(false); }}>Στείλε</Button>
+            <Input value={reply} onChange={(e) => setReply(e.target.value)} placeholder="Write your reply..." className="flex-1" />
+            <Button size="sm" onClick={() => { setReply(""); setShowInput(false); }}>Send</Button>
           </div>
         ) : (
           <Button variant="outline" className="mt-3 w-full border-primary/30 text-primary hover:bg-primary/10" onClick={() => setShowInput(true)}>
-            Πρόσθεσε την απάντησή σου
+            Add your reply
           </Button>
         )}
       </div>

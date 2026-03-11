@@ -20,10 +20,10 @@ const CategoriesPage = () => {
         <section className="bg-muted/40 py-10">
           <div className="container text-center">
             <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">
-              📂 Όλες οι Κατηγορίες
+              📂 All Categories
             </h1>
             <p className="mt-2 text-muted-foreground">
-              Διάλεξε κατηγορία και ξεκίνα!
+              Pick a category and get started!
             </p>
           </div>
         </section>

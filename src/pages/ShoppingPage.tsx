@@ -29,7 +29,7 @@ const ShoppingPage = () => {
         <section className="bg-gradient-to-br from-secondary/10 via-background to-accent/10 py-10">
           <div className="container text-center">
             <h1 className="font-display text-3xl font-black text-foreground md:text-5xl">🛍️ Shopping</h1>
-            <p className="mx-auto mt-3 max-w-lg text-muted-foreground">Τα καλύτερα προϊόντα, deals και recommendations που αξίζουν τα λεφτά τους.</p>
+            <p className="mx-auto mt-3 max-w-lg text-muted-foreground">The best products, deals and recommendations that are worth every penny.</p>
           </div>
         </section>
         <div className="container py-4"><AdSlot format="leaderboard" /></div>

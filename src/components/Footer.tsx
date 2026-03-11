@@ -31,13 +31,13 @@ const Footer = () => {
               Quiz<span className="text-secondary">Mania</span>
             </Link>
             <p className="mt-3 text-sm text-muted-foreground">
-              Τα καλύτερα quizzes στα Ελληνικά. Ανακάλυψε ποιος είσαι, τέσταρε τις γνώσεις σου και διασκέδασε!
+              The best quizzes, trending content & viral stories. Discover who you are and have fun!
             </p>
           </div>
 
           <div>
             <h4 className="font-display text-sm font-bold uppercase tracking-wider text-foreground">
-              Κατηγορίες
+              Categories
             </h4>
             <nav className="mt-4 flex flex-col gap-2">
               {categories.map((cat) => (
@@ -54,41 +54,41 @@ const Footer = () => {
 
           <div>
             <h4 className="font-display text-sm font-bold uppercase tracking-wider text-foreground">
-              Σύνδεσμοι
+              Links
             </h4>
             <nav className="mt-4 flex flex-col gap-2">
               <Link to="/" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                Αρχική
+                Home
               </Link>
               <Link to="/categories" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                Όλες οι Κατηγορίες
+                All Categories
               </Link>
               <Link to="/about" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                Σχετικά
+                About
               </Link>
               <Link to="/contact" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                Επικοινωνία
+                Contact
               </Link>
             </nav>
           </div>
 
           <div>
             <h4 className="font-display text-sm font-bold uppercase tracking-wider text-foreground">
-              Νομικά
+              Legal
             </h4>
             <nav className="mt-4 flex flex-col gap-2">
               <Link to="/privacy" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                Πολιτική Απορρήτου
+                Privacy Policy
               </Link>
               <Link to="/terms" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                Όροι Χρήσης
+                Terms of Use
               </Link>
             </nav>
           </div>
         </div>
 
         <div className="mt-10 border-t pt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} QuizMania. Με ❤️ στην Ελλάδα.
+          © {new Date().getFullYear()} QuizMania. Made with ❤️
         </div>
       </div>
     </footer>

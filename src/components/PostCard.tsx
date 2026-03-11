@@ -4,7 +4,7 @@ import type { Post } from "@/data/samplePosts";
 import { formatViews, timeAgo, reactionsToRecord } from "@/data/samplePosts";
 
 const typeLabels: Record<Post["post_type"], string> = {
-  article: "Άρθρο",
+  article: "Article",
   shopping: "Shopping",
   celebrity: "Celebrity",
   trending_news: "Trending",

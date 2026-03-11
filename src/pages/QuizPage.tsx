@@ -13,7 +13,6 @@ import { RotateCcw, Share2, CheckCircle2, XCircle, Sparkles } from "lucide-react
 import ShareButtons from "@/components/ShareButtons";
 import CommentsSection from "@/components/CommentsSection";
 import { format } from "date-fns";
-import { el } from "date-fns/locale";
 
 interface QuizData {
   id: string;
@@ -60,7 +59,6 @@ const QuizPage = () => {
   const [results, setResults] = useState<Result[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Per-question selected answer
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [showTrivia, setShowTrivia] = useState<Record<string, boolean>>({});
   const [score, setScore] = useState(0);
@@ -97,9 +95,8 @@ const QuizPage = () => {
   const answeredCount = Object.keys(answers).length;
 
   const handleAnswer = useCallback((question: Question, answer: Answer) => {
-    if (answers[question.id]) return; // already answered
+    if (answers[question.id]) return;
 
-    // Increment plays on first answer
     if (!playsIncremented) {
       supabase.rpc("increment_plays", { quiz_id_param: id! });
       setPlaysIncremented(true);
@@ -116,7 +113,6 @@ const QuizPage = () => {
     const totalAnswered = Object.keys(newAnswers).length;
 
     if (totalAnswered < questions.length) {
-      // Scroll to next unanswered question
       const nextQ = questions.find((q) => !newAnswers[q.id]);
       if (nextQ) {
         setTimeout(() => {
@@ -124,7 +120,6 @@ const QuizPage = () => {
         }, quiz?.type === "trivia" ? 800 : 400);
       }
     } else {
-      // All answered — compute result
       setTimeout(() => computeResult(newAnswers, answer), quiz?.type === "trivia" ? 800 : 400);
     }
   }, [answers, questions, quiz, id, playsIncremented]);
@@ -141,7 +136,6 @@ const QuizPage = () => {
       else if (pct >= 0.5) setFinalResult(results[1] || null);
       else setFinalResult(results[2] || results[results.length - 1] || null);
     } else {
-      // Personality — tally result_ids
       const tally: Record<string, number> = {};
       questions.forEach((q) => {
         const selectedId = allAnswers[q.id];
@@ -158,7 +152,6 @@ const QuizPage = () => {
       setFinalResult(found || results[0] || null);
     }
 
-    // Save attempt
     supabase.from("quiz_attempts").insert({
       quiz_id: id!,
       score: quiz?.type === "trivia" ? finalScore : null,
@@ -182,8 +175,8 @@ const QuizPage = () => {
 
   const handleShare = () => {
     const text = quiz?.type === "personality"
-      ? `Πήρα "${finalResult?.title}" στο quiz "${quiz.title}"! Δοκίμασε κι εσύ!`
-      : `Πήρα ${score}/${questions.length} στο quiz "${quiz?.title}"! Δοκίμασε κι εσύ!`;
+      ? `I got "${finalResult?.title}" on the quiz "${quiz.title}"! Try it yourself!`
+      : `I scored ${score}/${questions.length} on the quiz "${quiz?.title}"! Try it yourself!`;
     if (navigator.share) {
       navigator.share({ title: quiz?.title || "Quiz", text, url: window.location.href });
     } else {
@@ -209,8 +202,8 @@ const QuizPage = () => {
       <div className="flex min-h-screen flex-col bg-background">
         <Header />
         <main className="flex flex-1 flex-col items-center justify-center gap-4">
-          <p className="text-lg text-muted-foreground">Το quiz δεν βρέθηκε.</p>
-          <Link to="/quizzes"><Button>Πίσω στα Quizzes</Button></Link>
+          <p className="text-lg text-muted-foreground">Quiz not found.</p>
+          <Link to="/quizzes"><Button>Back to Quizzes</Button></Link>
         </main>
         <Footer />
       </div>
@@ -224,11 +217,8 @@ const QuizPage = () => {
       <Header />
       <main className="flex-1">
         <div className="container py-6 md:py-10 md:flex md:gap-8">
-          {/* Main content column */}
           <div className="flex-1 min-w-0">
-            {/* Quiz header */}
             <div className="mb-6">
-              {/* Badges */}
               <div className="mb-3 flex flex-wrap items-center gap-2">
                 <Badge variant="default" className="uppercase text-[10px] tracking-wider">Quiz</Badge>
                 {quiz.categories && (
@@ -243,19 +233,16 @@ const QuizPage = () => {
                 )}
               </div>
 
-              {/* Title */}
               <h1 className="font-display text-2xl font-black leading-tight text-foreground md:text-4xl lg:text-5xl">
                 {quiz.title}
               </h1>
 
-              {/* Description */}
               {quiz.description && (
                 <p className="mt-3 text-base text-muted-foreground md:text-lg leading-relaxed">
                   {quiz.description}
                 </p>
               )}
 
-              {/* Author + Date */}
               <div className="mt-4 flex items-center gap-3">
                 {quiz.profiles && (
                   <>
@@ -278,25 +265,22 @@ const QuizPage = () => {
                   </>
                 )}
                 <span className="text-sm text-muted-foreground">
-                  {format(new Date(quiz.created_at), "d MMM yyyy", { locale: el })}
+                  {format(new Date(quiz.created_at), "d MMM yyyy")}
                 </span>
               </div>
 
-              {/* Share buttons */}
               <ShareButtons
                 text={quiz.title}
                 imageUrl={quiz.image_url || undefined}
                 className="mt-4"
               />
 
-              {/* Hero image */}
               {quiz.image_url && (
                 <div className="mt-6 overflow-hidden rounded-xl">
                   <img src={quiz.image_url} alt={quiz.title} className="w-full object-cover" />
                 </div>
               )}
 
-              {/* Instructions */}
               {quiz.instructions && (
                 <div className="mt-6 rounded-lg border border-border bg-muted/50 p-4">
                   <p className="text-sm font-medium text-foreground">{quiz.instructions}</p>
@@ -306,7 +290,6 @@ const QuizPage = () => {
 
             <AdSlot format="leaderboard" className="mb-8" />
 
-            {/* Questions */}
             <div className="space-y-8">
               {questions.map((q, qIdx) => {
                 const isAnswered = !!answers[q.id];
@@ -320,7 +303,6 @@ const QuizPage = () => {
                       ref={(el) => { questionRefs.current[q.id] = el; }}
                       className={`rounded-xl border border-border bg-card p-5 md:p-6 transition-opacity ${isAnswered ? "opacity-80" : ""}`}
                     >
-                      {/* Question number + text */}
                       <div className="mb-4 flex items-start gap-3">
                         <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
                           {qIdx + 1}
@@ -330,16 +312,13 @@ const QuizPage = () => {
                         </h2>
                       </div>
 
-                      {/* Question image */}
                       {q.image_url && (
                         <div className="mb-4 overflow-hidden rounded-lg">
                           <img src={q.image_url} alt="" className="w-full object-cover max-h-80" />
                         </div>
                       )}
 
-                      {/* Answers */}
                       {hasImages ? (
-                        /* Image grid answers */
                         <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
                           {q.answers.map((ans) => {
                             const isSelected = selectedId === ans.id;
@@ -380,7 +359,6 @@ const QuizPage = () => {
                           })}
                         </div>
                       ) : (
-                        /* Text-only answers */
                         <div className="grid gap-2.5">
                           {q.answers.map((ans) => {
                             const isSelected = selectedId === ans.id;
@@ -414,7 +392,6 @@ const QuizPage = () => {
                       )}
                     </div>
 
-                    {/* Ad after every question (BuzzFeed style) */}
                     {qIdx < questions.length - 1 && (
                   <AdSlot format="rectangle" className="mt-8" />
                     )}
@@ -423,17 +400,14 @@ const QuizPage = () => {
               })}
             </div>
 
-            {/* Progress indicator */}
             {!finished && answeredCount > 0 && (
               <div className="mt-6 text-center text-sm text-muted-foreground">
-                {answeredCount}/{questions.length} ερωτήσεις απαντημένες
+                {answeredCount}/{questions.length} questions answered
               </div>
             )}
 
-            {/* BuzzFeed-style Result Card */}
             {finished && finalResult && (
               <div ref={resultRef} className="mt-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                {/* Sunburst background container */}
                 <div
                   className="relative overflow-hidden rounded-2xl p-6 md:p-10"
                   style={{
@@ -446,7 +420,6 @@ const QuizPage = () => {
                     `,
                   }}
                 >
-                  {/* Vertical "QUIZ RESULT" label */}
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 hidden md:flex flex-col items-center gap-2">
                     <Sparkles className="h-4 w-4 text-primary-foreground/80" />
                     <span
@@ -458,7 +431,6 @@ const QuizPage = () => {
                     <Sparkles className="h-4 w-4 text-primary-foreground/80" />
                   </div>
 
-                  {/* Inner white card */}
                   <div className="relative mx-auto max-w-lg rounded-xl bg-card p-6 shadow-xl md:ml-12">
                     {quiz.type === "trivia" ? (
                       <>
@@ -468,7 +440,7 @@ const QuizPage = () => {
                       </>
                     ) : (
                       <>
-                        <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Το αποτέλεσμά σου:</p>
+                        <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Your result:</p>
                         <h2 className="font-display text-2xl font-bold text-foreground md:text-3xl">{finalResult.title}</h2>
                         {finalResult.image_url && (
                           <div className="mt-4 overflow-hidden rounded-lg">
@@ -479,49 +451,43 @@ const QuizPage = () => {
                       </>
                     )}
 
-                    {/* Share row inside card */}
                     <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
-                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Μοιράσου το</span>
+                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Share</span>
                       <ShareButtons
                         text={
                           quiz.type === "personality"
-                            ? `Πήρα "${finalResult.title}" στο quiz "${quiz.title}"! Δοκίμασε κι εσύ!`
-                            : `Πήρα ${score}/${questions.length} στο quiz "${quiz.title}"! Δοκίμασε κι εσύ!`
+                            ? `I got "${finalResult.title}" on the quiz "${quiz.title}"! Try it yourself!`
+                            : `I scored ${score}/${questions.length} on the quiz "${quiz.title}"! Try it yourself!`
                         }
                         imageUrl={finalResult.image_url || quiz.image_url || undefined}
                       />
                     </div>
                   </div>
 
-                  {/* "SHARE WITH FRIENDS" floating badge */}
                   <div className="absolute -bottom-2 -right-2 md:bottom-4 md:right-4 flex h-20 w-20 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-lg rotate-12">
                     <span className="text-[10px] font-black uppercase leading-tight text-center">Share<br />with<br />friends!</span>
                   </div>
                 </div>
 
-                {/* Action buttons below */}
                 <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
                   <Button onClick={resetQuiz} variant="outline" className="gap-2">
-                    <RotateCcw className="h-4 w-4" /> Δοκίμασε ξανά
+                    <RotateCcw className="h-4 w-4" /> Try Again
                   </Button>
                   <Button onClick={handleShare} className="gap-2">
-                    <Share2 className="h-4 w-4" /> Μοιράσου το
+                    <Share2 className="h-4 w-4" /> Share
                   </Button>
                 </div>
               </div>
             )}
 
-            {/* Comments */}
             <CommentsSection contentType="quiz" contentId={id!} />
 
-            {/* Ready for more + More from site */}
             <div className="mt-12 space-y-10">
               <ReadyForMore currentId={id!} type="quiz" categoryId={quiz.category_id} />
               <MoreFromSite currentId={id!} currentType="quiz" />
             </div>
           </div>
 
-          {/* Desktop sidebar */}
           <ContentSidebar />
         </div>
       </main>

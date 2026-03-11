@@ -6,110 +6,109 @@ const PrivacyPolicyPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container max-w-3xl py-10">
-        <h1 className="font-display text-3xl font-black text-foreground mb-2">Πολιτική Απορρήτου</h1>
-        <p className="text-sm text-muted-foreground mb-8">Τελευταία ενημέρωση: {new Date().toLocaleDateString("el-GR")}</p>
+        <h1 className="font-display text-3xl font-black text-foreground mb-2">Privacy Policy</h1>
+        <p className="text-sm text-muted-foreground mb-8">Last updated: {new Date().toLocaleDateString("en-US")}</p>
 
         <div className="prose prose-sm max-w-none space-y-8 text-foreground/90">
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">1. Εισαγωγή</h2>
-            <p>Καλώς ήρθατε στο QuizMania (εφεξής «εμείς», «μας» ή «η Ιστοσελίδα»). Σεβόμαστε το απόρρητό σας και δεσμευόμαστε να προστατεύουμε τα προσωπικά σας δεδομένα σύμφωνα με τον Γενικό Κανονισμό Προστασίας Δεδομένων (GDPR) της Ευρωπαϊκής Ένωσης και την ισχύουσα ελληνική νομοθεσία (Ν. 4624/2019).</p>
-            <p>Η παρούσα Πολιτική Απορρήτου εξηγεί ποια δεδομένα συλλέγουμε, πώς τα χρησιμοποιούμε, με ποιον τα μοιραζόμαστε και ποια είναι τα δικαιώματά σας.</p>
+            <h2 className="font-display text-xl font-bold text-foreground">1. Introduction</h2>
+            <p>Welcome to QuizMania (hereinafter "we", "us", or "the Website"). We respect your privacy and are committed to protecting your personal data in accordance with the General Data Protection Regulation (GDPR) of the European Union and applicable legislation.</p>
+            <p>This Privacy Policy explains what data we collect, how we use it, with whom we share it, and what your rights are.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">2. Δεδομένα που Συλλέγουμε</h2>
-            <p>Ενδέχεται να συλλέγουμε τα ακόλουθα δεδομένα:</p>
+            <h2 className="font-display text-xl font-bold text-foreground">2. Data We Collect</h2>
+            <p>We may collect the following data:</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li><strong>Δεδομένα χρήσης:</strong> Διεύθυνση IP, τύπος προγράμματος περιήγησης, λειτουργικό σύστημα, σελίδες που επισκέπτεστε, χρόνος παραμονής, πηγή παραπομπής.</li>
-              <li><strong>Δεδομένα συσκευής:</strong> Τύπος συσκευής, ανάλυση οθόνης, μοναδικά αναγνωριστικά συσκευής.</li>
-              <li><strong>Cookies και παρόμοιες τεχνολογίες:</strong> Βλ. ενότητα 3.</li>
-              <li><strong>Δεδομένα αλληλεπίδρασης:</strong> Απαντήσεις σε quizzes, αντιδράσεις, σχόλια.</li>
-              <li><strong>Δεδομένα επικοινωνίας:</strong> Εάν επικοινωνήσετε μαζί μας, ενδέχεται να συλλέξουμε το όνομα και τη διεύθυνση email σας.</li>
+              <li><strong>Usage data:</strong> IP address, browser type, operating system, pages visited, time spent, referral source.</li>
+              <li><strong>Device data:</strong> Device type, screen resolution, unique device identifiers.</li>
+              <li><strong>Cookies and similar technologies:</strong> See section 3.</li>
+              <li><strong>Interaction data:</strong> Quiz answers, reactions, comments.</li>
+              <li><strong>Contact data:</strong> If you contact us, we may collect your name and email address.</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">3. Cookies & Τεχνολογίες Παρακολούθησης</h2>
-            <p>Χρησιμοποιούμε cookies και παρόμοιες τεχνολογίες για τους ακόλουθους σκοπούς:</p>
+            <h2 className="font-display text-xl font-bold text-foreground">3. Cookies & Tracking Technologies</h2>
+            <p>We use cookies and similar technologies for the following purposes:</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li><strong>Απαραίτητα cookies:</strong> Για τη σωστή λειτουργία της ιστοσελίδας.</li>
-              <li><strong>Cookies ανάλυσης:</strong> Για την κατανόηση του τρόπου χρήσης της ιστοσελίδας (π.χ. Google Analytics).</li>
-              <li><strong>Cookies διαφήμισης:</strong> Για την προβολή εξατομικευμένων διαφημίσεων (βλ. ενότητα 4).</li>
+              <li><strong>Essential cookies:</strong> For the proper functioning of the website.</li>
+              <li><strong>Analytics cookies:</strong> To understand how the website is used (e.g., Google Analytics).</li>
+              <li><strong>Advertising cookies:</strong> To display personalized advertisements (see section 4).</li>
             </ul>
-            <p>Μπορείτε να διαχειριστείτε τις προτιμήσεις σας για τα cookies μέσω των ρυθμίσεων του προγράμματος περιήγησής σας.</p>
+            <p>You can manage your cookie preferences through your browser settings.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">4. Διαφημίσεις Τρίτων</h2>
-            <p>Η ιστοσελίδα μας χρησιμοποιεί υπηρεσίες διαφήμισης τρίτων μερών, συμπεριλαμβανομένων:</p>
+            <h2 className="font-display text-xl font-bold text-foreground">4. Third-Party Advertising</h2>
+            <p>Our website uses third-party advertising services, including:</p>
 
             <h3 className="font-display text-lg font-semibold text-foreground mt-4">Google AdSense</h3>
-            <p>Η Google, ως τρίτος πάροχος, χρησιμοποιεί cookies (συμπεριλαμβανομένου του cookie DoubleClick DART) για την προβολή διαφημίσεων βάσει προηγούμενων επισκέψεών σας στην ιστοσελίδα μας ή σε άλλες ιστοσελίδες. Η χρήση του cookie DART από τη Google επιτρέπει σε αυτήν και στους συνεργάτες της να σας προβάλλουν διαφημίσεις βάσει της επίσκεψής σας στην ιστοσελίδα μας ή/και σε άλλες ιστοσελίδες στο Διαδίκτυο.</p>
-            <p>Μπορείτε να εξαιρεθείτε από τη χρήση του cookie DART μέσω της σελίδας <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Ρυθμίσεις Διαφημίσεων Google</a>.</p>
-            <p>Για περισσότερες πληροφορίες: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Πολιτική Απορρήτου Google</a>.</p>
+            <p>Google, as a third-party provider, uses cookies (including the DoubleClick DART cookie) to serve ads based on your previous visits to our website or other websites. You can opt out of the DART cookie through the <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Ads Settings</a> page.</p>
+            <p>For more information: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Privacy Policy</a>.</p>
 
             <h3 className="font-display text-lg font-semibold text-foreground mt-4">Taboola</h3>
-            <p>Η Taboola χρησιμοποιεί cookies και web beacons για τη συλλογή πληροφοριών σχετικά με τη δραστηριότητά σας στο διαδίκτυο, ώστε να σας προβάλλει σχετικό περιεχόμενο και διαφημίσεις.</p>
-            <p>Μπορείτε να εξαιρεθείτε μέσω: <a href="https://www.taboola.com/policies/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Πολιτική Απορρήτου Taboola</a>.</p>
+            <p>Taboola uses cookies and web beacons to collect information about your online activity to serve you relevant content and ads.</p>
+            <p>You can opt out through: <a href="https://www.taboola.com/policies/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Taboola Privacy Policy</a>.</p>
 
-            <h3 className="font-display text-lg font-semibold text-foreground mt-4">Άλλα Διαφημιστικά Δίκτυα</h3>
-            <p>Ενδέχεται να συνεργαζόμαστε και με άλλα διαφημιστικά δίκτυα τα οποία χρησιμοποιούν παρόμοιες τεχνολογίες. Μπορείτε να διαχειριστείτε τις προτιμήσεις σας μέσω: <a href="https://www.youronlinechoices.eu/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Your Online Choices (EU)</a> ή <a href="https://optout.networkadvertising.org/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Network Advertising Initiative</a>.</p>
+            <h3 className="font-display text-lg font-semibold text-foreground mt-4">Other Advertising Networks</h3>
+            <p>We may also work with other advertising networks that use similar technologies. You can manage your preferences through: <a href="https://www.youronlinechoices.eu/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Your Online Choices (EU)</a> or <a href="https://optout.networkadvertising.org/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Network Advertising Initiative</a>.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">5. Σκοπός Επεξεργασίας Δεδομένων</h2>
-            <p>Τα δεδομένα σας χρησιμοποιούνται για:</p>
+            <h2 className="font-display text-xl font-bold text-foreground">5. Purpose of Data Processing</h2>
+            <p>Your data is used for:</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li>Τη λειτουργία και βελτίωση της ιστοσελίδας</li>
-              <li>Τη στατιστική ανάλυση χρήσης</li>
-              <li>Την προβολή σχετικών διαφημίσεων</li>
-              <li>Την απάντηση σε αιτήματα επικοινωνίας</li>
-              <li>Τη συμμόρφωση με νομικές υποχρεώσεις</li>
+              <li>Operating and improving the website</li>
+              <li>Statistical usage analysis</li>
+              <li>Displaying relevant advertisements</li>
+              <li>Responding to contact requests</li>
+              <li>Compliance with legal obligations</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">6. Νομική Βάση Επεξεργασίας (GDPR)</h2>
-            <p>Η επεξεργασία των δεδομένων σας βασίζεται σε:</p>
+            <h2 className="font-display text-xl font-bold text-foreground">6. Legal Basis for Processing (GDPR)</h2>
+            <p>The processing of your data is based on:</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li><strong>Συγκατάθεση (Άρθρο 6(1)(α) GDPR):</strong> Για cookies μη απαραίτητα και εξατομικευμένες διαφημίσεις.</li>
-              <li><strong>Έννομο συμφέρον (Άρθρο 6(1)(στ) GDPR):</strong> Για τη λειτουργία της ιστοσελίδας, στατιστικά ανάλυσης και ασφάλεια.</li>
-              <li><strong>Νομική υποχρέωση (Άρθρο 6(1)(γ) GDPR):</strong> Για συμμόρφωση με φορολογικές ή κανονιστικές υποχρεώσεις.</li>
+              <li><strong>Consent (Article 6(1)(a) GDPR):</strong> For non-essential cookies and personalized advertising.</li>
+              <li><strong>Legitimate interest (Article 6(1)(f) GDPR):</strong> For website operation, analytics, and security.</li>
+              <li><strong>Legal obligation (Article 6(1)(c) GDPR):</strong> For compliance with tax or regulatory obligations.</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">7. Τα Δικαιώματά σας (GDPR)</h2>
-            <p>Σύμφωνα με τον GDPR, έχετε τα ακόλουθα δικαιώματα:</p>
+            <h2 className="font-display text-xl font-bold text-foreground">7. Your Rights (GDPR)</h2>
+            <p>Under the GDPR, you have the following rights:</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li><strong>Δικαίωμα πρόσβασης:</strong> Να μάθετε ποια δεδομένα σας επεξεργαζόμαστε.</li>
-              <li><strong>Δικαίωμα διόρθωσης:</strong> Να ζητήσετε τη διόρθωση ανακριβών δεδομένων.</li>
-              <li><strong>Δικαίωμα διαγραφής:</strong> Να ζητήσετε τη διαγραφή των δεδομένων σας («δικαίωμα στη λήθη»).</li>
-              <li><strong>Δικαίωμα περιορισμού:</strong> Να περιορίσετε την επεξεργασία των δεδομένων σας.</li>
-              <li><strong>Δικαίωμα φορητότητας:</strong> Να λάβετε τα δεδομένα σας σε μηχαναγνώσιμη μορφή.</li>
-              <li><strong>Δικαίωμα εναντίωσης:</strong> Να αντιταχθείτε στην επεξεργασία δεδομένων για σκοπούς άμεσης εμπορικής προώθησης.</li>
-              <li><strong>Ανάκληση συγκατάθεσης:</strong> Μπορείτε να ανακαλέσετε τη συγκατάθεσή σας ανά πάσα στιγμή.</li>
+              <li><strong>Right of access:</strong> To know what data we process about you.</li>
+              <li><strong>Right to rectification:</strong> To request correction of inaccurate data.</li>
+              <li><strong>Right to erasure:</strong> To request deletion of your data ("right to be forgotten").</li>
+              <li><strong>Right to restriction:</strong> To restrict the processing of your data.</li>
+              <li><strong>Right to data portability:</strong> To receive your data in a machine-readable format.</li>
+              <li><strong>Right to object:</strong> To object to processing for direct marketing purposes.</li>
+              <li><strong>Withdrawal of consent:</strong> You can withdraw your consent at any time.</li>
             </ul>
-            <p>Για να ασκήσετε τα δικαιώματά σας, επικοινωνήστε μαζί μας στο email που αναφέρεται στην ενότητα 10.</p>
-            <p>Έχετε επίσης το δικαίωμα να υποβάλετε καταγγελία στην <a href="https://www.dpa.gr/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Αρχή Προστασίας Δεδομένων Προσωπικού Χαρακτήρα (ΑΠΔΠΧ)</a>.</p>
+            <p>To exercise your rights, contact us at the email provided in section 10.</p>
+            <p>You also have the right to lodge a complaint with your local data protection authority.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">8. Προστασία Ανηλίκων</h2>
-            <p>Η ιστοσελίδα μας δεν απευθύνεται σε παιδιά κάτω των 16 ετών. Δεν συλλέγουμε εν γνώσει μας προσωπικά δεδομένα από παιδιά κάτω των 16 ετών. Εάν αντιληφθούμε ότι έχουμε συλλέξει τέτοια δεδομένα, θα τα διαγράψουμε αμέσως. Εάν είστε γονέας/κηδεμόνας και πιστεύετε ότι το παιδί σας μας έχει παράσχει προσωπικά δεδομένα, παρακαλούμε επικοινωνήστε μαζί μας.</p>
+            <h2 className="font-display text-xl font-bold text-foreground">8. Protection of Minors</h2>
+            <p>Our website is not directed at children under the age of 16. We do not knowingly collect personal data from children under 16. If we become aware that we have collected such data, we will delete it immediately. If you are a parent/guardian and believe your child has provided us with personal data, please contact us.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">9. Αλλαγές στην Πολιτική Απορρήτου</h2>
-            <p>Διατηρούμε το δικαίωμα να τροποποιούμε την παρούσα Πολιτική Απορρήτου ανά πάσα στιγμή. Οι αλλαγές θα δημοσιεύονται στην παρούσα σελίδα με ενημερωμένη ημερομηνία. Σας ενθαρρύνουμε να ελέγχετε τακτικά αυτήν τη σελίδα.</p>
+            <h2 className="font-display text-xl font-bold text-foreground">9. Changes to Privacy Policy</h2>
+            <p>We reserve the right to modify this Privacy Policy at any time. Changes will be published on this page with an updated date. We encourage you to check this page regularly.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold text-foreground">10. Επικοινωνία</h2>
-            <p>Εάν έχετε ερωτήσεις σχετικά με την παρούσα Πολιτική Απορρήτου ή θέλετε να ασκήσετε τα δικαιώματά σας, επικοινωνήστε μαζί μας:</p>
+            <h2 className="font-display text-xl font-bold text-foreground">10. Contact</h2>
+            <p>If you have questions about this Privacy Policy or wish to exercise your rights, please contact us:</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li><strong>Email:</strong> contact@quizmania.gr</li>
-              <li><strong>Ιστοσελίδα:</strong> quizmania.gr</li>
+              <li><strong>Email:</strong> contact@quizmania.com</li>
+              <li><strong>Website:</strong> quizmania.com</li>
             </ul>
           </section>
         </div>
