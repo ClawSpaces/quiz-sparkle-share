@@ -18,7 +18,6 @@ const Header = () => {
   const activeRef = useRef<HTMLAnchorElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Scroll active tab into view on mobile
   useEffect(() => {
     if (activeRef.current && scrollRef.current) {
       activeRef.current.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
@@ -27,7 +26,6 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
-      {/* Top bar: Logo + Search */}
       <div className="container flex h-12 items-center justify-between gap-4 md:h-14">
         <Link to="/" className="flex items-center gap-2 flex-shrink-0">
           <span className="font-display text-xl font-black tracking-tight text-primary">
@@ -35,7 +33,6 @@ const Header = () => {
           </span>
         </Link>
 
-        {/* Desktop Nav */}
         <nav className="hidden items-center gap-0 md:flex">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
@@ -58,12 +55,11 @@ const Header = () => {
           })}
         </nav>
 
-        {/* Search */}
         <div className="flex items-center gap-2">
           {searchOpen ? (
             <div className="flex items-center gap-2">
               <Input
-                placeholder="Αναζήτηση..."
+                placeholder="Search..."
                 className="w-40 md:w-64"
                 autoFocus
               />
@@ -79,7 +75,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile scrollable tab bar */}
       <div
         ref={scrollRef}
         className="flex md:hidden overflow-x-auto scrollbar-none border-t border-border"

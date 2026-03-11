@@ -27,8 +27,8 @@ const TrendingPage = () => {
       <main className="flex-1">
         <section className="bg-gradient-to-br from-destructive/10 via-background to-primary/10 py-10">
           <div className="container text-center">
-            <h1 className="font-display text-3xl font-black text-foreground md:text-5xl">🔥 Trending Τώρα</h1>
-            <p className="mx-auto mt-3 max-w-lg text-muted-foreground">Τα πιο viral άρθρα και βίντεο που σπάνε το internet αυτή τη στιγμή.</p>
+            <h1 className="font-display text-3xl font-black text-foreground md:text-5xl">🔥 Trending Now</h1>
+            <p className="mx-auto mt-3 max-w-lg text-muted-foreground">The most viral articles and videos breaking the internet right now.</p>
           </div>
         </section>
         <div className="container py-4"><AdSlot format="leaderboard" /></div>

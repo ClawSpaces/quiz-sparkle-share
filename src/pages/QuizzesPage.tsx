@@ -48,7 +48,7 @@ const QuizzesPage = () => {
   }, []);
 
   const filters = [
-    { label: "Όλα", value: "all" },
+    { label: "All", value: "all" },
     ...categories.map((c) => ({ label: c.name, value: c.slug })),
   ];
 
@@ -84,7 +84,7 @@ const QuizzesPage = () => {
               Quizzes
             </h1>
             <p className="mt-2 text-lg text-muted-foreground">
-              Personality quizzes, trivia, και πολλά άλλα!
+              Personality quizzes, trivia, and so much more!
             </p>
           </div>
         </section>
@@ -182,7 +182,7 @@ const QuizzesPage = () => {
 
         <section className="container pb-12">
           <h2 className="mb-4 font-display text-xl font-bold text-foreground md:text-2xl">
-            {activeFilter === "all" ? "Περισσότερα Quizzes" : filters.find((f) => f.value === activeFilter)?.label}
+            {activeFilter === "all" ? "More Quizzes" : filters.find((f) => f.value === activeFilter)?.label}
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {remaining.map((quiz) => (
@@ -191,7 +191,7 @@ const QuizzesPage = () => {
           </div>
           {remaining.length === 0 && (
             <p className="py-12 text-center text-muted-foreground">
-              Δεν βρέθηκαν quizzes σε αυτή την κατηγορία.
+              No quizzes found in this category.
             </p>
           )}
         </section>

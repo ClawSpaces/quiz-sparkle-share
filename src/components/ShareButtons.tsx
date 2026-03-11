@@ -39,7 +39,7 @@ const ShareButtons = ({ url, text, imageUrl, className = "" }: ShareButtonsProps
 
   const copyLink = () => {
     navigator.clipboard.writeText(shareUrl);
-    toast({ title: "Link αντιγράφηκε!", description: "Ο σύνδεσμος αντιγράφηκε στο clipboard." });
+    toast({ title: "Link copied!", description: "The link has been copied to your clipboard." });
   };
 
   const btnClass = "flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground";

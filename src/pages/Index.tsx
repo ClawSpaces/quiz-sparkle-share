@@ -53,7 +53,6 @@ const Index = () => {
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1">
-        {/* TRENDING */}
         <section className="container py-4 md:py-6">
           <SectionHeader title="Trending Now" link="/trending" />
           <div className="hidden md:grid md:grid-cols-2 md:gap-4">
@@ -89,7 +88,6 @@ const Index = () => {
               })}
             </div>
           </div>
-          {/* Mobile */}
           <div className="md:hidden">
             {trendingPosts.slice(0, 1).map((post) => (
               <a key={post.id} href={`/post/${post.id}`} className="group relative block overflow-hidden rounded-lg">
@@ -121,13 +119,12 @@ const Index = () => {
           </div>
         </section>
 
-        {/* CONTENT + SIDEBAR */}
         <div className="container py-4 md:flex md:gap-6">
           <div className="flex-1 min-w-0">
             <div className="py-2"><AdSlot format="native" /></div>
 
             <section className="border-t border-border bg-muted/30 py-4 md:py-8 -mx-4 px-4 md:-mx-0 md:px-0 md:rounded-lg">
-              <SectionHeader title="Popular Quizzes" link="/quizzes" linkText="Όλα" />
+              <SectionHeader title="Popular Quizzes" link="/quizzes" />
               <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6">
                 {popularQuizzes.slice(0, 3).map((quiz) => (<QuizCard key={quiz.id} quiz={quiz} />))}
               </div>
@@ -136,7 +133,7 @@ const Index = () => {
             <div className="py-2"><AdSlot format="banner" /></div>
 
             <section className="py-4 md:py-8">
-              <SectionHeader title="Latest" link="/trending" linkText="Περισσότερα" />
+              <SectionHeader title="Latest" link="/trending" linkText="More" />
               <div className="md:hidden">
                 {latestPosts.map((post) => (<PostCard key={post.id} post={post} variant="list" />))}
               </div>
@@ -146,7 +143,7 @@ const Index = () => {
             </section>
 
             <section className="border-t border-border bg-muted/30 py-4 md:py-8 -mx-4 px-4 md:-mx-0 md:px-0 md:rounded-lg">
-              <SectionHeader title="Buzz Chat" link="/buzzchat" linkText="Όλα" />
+              <SectionHeader title="Buzz Chat" link="/buzzchat" />
               <div className="grid gap-4 md:grid-cols-2">
                 {buzzChats.slice(0, 2).map((chat) => (<BuzzChatCard key={chat.id} chat={chat} variant="featured" />))}
               </div>
@@ -155,18 +152,18 @@ const Index = () => {
             <section className="py-4 md:py-8">
               <div className="grid gap-6 md:grid-cols-2">
                 <div>
-                  <SectionHeader title="Shopping" link="/shopping" linkText="Όλα" />
+                  <SectionHeader title="Shopping" link="/shopping" />
                   <div className="flex flex-col">{shoppingPosts.map((post) => (<PostCard key={post.id} post={post} variant="list" />))}</div>
                 </div>
                 <div>
-                  <SectionHeader title="Celebrity" link="/celebrity" linkText="Όλα" />
+                  <SectionHeader title="Celebrity" link="/celebrity" />
                   <div className="flex flex-col">{celebrityPosts.map((post) => (<PostCard key={post.id} post={post} variant="list" />))}</div>
                 </div>
               </div>
             </section>
 
             <section className="border-t border-border bg-muted/30 py-4 md:py-8 -mx-4 px-4 md:-mx-0 md:px-0 md:rounded-lg">
-              <SectionHeader title="Quiz Categories" link="/categories" linkText="Όλες" />
+              <SectionHeader title="Quiz Categories" link="/categories" />
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5">
                 {dbCategories.map((cat) => (<CategoryCard key={cat.id} category={cat} />))}
               </div>
@@ -175,13 +172,12 @@ const Index = () => {
             <div className="py-4"><AdSlot format="leaderboard" /></div>
           </div>
 
-          {/* SIDEBAR */}
           <aside className="hidden md:block md:w-[25%] flex-shrink-0">
             <div className="sticky top-4 space-y-6">
               <AdSlot format="rectangle" />
               <div className="overflow-hidden rounded-lg border border-border">
                 <div className="bg-foreground px-4 py-2.5">
-                  <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">Τελευταία Άρθρα</h3>
+                  <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">Latest Posts</h3>
                 </div>
                 <div className="divide-y divide-border">
                   {latestPosts.slice(0, 5).map((post, i) => (
@@ -219,7 +215,7 @@ const Index = () => {
               </div>
               <div className="overflow-hidden rounded-lg border border-border">
                 <div className="bg-foreground px-4 py-2.5">
-                  <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">Κατηγορίες</h3>
+                  <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">Categories</h3>
                 </div>
                 <div className="p-3">
                   <div className="flex flex-wrap gap-2">

@@ -29,7 +29,7 @@ const ContentSidebar = () => {
 
         <div className="overflow-hidden rounded-lg border border-border">
           <div className="bg-foreground px-4 py-2.5">
-            <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">Τελευταία Άρθρα</h3>
+            <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">Latest Posts</h3>
           </div>
           <div className="divide-y divide-border">
             {latestPosts.map((post, i) => (
@@ -50,7 +50,7 @@ const ContentSidebar = () => {
         {popularQuizzes.length > 0 && (
           <div className="overflow-hidden rounded-lg border border-border">
             <div className="bg-foreground px-4 py-2.5">
-              <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">Δημοφιλή Quizzes</h3>
+              <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">Popular Quizzes</h3>
             </div>
             <div className="divide-y divide-border">
               {popularQuizzes.map((quiz, i) => (
@@ -74,7 +74,7 @@ const ContentSidebar = () => {
         {categories.length > 0 && (
           <div className="overflow-hidden rounded-lg border border-border">
             <div className="bg-foreground px-4 py-2.5">
-              <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">Κατηγορίες</h3>
+              <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">Categories</h3>
             </div>
             <div className="p-3">
               <div className="flex flex-wrap gap-2">

@@ -28,7 +28,6 @@ const PostPage = () => {
         .single();
       if (data) {
         setPost(data as any);
-        // Increment views
         supabase.rpc("increment_views", { post_id_param: id });
       }
       setLoading(false);
@@ -41,7 +40,7 @@ const PostPage = () => {
       <div className="flex min-h-screen flex-col bg-background">
         <Header />
         <main className="flex flex-1 items-center justify-center">
-          <p className="text-muted-foreground">Φόρτωση...</p>
+          <p className="text-muted-foreground">Loading...</p>
         </main>
         <Footer />
       </div>
@@ -53,7 +52,7 @@ const PostPage = () => {
       <div className="flex min-h-screen flex-col bg-background">
         <Header />
         <main className="flex flex-1 items-center justify-center">
-          <p className="text-muted-foreground">Το άρθρο δεν βρέθηκε.</p>
+          <p className="text-muted-foreground">Article not found.</p>
         </main>
         <Footer />
       </div>
@@ -88,18 +87,18 @@ const PostPage = () => {
               {post.content && <div className="mt-4" dangerouslySetInnerHTML={{ __html: post.content }} />}
               {!post.content && (
                 <p className="mt-4 text-muted-foreground">
-                  Αυτό είναι ένα placeholder για το πλήρες περιεχόμενο του άρθρου. Όταν συνδεθεί με τη βάση δεδομένων, εδώ θα εμφανίζεται το πλήρες κείμενο σε μορφή rich text.
+                  This is a placeholder for the full article content. When connected to the database, the full rich text content will be displayed here.
                 </p>
               )}
             </div>
 
             <div className="mt-6 flex items-center gap-3">
-              <span className="text-sm font-semibold text-muted-foreground">Μοιράσου το:</span>
+              <span className="text-sm font-semibold text-muted-foreground">Share:</span>
               <ShareButtons text={post.title} imageUrl={image} />
             </div>
 
             <div className="mt-8 rounded-xl border bg-card p-4">
-              <p className="mb-3 text-sm font-semibold text-foreground">Πώς σε κάνει να νιώθεις αυτό το άρθρο;</p>
+              <p className="mb-3 text-sm font-semibold text-foreground">How does this article make you feel?</p>
               <ReactionBar reactions={reactions} />
             </div>
 

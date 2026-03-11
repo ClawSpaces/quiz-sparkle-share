@@ -26,21 +26,18 @@ const AdSlot = ({ format, className = "", slotId, network = "adsense" }: AdSlotP
   const adInitialized = useRef(false);
 
   useEffect(() => {
-    // If a real slotId is provided, try to push the ad
     if (slotId && !adInitialized.current && containerRef.current) {
       adInitialized.current = true;
       try {
-        // AdSense push
         if (network === "adsense" && (window as any).adsbygoogle) {
           (window as any).adsbygoogle.push({});
         }
       } catch (e) {
-        // Ad blocker or script not loaded — fail silently
+        // Ad blocker or script not loaded
       }
     }
   }, [slotId, network]);
 
-  // Real ad slot configured
   if (slotId && network === "adsense") {
     return (
       <div ref={containerRef} className={`w-full overflow-hidden ${className}`}>
@@ -56,12 +53,11 @@ const AdSlot = ({ format, className = "", slotId, network = "adsense" }: AdSlotP
     );
   }
 
-  // Placeholder fallback — shown when no ad network is configured yet
   return (
     <div
       className={`flex w-full items-center justify-center rounded-lg border border-dashed border-border bg-muted/50 text-xs text-muted-foreground ${sizes[format]} ${className}`}
     >
-      Διαφήμιση — {format.toUpperCase()}
+      Advertisement — {format.toUpperCase()}
     </div>
   );
 };

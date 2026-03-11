@@ -46,8 +46,8 @@ const CategoryPage = () => {
         <Header />
         <main className="container flex flex-1 items-center justify-center py-20">
           <div className="text-center">
-            <h1 className="font-display text-3xl font-bold text-foreground">Η κατηγορία δεν βρέθηκε</h1>
-            <p className="mt-2 text-muted-foreground">Δοκίμασε μια άλλη κατηγορία.</p>
+            <h1 className="font-display text-3xl font-bold text-foreground">Category Not Found</h1>
+            <p className="mt-2 text-muted-foreground">Try a different category.</p>
           </div>
         </main>
         <Footer />
@@ -83,7 +83,7 @@ const CategoryPage = () => {
             </div>
           ) : (
             <p className="text-center text-muted-foreground">
-              Δεν υπάρχουν ακόμα quizzes σε αυτή την κατηγορία.
+              No quizzes in this category yet.
             </p>
           )}
         </section>
