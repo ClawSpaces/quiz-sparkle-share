@@ -107,7 +107,11 @@ serve(async (req) => {
       try {
         console.log(`Generating image for: "${item.text}" (${item.id})`);
 
-        const prompt = `Create a vibrant, eye-catching cover image for a quiz or article titled "${item.text}". The image should be colorful, engaging, and suitable as a thumbnail/cover image. No text in the image. High quality, professional look.`;
+        // Create a generic prompt that avoids copyrighted references
+        const safeTitle = item.text
+          .replace(/disney|marvel|pixar|nintendo|pokemon|harry potter|star wars|netflix|anime/gi, "")
+          .trim() || "fun quiz challenge";
+        const prompt = `Create a vibrant, eye-catching abstract cover image inspired by the theme: "${safeTitle}". Use bold colors, dynamic composition. No text, no characters, no logos. Professional quality thumbnail image.`;
 
         const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
           method: "POST",
