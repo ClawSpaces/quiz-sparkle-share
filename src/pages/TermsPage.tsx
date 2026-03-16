@@ -12,7 +12,7 @@ const TermsPage = () => {
         <div className="prose prose-sm max-w-none space-y-8 text-foreground/90">
           <section>
             <h2 className="font-display text-xl font-bold text-foreground">1. Acceptance of Terms</h2>
-            <p>By accessing and using the QuizMania website (hereinafter "the Website"), you fully and unconditionally accept these Terms of Use. If you do not agree with any of these terms, please do not use the Website.</p>
+            <p>By accessing and using the Fizzty website (hereinafter "the Website"), you fully and unconditionally accept these Terms of Use. If you do not agree with any of these terms, please do not use the Website.</p>
           </section>
 
           <section>
@@ -92,8 +92,8 @@ const TermsPage = () => {
             <h2 className="font-display text-xl font-bold text-foreground">12. Contact</h2>
             <p>If you have questions regarding these Terms of Use, please contact us:</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li><strong>Email:</strong> contact@quizmania.com</li>
-              <li><strong>Website:</strong> quizmania.com</li>
+              <li><strong>Email:</strong> contact@fizzty.com</li>
+              <li><strong>Website:</strong> fizzty.com</li>
             </ul>
           </section>
         </div>

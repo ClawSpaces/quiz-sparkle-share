@@ -95,9 +95,9 @@ export default function AdminBuzzChats() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">BuzzChat</h1>
+        <h1 className="text-2xl font-bold">FizzChat</h1>
         <Button onClick={() => { resetForm(); setShowForm(true); }}>
-          <Plus className="h-4 w-4 mr-2" /> New BuzzChat
+          <Plus className="h-4 w-4 mr-2" /> New FizzChat
         </Button>
       </div>
 
@@ -168,9 +168,9 @@ export default function AdminBuzzChats() {
       <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete BuzzChat</DialogTitle>
+            <DialogTitle>Delete FizzChat</DialogTitle>
           </DialogHeader>
-          <p>Are you sure you want to delete this BuzzChat?</p>
+          <p>Are you sure you want to delete this FizzChat?</p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteId(null)}>Cancel</Button>
             <Button variant="destructive" onClick={() => deleteId && deleteMutation.mutate(deleteId)}>

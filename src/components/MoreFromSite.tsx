@@ -68,7 +68,7 @@ const MoreFromSite = ({ currentId, currentType }: MoreFromSiteProps) => {
   return (
     <section className="border-t border-border pt-8">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="font-display text-xl font-black text-foreground md:text-2xl">More from QuizMania</h2>
+        <h2 className="font-display text-xl font-black text-foreground md:text-2xl">More from Fizzty</h2>
         <a href="/" className="flex items-center gap-1 text-sm font-semibold text-primary hover:underline">
           See all <ArrowRight className="h-4 w-4" />
         </a>

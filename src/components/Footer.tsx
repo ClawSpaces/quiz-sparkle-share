@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import fizztyLogo from "@/assets/fizzty-logo.png";
 
 interface FooterCategory {
   id: string;
@@ -27,8 +28,8 @@ const Footer = () => {
       <div className="container py-12">
         <div className="grid gap-8 md:grid-cols-4">
           <div className="md:col-span-1">
-            <Link to="/" className="font-display text-xl font-black text-primary">
-              Quiz<span className="text-secondary">Mania</span>
+            <Link to="/" className="block">
+              <img src={fizztyLogo} alt="Fizzty" className="h-8" />
             </Link>
             <p className="mt-3 text-sm text-muted-foreground">
               The best quizzes, trending content & viral stories. Discover who you are and have fun!
@@ -88,7 +89,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-10 border-t pt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} QuizMania. Made with ❤️
+          © {new Date().getFullYear()} Fizzty. Made with ❤️
         </div>
       </div>
     </footer>

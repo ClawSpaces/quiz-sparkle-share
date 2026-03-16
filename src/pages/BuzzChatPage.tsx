@@ -27,7 +27,7 @@ const BuzzChatPage = () => {
       <main className="flex-1">
         <section className="bg-gradient-to-br from-accent/10 via-background to-primary/10 py-10">
           <div className="container text-center">
-            <h1 className="font-display text-3xl font-black text-foreground md:text-5xl">💬 Buzz Chat</h1>
+            <h1 className="font-display text-3xl font-black text-foreground md:text-5xl">💬 Fizz Chat</h1>
             <p className="mx-auto mt-3 max-w-lg text-muted-foreground">Join the conversation! Share your opinion and see what others think.</p>
           </div>
         </section>
