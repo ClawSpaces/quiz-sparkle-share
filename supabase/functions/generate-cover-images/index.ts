@@ -78,6 +78,11 @@ serve(async (req) => {
         if (url.includes("/storage/v1/object/public/cover-images/")) {
           return; // Already fixed
         }
+        // If replace_all_unsplash mode, mark all unsplash URLs as broken
+        if (replace_all_unsplash && url.includes("unsplash.com")) {
+          broken.push({ id: r.id, text: r[textField] || "" });
+          return;
+        }
         try {
           const res = await fetch(url, { method: "GET", redirect: "follow" });
           if (!res.ok) {
