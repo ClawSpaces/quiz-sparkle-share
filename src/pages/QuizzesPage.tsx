@@ -29,7 +29,9 @@ const formatPlays = (n: number) => {
 };
 
 const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-  e.currentTarget.src = '/placeholder.svg';
+  if (!e.currentTarget.src.endsWith('/placeholder.svg')) {
+    e.currentTarget.src = '/placeholder.svg';
+  }
 };
 
 const QuizzesPage = () => {
