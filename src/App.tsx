@@ -50,7 +50,10 @@ const App = () => (
           <Route path="/buzzchat" element={<BuzzChatPage />} />
           <Route path="/post/:id" element={<PostPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
 
           {/* Admin routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
