@@ -51,6 +51,9 @@ const PrivacyPolicyPage = () => {
             <p>Taboola uses cookies and web beacons to collect information about your online activity to serve you relevant content and ads.</p>
             <p>You can opt out through: <a href="https://www.taboola.com/policies/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Taboola Privacy Policy</a>.</p>
 
+            <h3 className="font-display text-lg font-semibold text-foreground mt-4">Ezoic</h3>
+            <p>We use Ezoic as our ad management platform. Ezoic uses cookies and similar technologies to serve relevant advertisements and optimize ad placements. Ezoic may share data with its advertising partners. You can learn more and opt out through the <a href="https://www.ezoic.com/privacy-policy/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Ezoic Privacy Policy</a>.</p>
+
             <h3 className="font-display text-lg font-semibold text-foreground mt-4">Other Advertising Networks</h3>
             <p>We may also work with other advertising networks that use similar technologies. You can manage your preferences through: <a href="https://www.youronlinechoices.eu/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Your Online Choices (EU)</a> or <a href="https://optout.networkadvertising.org/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Network Advertising Initiative</a>.</p>
           </section>
