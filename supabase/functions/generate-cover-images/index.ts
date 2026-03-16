@@ -203,7 +203,7 @@ serve(async (req) => {
         console.log(`✅ Fixed: ${item.text} -> ${publicUrl}`);
 
         // Delay between generations to avoid rate limits
-        await new Promise(r => setTimeout(r, 2000));
+        await new Promise(r => setTimeout(r, 500));
       } catch (e) {
         console.error(`Error processing ${item.id}:`, e);
         errors.push(`${item.id}: ${e.message}`);
