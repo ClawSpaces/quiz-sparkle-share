@@ -50,7 +50,7 @@ const QuizCard = ({ quiz, variant = "default" }: QuizCardProps) => {
     return (
       <a href={href} className="group flex gap-3 rounded-lg p-2 transition-colors hover:bg-muted">
         <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg">
-          <img src={image} alt={quiz.title} className="h-full w-full object-cover" loading="lazy" />
+          <img src={image} alt={quiz.title} className="h-full w-full object-cover" loading="lazy" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
         </div>
         <div className="flex flex-col justify-center">
           <h4 className="text-sm font-semibold leading-tight text-foreground group-hover:text-primary">{quiz.title}</h4>
