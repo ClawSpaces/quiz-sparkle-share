@@ -19,7 +19,7 @@ const BuzzChatCard = ({ chat, variant = "default" }: BuzzChatCardProps) => {
     <div className={`overflow-hidden rounded-xl border bg-card shadow-sm ${isFeatured ? "border-primary/30" : ""}`}>
       {chat.image_url && (
         <div className={`overflow-hidden ${isFeatured ? "aspect-[16/8]" : "aspect-[16/10]"}`}>
-          <img src={chat.image_url} alt="" className="h-full w-full object-cover" loading="lazy" />
+          <img src={chat.image_url} alt="" className="h-full w-full object-cover" loading="lazy" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
         </div>
       )}
       <div className="p-4">

@@ -9,6 +9,10 @@ interface CategoryCardCategory {
   image_url?: string | null;
 }
 
+const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  e.currentTarget.src = '/placeholder.svg';
+};
+
 const CategoryCard = ({ category }: { category: CategoryCardCategory }) => {
   return (
     <Link
@@ -21,6 +25,7 @@ const CategoryCard = ({ category }: { category: CategoryCardCategory }) => {
           alt={category.name}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
           loading="lazy"
+          onError={handleImgError}
         />
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-primary/80 to-primary/40" />

@@ -28,6 +28,10 @@ const formatPlays = (n: number) => {
   return n.toString();
 };
 
+const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  e.currentTarget.src = '/placeholder.svg';
+};
+
 const QuizzesPage = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [quizzes, setQuizzes] = useState<DbQuiz[]>([]);
@@ -120,6 +124,7 @@ const QuizzesPage = () => {
                   src={featured.image_url || "/placeholder.svg"}
                   alt={featured.title}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  onError={handleImgError}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
               </div>
@@ -161,6 +166,7 @@ const QuizzesPage = () => {
                       alt={quiz.title}
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"
+                      onError={handleImgError}
                     />
                   </div>
                   <div className="flex flex-col justify-center">

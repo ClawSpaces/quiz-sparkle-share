@@ -20,6 +20,10 @@ const formatPlays = (n: number) => {
   return n.toString();
 };
 
+const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  e.currentTarget.src = '/placeholder.svg';
+};
+
 const QuizCard = ({ quiz, variant = "default" }: QuizCardProps) => {
   const image = quiz.image_url || "/placeholder.svg";
   const category = quiz.categories?.name;
@@ -32,7 +36,7 @@ const QuizCard = ({ quiz, variant = "default" }: QuizCardProps) => {
         className="group relative block overflow-hidden rounded-xl bg-card shadow-md transition-all hover:shadow-xl hover:-translate-y-1"
       >
         <div className="aspect-[16/10] overflow-hidden">
-          <img src={image} alt={quiz.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          <img src={image} alt={quiz.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" onError={handleImgError} />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
         </div>
         <div className="absolute bottom-0 left-0 right-0 p-5">
@@ -50,7 +54,7 @@ const QuizCard = ({ quiz, variant = "default" }: QuizCardProps) => {
     return (
       <a href={href} className="group flex gap-3 rounded-lg p-2 transition-colors hover:bg-muted">
         <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg">
-          <img src={image} alt={quiz.title} className="h-full w-full object-cover" loading="lazy" />
+          <img src={image} alt={quiz.title} className="h-full w-full object-cover" loading="lazy" onError={handleImgError} />
         </div>
         <div className="flex flex-col justify-center">
           <h4 className="text-sm font-semibold leading-tight text-foreground group-hover:text-primary">{quiz.title}</h4>
@@ -63,7 +67,7 @@ const QuizCard = ({ quiz, variant = "default" }: QuizCardProps) => {
   return (
     <a href={href} className="group block overflow-hidden rounded-xl bg-card shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
       <div className="aspect-[16/10] overflow-hidden">
-        <img src={image} alt={quiz.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+        <img src={image} alt={quiz.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" onError={handleImgError} />
       </div>
       <div className="p-4">
         {category && <span className="text-xs font-semibold uppercase tracking-wider text-primary">{category}</span>}
