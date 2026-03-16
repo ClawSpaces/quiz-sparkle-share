@@ -444,7 +444,7 @@ const QuizPage = () => {
                         <h2 className="font-display text-2xl font-bold text-foreground md:text-3xl">{finalResult.title}</h2>
                         {finalResult.image_url && (
                           <div className="mt-4 overflow-hidden rounded-lg">
-                            <img src={finalResult.image_url} alt={finalResult.title} className="w-full object-cover" />
+                            <img src={finalResult.image_url} alt={finalResult.title} className="w-full object-cover" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
                           </div>
                         )}
                         {finalResult.description && <p className="mt-4 text-muted-foreground leading-relaxed">{finalResult.description}</p>}
