@@ -134,7 +134,7 @@ const Index = () => {
               </div>
             </section>
 
-            <div className="py-2"><AdSlot format="banner" /></div>
+            <div className="py-2"><AdSlot format="banner" ezoicId={102} /></div>
 
             <section className="py-4 md:py-8">
               <SectionHeader title="Latest" link="/trending" linkText="More" />
