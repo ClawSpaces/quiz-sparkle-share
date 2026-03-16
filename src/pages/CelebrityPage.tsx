@@ -32,7 +32,7 @@ const CelebrityPage = () => {
             <p className="mx-auto mt-3 max-w-lg text-muted-foreground">The latest news, gossip and viral moments from your favorite stars.</p>
           </div>
         </section>
-        <div className="container py-4"><AdSlot format="leaderboard" /></div>
+        <div className="container py-4"><AdSlot format="leaderboard" ezoicId={112} /></div>
         <section className="container py-8">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (<PostCard key={post.id} post={post} />))}

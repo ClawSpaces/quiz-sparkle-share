@@ -71,7 +71,7 @@ const CategoryPage = () => {
         </section>
 
         <div className="container py-4">
-          <AdSlot format="leaderboard" />
+          <AdSlot format="leaderboard" ezoicId={115} />
         </div>
 
         <section className="container py-8">

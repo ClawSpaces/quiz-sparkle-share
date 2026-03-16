@@ -288,7 +288,7 @@ const QuizPage = () => {
               )}
             </div>
 
-            <AdSlot format="leaderboard" className="mb-8" />
+            <AdSlot format="leaderboard" ezoicId={107} className="mb-8" />
 
             <div className="space-y-8">
               {questions.map((q, qIdx) => {
@@ -393,7 +393,7 @@ const QuizPage = () => {
                     </div>
 
                     {qIdx < questions.length - 1 && (
-                  <AdSlot format="rectangle" className="mt-8" />
+                  <AdSlot format="rectangle" ezoicId={108} className="mt-8" />
                     )}
                   </div>
                 );

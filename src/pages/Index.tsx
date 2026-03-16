@@ -125,7 +125,7 @@ const Index = () => {
 
         <div className="container py-4 md:flex md:gap-6">
           <div className="flex-1 min-w-0">
-            <div className="py-2"><AdSlot format="native" /></div>
+            <div className="py-2"><AdSlot format="native" ezoicId={101} /></div>
 
             <section className="border-t border-border bg-muted/30 py-4 md:py-8 -mx-4 px-4 md:-mx-0 md:px-0 md:rounded-lg">
               <SectionHeader title="Popular Quizzes" link="/quizzes" />
@@ -134,7 +134,7 @@ const Index = () => {
               </div>
             </section>
 
-            <div className="py-2"><AdSlot format="banner" /></div>
+            <div className="py-2"><AdSlot format="banner" ezoicId={102} /></div>
 
             <section className="py-4 md:py-8">
               <SectionHeader title="Latest" link="/trending" linkText="More" />
@@ -173,12 +173,12 @@ const Index = () => {
               </div>
             </section>
 
-            <div className="py-4"><AdSlot format="leaderboard" /></div>
+            <div className="py-4"><AdSlot format="leaderboard" ezoicId={103} /></div>
           </div>
 
           <aside className="hidden md:block md:w-[25%] flex-shrink-0">
             <div className="sticky top-4 space-y-6">
-              <AdSlot format="rectangle" />
+              <AdSlot format="rectangle" ezoicId={104} />
               <div className="overflow-hidden rounded-lg border border-border">
                 <div className="bg-foreground px-4 py-2.5">
                   <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">Latest Posts</h3>
