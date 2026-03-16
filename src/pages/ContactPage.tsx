@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -46,6 +47,7 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Contact Us — Fizzty" description="Get in touch with the Fizzty team. Questions, feedback, or partnership inquiries welcome." />
       <Header />
       <main className="container max-w-xl py-10">
         <h1 className="font-display text-3xl font-black text-foreground mb-2">Contact Us</h1>

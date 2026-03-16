@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
+import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import PostCard from "@/components/PostCard";
 import AdSlot from "@/components/AdSlot";
@@ -24,6 +25,7 @@ const CelebrityPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <SEO title="Celebrity News — Latest Gossip & Viral Moments" description="Get the latest celebrity news, gossip and viral moments from your favorite stars on Fizzty." />
       <Header />
       <main className="flex-1">
         <section className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-10">

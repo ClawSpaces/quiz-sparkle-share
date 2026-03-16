@@ -1,9 +1,11 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 const PrivacyPolicyPage = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Privacy Policy — Fizzty" description="Read Fizzty's privacy policy. Learn how we handle your data, cookies, and third-party advertising." />
       <Header />
       <main className="container max-w-3xl py-10">
         <h1 className="font-display text-3xl font-black text-foreground mb-2">Privacy Policy</h1>

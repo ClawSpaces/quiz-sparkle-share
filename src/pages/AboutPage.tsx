@@ -1,9 +1,11 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 const AboutPage = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="About Fizzty — Who We Are" description="Learn about Fizzty, your destination for fun personality quizzes, trivia challenges, and trending content." />
       <Header />
       <main className="container max-w-3xl py-10">
         <h1 className="font-display text-3xl font-black text-foreground mb-6">About Fizzty</h1>

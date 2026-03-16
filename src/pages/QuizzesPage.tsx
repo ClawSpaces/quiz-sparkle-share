@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
+import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import QuizCard from "@/components/QuizCard";
 import { supabase } from "@/integrations/supabase/client";
@@ -82,6 +83,7 @@ const QuizzesPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <SEO title="All Quizzes — Personality, Trivia & More" description="Browse all quizzes on Fizzty. Personality tests, trivia challenges, career quizzes and more. Take a free quiz now!" />
       <Header />
       <main className="flex-1">
         <section className="border-b border-border bg-card py-8 md:py-12">

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Header from "@/components/Header";
+import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import QuizCard from "@/components/QuizCard";
 import AdSlot from "@/components/AdSlot";
@@ -57,6 +58,10 @@ const CategoryPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <SEO
+        title={`${category.name} Quizzes & Articles`}
+        description={`Explore ${category.name} quizzes and articles on Fizzty. Fun personality quizzes, trivia challenges and more!`}
+      />
       <Header />
       <main className="flex-1">
         <section className="bg-muted/40 py-10">

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
+import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import PostCard from "@/components/PostCard";
 import AdSlot from "@/components/AdSlot";
@@ -24,6 +25,7 @@ const ShoppingPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <SEO title="Shopping — Best Deals & Recommendations" description="Discover the best products, deals and recommendations curated by Fizzty. Worth every penny!" />
       <Header />
       <main className="flex-1">
         <section className="bg-gradient-to-br from-secondary/10 via-background to-accent/10 py-10">

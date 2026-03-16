@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
+import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import ReactionBar from "@/components/ReactionBar";
 import AdSlot from "@/components/AdSlot";
@@ -64,6 +65,12 @@ const PostPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <SEO
+        title={post.title}
+        description={(post.description || "Read this article on Fizzty!").slice(0, 155)}
+        image={post.image_url || undefined}
+        type="article"
+      />
       <Header />
       <main className="flex-1">
         <div className="container py-8 md:flex md:gap-6">

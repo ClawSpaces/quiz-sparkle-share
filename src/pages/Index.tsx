@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
+import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import QuizCard from "@/components/QuizCard";
 import PostCard from "@/components/PostCard";
@@ -55,6 +56,7 @@ const Index = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <SEO title="Fizzty — Fun Quizzes, Trending Content & Viral Stories" description="Take free personality quizzes, trivia challenges and discover trending content. Find out who you really are with Fizzty!" />
       <Header />
       <main className="flex-1">
         <section className="container py-4 md:py-6">

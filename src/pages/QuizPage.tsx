@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
+import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import ContentSidebar from "@/components/ContentSidebar";
 import AdSlot from "@/components/AdSlot";
@@ -214,6 +215,12 @@ const QuizPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <SEO
+        title={`${quiz.title} | Free Quiz`}
+        description={(quiz.description || "Take this quiz on Fizzty!").slice(0, 155)}
+        image={quiz.image_url || undefined}
+        type="quiz"
+      />
       <Header />
       <main className="flex-1">
         <div className="container py-6 md:py-10 md:flex md:gap-8">

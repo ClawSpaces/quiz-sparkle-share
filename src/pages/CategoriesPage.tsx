@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CategoryCard from "@/components/CategoryCard";
+import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 
 const CategoriesPage = () => {
@@ -15,6 +16,7 @@ const CategoriesPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <SEO title="All Categories — Quizzes & Articles" description="Browse all quiz and article categories on Fizzty. Find personality tests, trivia, and trending content by topic." />
       <Header />
       <main className="flex-1">
         <section className="bg-muted/40 py-10">

@@ -1,9 +1,11 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 const TermsPage = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Terms of Use — Fizzty" description="Read Fizzty's terms of use for accessing our quizzes, articles, and content." />
       <Header />
       <main className="container max-w-3xl py-10">
         <h1 className="font-display text-3xl font-black text-foreground mb-2">Terms of Use</h1>
