@@ -3,61 +3,50 @@ import { useEffect, useRef } from "react";
 interface AdSlotProps {
   format: "leaderboard" | "rectangle" | "native" | "banner";
   className?: string;
-  slotId?: string;
-  network?: "adsense" | "taboola" | "custom";
+  ezoicId?: number;
 }
 
-const sizes: Record<AdSlotProps["format"], string> = {
-  leaderboard: "h-[90px]",
-  rectangle: "h-[250px]",
-  native: "h-[120px]",
-  banner: "h-[60px]",
+const sizes: Record<AdSlotProps["format"], { minHeight: string }> = {
+  leaderboard: { minHeight: "90px" },
+  rectangle: { minHeight: "250px" },
+  native: { minHeight: "120px" },
+  banner: { minHeight: "60px" },
 };
 
-const dataFormats: Record<AdSlotProps["format"], string> = {
-  leaderboard: "horizontal",
-  rectangle: "rectangle",
-  native: "fluid",
-  banner: "horizontal",
-};
-
-const AdSlot = ({ format, className = "", slotId, network = "adsense" }: AdSlotProps) => {
+const AdSlot = ({ format, className = "", ezoicId }: AdSlotProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const adInitialized = useRef(false);
 
   useEffect(() => {
-    if (slotId && !adInitialized.current && containerRef.current) {
-      adInitialized.current = true;
+    // Ezoic will auto-detect placeholders with the ezoic-pub-ad-placeholder-* id
+    // and fill them. We just need the placeholder div to exist.
+    if (ezoicId && containerRef.current) {
       try {
-        if (network === "adsense" && (window as any).adsbygoogle) {
-          (window as any).adsbygoogle.push({});
+        if (typeof (window as any).ezstandalone !== "undefined") {
+          (window as any).ezstandalone.cmd.push(() => {
+            (window as any).ezstandalone.showAds();
+          });
         }
-      } catch (e) {
-        // Ad blocker or script not loaded
+      } catch {
+        // Ezoic script not loaded or ad blocker active
       }
     }
-  }, [slotId, network]);
-
-  if (slotId && network === "adsense") {
-    return (
-      <div ref={containerRef} className={`w-full overflow-hidden ${className}`}>
-        <ins
-          className="adsbygoogle"
-          style={{ display: "block" }}
-          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-          data-ad-slot={slotId}
-          data-ad-format={dataFormats[format]}
-          data-full-width-responsive="true"
-        />
-      </div>
-    );
-  }
+  }, [ezoicId]);
 
   return (
     <div
-      className={`flex w-full items-center justify-center rounded-lg border border-dashed border-border bg-muted/50 text-xs text-muted-foreground ${sizes[format]} ${className}`}
+      ref={containerRef}
+      id={ezoicId ? `ezoic-pub-ad-placeholder-${ezoicId}` : undefined}
+      className={`w-full overflow-hidden ${className}`}
+      style={{ minHeight: sizes[format].minHeight }}
     >
-      Advertisement — {format.toUpperCase()}
+      {!ezoicId && (
+        <div
+          className={`flex w-full items-center justify-center rounded-lg border border-dashed border-border bg-muted/50 text-xs text-muted-foreground`}
+          style={{ minHeight: sizes[format].minHeight }}
+        >
+          Advertisement — {format.toUpperCase()}
+        </div>
+      )}
     </div>
   );
 };
