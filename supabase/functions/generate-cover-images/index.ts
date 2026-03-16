@@ -116,7 +116,7 @@ serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            model: "google/gemini-2.5-flash-image",
+            model: "google/gemini-3.1-flash-image-preview",
             messages: [{ role: "user", content: prompt }],
             modalities: ["image", "text"],
           }),
@@ -126,16 +126,32 @@ serve(async (req) => {
           const errText = await aiResponse.text();
           console.error(`AI error for ${item.id}: ${aiResponse.status} ${errText}`);
           errors.push(`${item.id}: AI ${aiResponse.status}`);
-          // Add delay to avoid rate limits
           await new Promise(r => setTimeout(r, 3000));
           continue;
         }
 
         const aiData = await aiResponse.json();
-        const imageData = aiData.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+        console.log(`AI response keys for ${item.id}:`, JSON.stringify(Object.keys(aiData)));
+        const msg = aiData.choices?.[0]?.message;
+        console.log(`Message keys:`, msg ? JSON.stringify(Object.keys(msg)) : "no message");
+        
+        // Try multiple paths to find image data
+        let imageData = msg?.images?.[0]?.image_url?.url;
+        if (!imageData) {
+          // Check inline_data format
+          const parts = msg?.content?.parts || msg?.parts;
+          if (Array.isArray(parts)) {
+            for (const part of parts) {
+              if (part.inline_data?.data) {
+                imageData = `data:${part.inline_data.mime_type || 'image/png'};base64,${part.inline_data.data}`;
+                break;
+              }
+            }
+          }
+        }
 
         if (!imageData || !imageData.startsWith("data:image/")) {
-          console.error(`No image data for ${item.id}`);
+          console.error(`No image data for ${item.id}. Full response:`, JSON.stringify(aiData).substring(0, 500));
           errors.push(`${item.id}: no image data`);
           continue;
         }
