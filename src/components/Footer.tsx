@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import fizztyLogo from "@/assets/fizzty-logo.png";
 
 interface FooterCategory {
   id: string;
