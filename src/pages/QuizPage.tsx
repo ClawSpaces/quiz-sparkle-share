@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import SEO from "@/components/SEO";
+import SchemaMarkup from "@/components/SchemaMarkup";
 import Footer from "@/components/Footer";
 import ContentSidebar from "@/components/ContentSidebar";
 import AdSlot from "@/components/AdSlot";
@@ -220,6 +221,15 @@ const QuizPage = () => {
         description={(quiz.description || "Take this quiz on Fizzty!").slice(0, 155)}
         image={quiz.image_url || undefined}
         type="quiz"
+      />
+      <SchemaMarkup
+        type="quiz"
+        title={quiz.title}
+        description={quiz.description}
+        image={quiz.image_url}
+        categoryName={quiz.categories?.name}
+        categorySlug={quiz.categories?.slug}
+        questions={questions.map(q => ({ text: q.text, answers: q.answers.map(a => a.text) }))}
       />
       <Header />
       <main className="flex-1">

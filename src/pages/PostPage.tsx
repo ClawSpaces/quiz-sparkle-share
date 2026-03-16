@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import SEO from "@/components/SEO";
+import SchemaMarkup from "@/components/SchemaMarkup";
 import Footer from "@/components/Footer";
 import ReactionBar from "@/components/ReactionBar";
 import AdSlot from "@/components/AdSlot";
@@ -70,6 +71,14 @@ const PostPage = () => {
         description={(post.description || "Read this article on Fizzty!").slice(0, 155)}
         image={post.image_url || undefined}
         type="article"
+      />
+      <SchemaMarkup
+        type="article"
+        title={post.title}
+        description={post.description}
+        image={post.image_url}
+        datePublished={post.created_at}
+        dateModified={post.created_at}
       />
       <Header />
       <main className="flex-1">
