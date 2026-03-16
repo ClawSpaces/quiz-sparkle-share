@@ -248,7 +248,7 @@ const QuizPage = () => {
                   <>
                     <div className="h-9 w-9 overflow-hidden rounded-full bg-muted">
                       {quiz.profiles.avatar_url ? (
-                        <img src={quiz.profiles.avatar_url} alt={quiz.profiles.name} className="h-full w-full object-cover" />
+                        <img src={quiz.profiles.avatar_url} alt={quiz.profiles.name} className="h-full w-full object-cover" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center text-sm font-bold text-muted-foreground">
                           {quiz.profiles.name.charAt(0)}
