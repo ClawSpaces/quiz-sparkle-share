@@ -65,8 +65,13 @@ const PostPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <SEO
+        title={post.title}
+        description={(post.description || "Read this article on Fizzty!").slice(0, 155)}
+        image={post.image_url || undefined}
+        type="article"
+      />
       <Header />
-      <main className="flex-1">
         <div className="container py-8 md:flex md:gap-6">
           <div className="flex-1 min-w-0 max-w-3xl">
             <div className="aspect-[16/9] overflow-hidden rounded-xl">

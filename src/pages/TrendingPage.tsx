@@ -24,6 +24,7 @@ const TrendingPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <SEO title="Trending Now — Viral Stories & Hot Topics" description="Discover the most viral articles and trending stories on Fizzty. Stay in the loop with what's breaking the internet." />
       <Header />
       <main className="flex-1">
         <section className="bg-gradient-to-br from-destructive/10 via-background to-primary/10 py-10">

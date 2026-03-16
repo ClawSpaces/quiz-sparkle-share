@@ -58,6 +58,10 @@ const CategoryPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <SEO
+        title={`${category.name} Quizzes & Articles`}
+        description={`Explore ${category.name} quizzes and articles on Fizzty. Fun personality quizzes, trivia challenges and more!`}
+      />
       <Header />
       <main className="flex-1">
         <section className="bg-muted/40 py-10">

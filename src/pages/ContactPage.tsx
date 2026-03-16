@@ -47,6 +47,7 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Contact Us — Fizzty" description="Get in touch with the Fizzty team. Questions, feedback, or partnership inquiries welcome." />
       <Header />
       <main className="container max-w-xl py-10">
         <h1 className="font-display text-3xl font-black text-foreground mb-2">Contact Us</h1>

@@ -24,6 +24,7 @@ const BuzzChatPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <SEO title="Fizz Chat — Join the Conversation" description="Share your opinion and see what others think. Join the conversation on Fizzty's Fizz Chat!" />
       <Header />
       <main className="flex-1">
         <section className="bg-gradient-to-br from-accent/10 via-background to-primary/10 py-10">
