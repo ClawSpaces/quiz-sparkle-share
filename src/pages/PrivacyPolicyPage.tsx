@@ -12,7 +12,7 @@ const PrivacyPolicyPage = () => {
         <div className="prose prose-sm max-w-none space-y-8 text-foreground/90">
           <section>
             <h2 className="font-display text-xl font-bold text-foreground">1. Introduction</h2>
-            <p>Welcome to QuizMania (hereinafter "we", "us", or "the Website"). We respect your privacy and are committed to protecting your personal data in accordance with the General Data Protection Regulation (GDPR) of the European Union and applicable legislation.</p>
+            <p>Welcome to Fizzty (hereinafter "we", "us", or "the Website"). We respect your privacy and are committed to protecting your personal data in accordance with the General Data Protection Regulation (GDPR) of the European Union and applicable legislation.</p>
             <p>This Privacy Policy explains what data we collect, how we use it, with whom we share it, and what your rights are.</p>
           </section>
 
