@@ -173,7 +173,7 @@ const Index = () => {
               </div>
             </section>
 
-            <div className="py-4"><AdSlot format="leaderboard" /></div>
+            <div className="py-4"><AdSlot format="leaderboard" ezoicId={103} /></div>
           </div>
 
           <aside className="hidden md:block md:w-[25%] flex-shrink-0">
