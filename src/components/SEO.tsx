@@ -22,7 +22,7 @@ const SEO = ({ title, description, image, url, type = "website" }: SEOProps) => 
       <link rel="canonical" href={canonical} />
       <meta name="author" content="Fizzty" />
 
-      <meta property="og:title" content={title} />
+      <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage} />
       <meta property="og:url" content={canonical} />
