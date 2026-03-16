@@ -31,7 +31,7 @@ const TrendingPage = () => {
             <p className="mx-auto mt-3 max-w-lg text-muted-foreground">The most viral articles and videos breaking the internet right now.</p>
           </div>
         </section>
-        <div className="container py-4"><AdSlot format="leaderboard" /></div>
+        <div className="container py-4"><AdSlot format="leaderboard" ezoicId={111} /></div>
         <section className="container py-8">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (<PostCard key={post.id} post={post} />))}

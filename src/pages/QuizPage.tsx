@@ -393,7 +393,7 @@ const QuizPage = () => {
                     </div>
 
                     {qIdx < questions.length - 1 && (
-                  <AdSlot format="rectangle" className="mt-8" />
+                  <AdSlot format="rectangle" ezoicId={108} className="mt-8" />
                     )}
                   </div>
                 );

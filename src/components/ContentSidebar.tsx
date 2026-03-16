@@ -87,7 +87,7 @@ const ContentSidebar = () => {
           </div>
         )}
 
-        <AdSlot format="rectangle" />
+        <AdSlot format="rectangle" ezoicId={110} />
       </div>
     </aside>
   );
