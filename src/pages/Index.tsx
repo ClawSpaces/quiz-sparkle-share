@@ -125,7 +125,7 @@ const Index = () => {
 
         <div className="container py-4 md:flex md:gap-6">
           <div className="flex-1 min-w-0">
-            <div className="py-2"><AdSlot format="native" /></div>
+            <div className="py-2"><AdSlot format="native" ezoicId={101} /></div>
 
             <section className="border-t border-border bg-muted/30 py-4 md:py-8 -mx-4 px-4 md:-mx-0 md:px-0 md:rounded-lg">
               <SectionHeader title="Popular Quizzes" link="/quizzes" />
