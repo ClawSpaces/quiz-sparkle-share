@@ -95,7 +95,7 @@ export default function AdminBuzzChats() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">BuzzChat</h1>
+        <h1 className="text-2xl font-bold">FizzChat</h1>
         <Button onClick={() => { resetForm(); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" /> New BuzzChat
         </Button>
