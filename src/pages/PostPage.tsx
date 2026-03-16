@@ -72,6 +72,7 @@ const PostPage = () => {
         type="article"
       />
       <Header />
+      <main className="flex-1">
         <div className="container py-8 md:flex md:gap-6">
           <div className="flex-1 min-w-0 max-w-3xl">
             <div className="aspect-[16/9] overflow-hidden rounded-xl">
