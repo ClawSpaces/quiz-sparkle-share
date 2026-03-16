@@ -64,8 +64,11 @@ const Footer = () => {
               <Link to="/categories" className="text-sm text-muted-foreground transition-colors hover:text-primary">
                 All Categories
               </Link>
+              <Link to="/quizzes" className="text-sm text-muted-foreground transition-colors hover:text-primary">
+                Quizzes
+              </Link>
               <Link to="/about" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                About
+                About Us
               </Link>
               <Link to="/contact" className="text-sm text-muted-foreground transition-colors hover:text-primary">
                 Contact
@@ -78,7 +81,7 @@ const Footer = () => {
               Legal
             </h4>
             <nav className="mt-4 flex flex-col gap-2">
-              <Link to="/privacy" className="text-sm text-muted-foreground transition-colors hover:text-primary">
+              <Link to="/privacy-policy" className="text-sm text-muted-foreground transition-colors hover:text-primary">
                 Privacy Policy
               </Link>
               <Link to="/terms" className="text-sm text-muted-foreground transition-colors hover:text-primary">
