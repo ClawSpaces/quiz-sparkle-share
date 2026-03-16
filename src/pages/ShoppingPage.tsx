@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
+import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import PostCard from "@/components/PostCard";
 import AdSlot from "@/components/AdSlot";
