@@ -12,6 +12,10 @@ import { formatViews, timeAgo, reactionsToRecord, type Post, type BuzzChat } fro
 import { ArrowRight, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 
+const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  e.currentTarget.src = '/placeholder.svg';
+};
+
 const SectionHeader = ({ title, link, linkText = "See All" }: { title: string; link: string; linkText?: string }) => (
   <div className="mb-4 flex items-center justify-between border-b-2 border-foreground/10 pb-2">
     <h2 className="font-display text-lg font-extrabold uppercase tracking-wide text-foreground md:text-xl">{title}</h2>
@@ -61,7 +65,7 @@ const Index = () => {
               return (
                 <a key={post.id} href={`/post/${post.id}`} className="group relative block overflow-hidden rounded-lg">
                   <div className="relative h-full min-h-[380px] overflow-hidden rounded-lg">
-                    <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" onError={handleImgError} />
                     <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-5">
                       <span className="inline-block rounded bg-destructive px-2 py-0.5 text-[10px] font-bold uppercase text-destructive-foreground">Trending</span>
@@ -78,7 +82,7 @@ const Index = () => {
                 return (
                   <a key={post.id} href={`/post/${post.id}`} className="group flex flex-col overflow-hidden">
                     <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
-                      <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                      <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" onError={handleImgError} />
                       <span className="absolute bottom-2 left-2 font-display text-3xl font-black leading-none text-primary-foreground/30">{i + 2}</span>
                     </div>
                     <h3 className="mt-2 text-sm font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">{post.title}</h3>
@@ -92,7 +96,7 @@ const Index = () => {
             {trendingPosts.slice(0, 1).map((post) => (
               <a key={post.id} href={`/post/${post.id}`} className="group relative block overflow-hidden rounded-lg">
                 <div className="aspect-[16/10] overflow-hidden">
-                  <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" onError={handleImgError} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -107,7 +111,7 @@ const Index = () => {
                 <a key={post.id} href={`/post/${post.id}`} className="group flex items-center gap-3 border-b border-border py-3 last:border-b-0">
                   <span className="font-display text-2xl font-black text-muted-foreground/40 w-7 text-center flex-shrink-0">{i + 2}</span>
                   <div className="h-16 w-20 flex-shrink-0 overflow-hidden rounded-lg">
-                    <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover" loading="lazy" />
+                    <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover" loading="lazy" onError={handleImgError} />
                   </div>
                   <div className="flex flex-1 flex-col justify-center">
                     <h3 className="text-sm font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">{post.title}</h3>
@@ -184,7 +188,7 @@ const Index = () => {
                     <a key={post.id} href={`/post/${post.id}`} className="group flex items-start gap-3 p-3 transition-colors hover:bg-muted/50">
                       <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-destructive text-xs font-bold text-destructive-foreground">{i + 1}</span>
                       <div className="h-12 w-16 flex-shrink-0 overflow-hidden rounded">
-                        <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover" loading="lazy" />
+                        <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover" loading="lazy" onError={handleImgError} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="text-xs font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">{post.title}</h4>
@@ -203,7 +207,7 @@ const Index = () => {
                     <a key={post.id} href={`/post/${post.id}`} className="group flex items-start gap-3 p-3 transition-colors hover:bg-muted/50">
                       <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-primary text-xs font-bold text-primary-foreground">{i + 1}</span>
                       <div className="h-12 w-16 flex-shrink-0 overflow-hidden rounded">
-                        <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover" loading="lazy" />
+                        <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover" loading="lazy" onError={handleImgError} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="text-xs font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">{post.title}</h4>
