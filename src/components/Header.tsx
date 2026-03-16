@@ -29,9 +29,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
       <div className="container flex h-12 items-center justify-between gap-4 md:h-14">
         <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-          <span className="font-display text-xl font-black tracking-tight text-primary">
-            Quiz<span className="text-secondary">Mania</span>
-          </span>
+          <img src={fizztyLogo} alt="Fizzty" className="h-8" />
         </Link>
 
         <nav className="hidden items-center gap-0 md:flex">

@@ -168,9 +168,9 @@ export default function AdminBuzzChats() {
       <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete BuzzChat</DialogTitle>
+            <DialogTitle>Delete FizzChat</DialogTitle>
           </DialogHeader>
-          <p>Are you sure you want to delete this BuzzChat?</p>
+          <p>Are you sure you want to delete this FizzChat?</p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteId(null)}>Cancel</Button>
             <Button variant="destructive" onClick={() => deleteId && deleteMutation.mutate(deleteId)}>

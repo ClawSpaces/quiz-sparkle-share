@@ -10,7 +10,7 @@ const navItems = [
   { to: "/admin/posts", icon: FileText, label: "Posts" },
   { to: "/admin/quizzes", icon: HelpCircle, label: "Quizzes" },
   { to: "/admin/categories", icon: FolderOpen, label: "Categories" },
-  { to: "/admin/buzzchat", icon: MessageCircle, label: "BuzzChat" },
+  { to: "/admin/buzzchat", icon: MessageCircle, label: "FizzChat" },
 ];
 
 export default function AdminLayout() {

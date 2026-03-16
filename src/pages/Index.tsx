@@ -143,7 +143,7 @@ const Index = () => {
             </section>
 
             <section className="border-t border-border bg-muted/30 py-4 md:py-8 -mx-4 px-4 md:-mx-0 md:px-0 md:rounded-lg">
-              <SectionHeader title="Buzz Chat" link="/buzzchat" />
+              <SectionHeader title="Fizz Chat" link="/buzzchat" />
               <div className="grid gap-4 md:grid-cols-2">
                 {buzzChats.slice(0, 2).map((chat) => (<BuzzChatCard key={chat.id} chat={chat} variant="featured" />))}
               </div>

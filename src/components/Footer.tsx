@@ -89,7 +89,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-10 border-t pt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} QuizMania. Made with ❤️
+          © {new Date().getFullYear()} Fizzty. Made with ❤️
         </div>
       </div>
     </footer>

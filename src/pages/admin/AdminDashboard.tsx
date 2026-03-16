@@ -40,7 +40,7 @@ export default function AdminDashboard() {
     { label: "Posts", value: postCount, icon: FileText, color: "text-blue-500" },
     { label: "Quizzes", value: quizCount, icon: HelpCircle, color: "text-green-500" },
     { label: "Categories", value: categoryCount, icon: FolderOpen, color: "text-orange-500" },
-    { label: "BuzzChats", value: buzzChatCount, icon: MessageCircle, color: "text-purple-500" },
+    { label: "FizzChats", value: buzzChatCount, icon: MessageCircle, color: "text-purple-500" },
   ];
 
   return (

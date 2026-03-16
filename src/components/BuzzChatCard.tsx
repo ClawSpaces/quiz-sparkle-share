@@ -24,7 +24,7 @@ const BuzzChatCard = ({ chat, variant = "default" }: BuzzChatCardProps) => {
       )}
       <div className="p-4">
         <span className="mb-2 inline-block rounded-full bg-accent/20 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-accent">
-          Buzz Chat
+          Fizz Chat
         </span>
         <h3 className={`font-display font-bold leading-tight text-foreground ${isFeatured ? "text-xl md:text-2xl" : "text-base md:text-lg"}`}>
           {chat.question}
