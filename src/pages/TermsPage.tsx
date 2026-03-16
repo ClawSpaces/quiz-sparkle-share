@@ -92,8 +92,8 @@ const TermsPage = () => {
             <h2 className="font-display text-xl font-bold text-foreground">12. Contact</h2>
             <p>If you have questions regarding these Terms of Use, please contact us:</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li><strong>Email:</strong> contact@fizzty.com</li>
-              <li><strong>Website:</strong> fizzty.com</li>
+              <li><strong>Email:</strong> <a href="mailto:john.nedev@gmail.com" className="text-primary hover:underline">john.nedev@gmail.com</a></li>
+              <li><strong>Website:</strong> <a href="https://fizzty.com" className="text-primary hover:underline">fizzty.com</a></li>
             </ul>
           </section>
         </div>
