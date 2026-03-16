@@ -78,7 +78,7 @@ const PostPage = () => {
         description={post.description}
         image={post.image_url}
         datePublished={post.created_at}
-        dateModified={post.updated_at}
+        dateModified={post.created_at}
       />
       <Header />
       <main className="flex-1">
