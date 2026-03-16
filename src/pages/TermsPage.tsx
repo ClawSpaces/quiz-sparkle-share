@@ -12,7 +12,7 @@ const TermsPage = () => {
         <div className="prose prose-sm max-w-none space-y-8 text-foreground/90">
           <section>
             <h2 className="font-display text-xl font-bold text-foreground">1. Acceptance of Terms</h2>
-            <p>By accessing and using the QuizMania website (hereinafter "the Website"), you fully and unconditionally accept these Terms of Use. If you do not agree with any of these terms, please do not use the Website.</p>
+            <p>By accessing and using the Fizzty website (hereinafter "the Website"), you fully and unconditionally accept these Terms of Use. If you do not agree with any of these terms, please do not use the Website.</p>
           </section>
 
           <section>
