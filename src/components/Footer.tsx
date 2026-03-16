@@ -28,8 +28,8 @@ const Footer = () => {
       <div className="container py-12">
         <div className="grid gap-8 md:grid-cols-4">
           <div className="md:col-span-1">
-            <Link to="/" className="font-display text-xl font-black text-primary">
-              Quiz<span className="text-secondary">Mania</span>
+            <Link to="/" className="block">
+              <img src={fizztyLogo} alt="Fizzty" className="h-8" />
             </Link>
             <p className="mt-3 text-sm text-muted-foreground">
               The best quizzes, trending content & viral stories. Discover who you are and have fun!
