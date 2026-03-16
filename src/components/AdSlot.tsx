@@ -21,9 +21,10 @@ const AdSlot = ({ format, className = "", ezoicId }: AdSlotProps) => {
     // and fill them. We just need the placeholder div to exist.
     if (ezoicId && containerRef.current) {
       try {
-        if (typeof (window as any).ezstandalone !== "undefined") {
-          (window as any).ezstandalone.cmd.push(() => {
-            (window as any).ezstandalone.showAds();
+        const ez = (window as any).ezstandalone || (window as any).defined_ezstandalone;
+        if (ez && ez.cmd) {
+          ez.cmd.push(() => {
+            if (ez.showAds) ez.showAds();
           });
         }
       } catch {
