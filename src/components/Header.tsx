@@ -3,13 +3,14 @@ import { Search, X } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import fizztyLogo from "@/assets/fizzty-logo.png";
 
 const navItems = [
   { label: "Trending", path: "/trending" },
   { label: "Quizzes", path: "/quizzes" },
   { label: "Shopping", path: "/shopping" },
   { label: "Celebrity", path: "/celebrity" },
-  { label: "Buzz Chat", path: "/buzzchat" },
+  { label: "Fizz Chat", path: "/buzzchat" },
 ];
 
 const Header = () => {
