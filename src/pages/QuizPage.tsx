@@ -222,6 +222,15 @@ const QuizPage = () => {
         image={quiz.image_url || undefined}
         type="quiz"
       />
+      <SchemaMarkup
+        type="quiz"
+        title={quiz.title}
+        description={quiz.description}
+        image={quiz.image_url}
+        categoryName={quiz.categories?.name}
+        categorySlug={quiz.categories?.slug}
+        questions={questions.map(q => ({ text: q.text, answers: q.answers.map(a => a.text) }))}
+      />
       <Header />
       <main className="flex-1">
         <div className="container py-6 md:py-10 md:flex md:gap-8">

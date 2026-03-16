@@ -72,6 +72,14 @@ const PostPage = () => {
         image={post.image_url || undefined}
         type="article"
       />
+      <SchemaMarkup
+        type="article"
+        title={post.title}
+        description={post.description}
+        image={post.image_url}
+        datePublished={post.created_at}
+        dateModified={post.updated_at}
+      />
       <Header />
       <main className="flex-1">
         <div className="container py-8 md:flex md:gap-6">
