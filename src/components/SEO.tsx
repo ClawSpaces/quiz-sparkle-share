@@ -22,7 +22,7 @@ const SEO = ({ title, description, image, url, type = "website" }: SEOProps) => 
       <link rel="canonical" href={canonical} />
       <meta name="author" content="Fizzty" />
 
-      <meta property="og:title" content={title} />
+      <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage} />
       <meta property="og:url" content={canonical} />
@@ -30,7 +30,7 @@ const SEO = ({ title, description, image, url, type = "website" }: SEOProps) => 
       <meta property="og:site_name" content="Fizzty" />
 
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={title} />
+      <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
     </Helmet>
