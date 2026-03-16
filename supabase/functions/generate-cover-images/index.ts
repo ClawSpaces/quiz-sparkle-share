@@ -97,13 +97,16 @@ serve(async (req) => {
       });
     }
 
-    console.log(`Found ${broken.length} broken images in ${table}, generating replacements...`);
+    console.log(`Found ${broken.length} broken images in ${table}, will fix up to ${max_fix}...`);
+    
+    // Only process up to max_fix items per invocation
+    const toFix = broken.slice(0, max_fix);
 
     // Generate and upload images one by one
     let fixed = 0;
     const errors: string[] = [];
 
-    for (const item of broken) {
+    for (const item of toFix) {
       try {
         console.log(`Generating image for: "${item.text}" (${item.id})`);
 
