@@ -25,8 +25,7 @@ const ContentSidebar = () => {
   return (
     <aside className="hidden md:block md:w-[25%] flex-shrink-0">
       <div className="sticky top-4 space-y-6">
-        <AdSlot format="rectangle" />
-
+              <AdSlot format="rectangle" ezoicId={109} />
         <div className="overflow-hidden rounded-lg border border-border">
           <div className="bg-foreground px-4 py-2.5">
             <h3 className="font-display text-sm font-extrabold uppercase tracking-wide text-background">Latest Posts</h3>
