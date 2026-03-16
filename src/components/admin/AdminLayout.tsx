@@ -37,7 +37,7 @@ export default function AdminLayout() {
     <div className="min-h-screen flex bg-muted">
       <aside className="w-64 bg-card border-r flex flex-col">
         <div className="p-4 border-b">
-          <h1 className="text-lg font-bold text-foreground">BuzzFeed Admin</h1>
+          <h1 className="text-lg font-bold text-foreground">Fizzty Admin</h1>
         </div>
         <nav className="flex-1 p-3 space-y-1">
           {navItems.map((item) => (
