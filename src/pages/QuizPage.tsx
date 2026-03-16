@@ -346,7 +346,7 @@ const QuizPage = () => {
                               >
                                 {ans.image_url && (
                                   <div className="aspect-square overflow-hidden">
-                                    <img src={ans.image_url} alt={ans.text} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+                                    <img src={ans.image_url} alt={ans.text} className="h-full w-full object-cover transition-transform group-hover:scale-105" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
                                   </div>
                                 )}
                                 <div className="flex items-center justify-between p-2.5">
