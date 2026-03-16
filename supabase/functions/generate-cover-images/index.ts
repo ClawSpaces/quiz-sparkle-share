@@ -79,9 +79,19 @@ serve(async (req) => {
           return; // Already fixed
         }
         try {
-          const res = await fetch(url, { method: "HEAD", redirect: "follow" });
+          const res = await fetch(url, { method: "GET", redirect: "follow" });
           if (!res.ok) {
             broken.push({ id: r.id, text: r[textField] || "" });
+          } else {
+            // Check if the response is actually an image with reasonable size
+            const contentLength = res.headers.get("content-length");
+            const contentType = res.headers.get("content-type") || "";
+            // Consume the body to prevent leaks
+            const body = await res.arrayBuffer();
+            // If it's less than 1KB or not an image content-type, it's likely broken
+            if (body.byteLength < 1000 || (!contentType.includes("image") && !contentType.includes("jpeg") && !contentType.includes("png"))) {
+              broken.push({ id: r.id, text: r[textField] || "" });
+            }
           }
         } catch {
           broken.push({ id: r.id, text: r[textField] || "" });
