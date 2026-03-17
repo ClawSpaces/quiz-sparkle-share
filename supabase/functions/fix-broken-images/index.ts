@@ -191,7 +191,7 @@ ${broken.map((item, i) => `${i + 1}. [${item.id}] "${item.text}"`).join("\n")}`;
     );
   } catch (e) {
     console.error("fix-broken-images error:", e);
-    return new Response(JSON.stringify({ error: e.message }), {
+    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

@@ -130,7 +130,7 @@ ${items.map((item: any, i: number) => `${i + 1}. [${item.id}] "${item.text}"`).j
     );
   } catch (e) {
     console.error("fix-missing-images error:", e);
-    return new Response(JSON.stringify({ error: e.message }), {
+    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
