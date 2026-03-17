@@ -224,7 +224,7 @@ serve(async (req) => {
         await new Promise(r => setTimeout(r, 500));
       } catch (e) {
         console.error(`Error processing ${item.id}:`, e);
-        errors.push(`${item.id}: ${e.message}`);
+        errors.push(`${item.id}: ${e instanceof Error ? e.message : "Unknown error"}`);
       }
     }
 
