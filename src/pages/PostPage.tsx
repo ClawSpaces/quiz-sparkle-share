@@ -71,6 +71,8 @@ const PostPage = () => {
         description={(post.description || "Read this article on Fizzty!").slice(0, 155)}
         image={post.image_url || undefined}
         type="article"
+        publishedTime={post.created_at}
+        modifiedTime={post.created_at}
       />
       <SchemaMarkup
         type="article"

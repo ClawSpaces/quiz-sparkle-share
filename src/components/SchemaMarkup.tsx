@@ -34,6 +34,16 @@ type SchemaProps = QuizSchemaProps | ArticleSchemaProps | WebsiteSchemaProps;
 
 const BASE_URL = "https://fizzty.com";
 
+const PUBLISHER = {
+  "@type": "Organization",
+  name: "Fizzty",
+  url: BASE_URL,
+  logo: {
+    "@type": "ImageObject",
+    url: `${BASE_URL}/favicon.ico`,
+  },
+};
+
 const buildBreadcrumbs = (items: BreadcrumbItem[]) => ({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -55,7 +65,12 @@ const SchemaMarkup = (props: SchemaProps) => {
       name: "Fizzty",
       url: BASE_URL,
       description: "Take free personality quizzes, trivia challenges and discover trending content.",
-      publisher: { "@type": "Organization", name: "Fizzty" },
+      publisher: PUBLISHER,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${BASE_URL}/quizzes?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
     });
   }
 
@@ -66,6 +81,8 @@ const SchemaMarkup = (props: SchemaProps) => {
       name: props.title,
       description: props.description || undefined,
       image: props.image || undefined,
+      publisher: PUBLISHER,
+      provider: PUBLISHER,
     };
     if (props.categoryName) {
       quizSchema.educationalAlignment = {
@@ -73,6 +90,7 @@ const SchemaMarkup = (props: SchemaProps) => {
         alignmentType: "educationalSubject",
         targetName: props.categoryName,
       };
+      quizSchema.about = { "@type": "Thing", name: props.categoryName };
     }
     if (props.questions?.length) {
       quizSchema.hasPart = props.questions.map((q) => ({
@@ -98,10 +116,14 @@ const SchemaMarkup = (props: SchemaProps) => {
       headline: props.title,
       description: props.description || undefined,
       image: props.image || undefined,
-      author: { "@type": "Organization", name: "Fizzty" },
-      publisher: { "@type": "Organization", name: "Fizzty", url: BASE_URL },
+      author: PUBLISHER,
+      publisher: PUBLISHER,
       datePublished: props.datePublished,
       dateModified: props.dateModified,
+      mainEntityOfPage: {
+        "@type": "WebPage",
+        "@id": typeof window !== "undefined" ? window.location.href : BASE_URL,
+      },
     });
 
     const crumbs: BreadcrumbItem[] = [{ name: "Home", url: BASE_URL }];

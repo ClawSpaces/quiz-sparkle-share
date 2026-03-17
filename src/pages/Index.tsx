@@ -67,7 +67,7 @@ const Index = () => {
             {trendingPosts.slice(0, 1).map((post) => {
               const reactions = reactionsToRecord(post.post_reactions);
               return (
-                <a key={post.id} href={`/post/${post.id}`} className="group relative block overflow-hidden rounded-lg">
+                <Link key={post.id} to={`/post/${post.id}`} className="group relative block overflow-hidden rounded-lg">
                   <div className="relative h-full min-h-[380px] overflow-hidden rounded-lg">
                     <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" onError={handleImgError} />
                     <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
@@ -77,28 +77,28 @@ const Index = () => {
                       <div className="mt-2"><ReactionBar reactions={reactions} compact /></div>
                     </div>
                   </div>
-                </a>
+                </Link>
               );
             })}
             <div className="grid grid-cols-2 gap-4">
               {trendingPosts.slice(1, 5).map((post, i) => {
                 const reactions = reactionsToRecord(post.post_reactions);
                 return (
-                  <a key={post.id} href={`/post/${post.id}`} className="group flex flex-col overflow-hidden">
+                  <Link key={post.id} to={`/post/${post.id}`} className="group flex flex-col overflow-hidden">
                     <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
                       <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" onError={handleImgError} />
                       <span className="absolute bottom-2 left-2 font-display text-3xl font-black leading-none text-primary-foreground/30">{i + 2}</span>
                     </div>
                     <h3 className="mt-2 text-sm font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">{post.title}</h3>
                     <div className="mt-1.5"><ReactionBar reactions={reactions} compact /></div>
-                  </a>
+                  </Link>
                 );
               })}
             </div>
           </div>
           <div className="md:hidden">
             {trendingPosts.slice(0, 1).map((post) => (
-              <a key={post.id} href={`/post/${post.id}`} className="group relative block overflow-hidden rounded-lg">
+              <Link key={post.id} to={`/post/${post.id}`} className="group relative block overflow-hidden rounded-lg">
                 <div className="aspect-[16/10] overflow-hidden">
                   <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" onError={handleImgError} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -108,11 +108,11 @@ const Index = () => {
                   <h2 className="mt-1 font-display text-base font-bold leading-tight text-primary-foreground">{post.title}</h2>
                   <span className="mt-1 block text-[11px] text-primary-foreground/70">{timeAgo(post.created_at)} · {formatViews(post.views_count)} views</span>
                 </div>
-              </a>
+              </Link>
             ))}
             <div className="mt-3 flex flex-col">
               {trendingPosts.slice(1, 4).map((post, i) => (
-                <a key={post.id} href={`/post/${post.id}`} className="group flex items-center gap-3 border-b border-border py-3 last:border-b-0">
+                <Link key={post.id} to={`/post/${post.id}`} className="group flex items-center gap-3 border-b border-border py-3 last:border-b-0">
                   <span className="font-display text-2xl font-black text-muted-foreground/40 w-7 text-center flex-shrink-0">{i + 2}</span>
                   <div className="h-16 w-20 flex-shrink-0 overflow-hidden rounded-lg">
                     <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover" loading="lazy" onError={handleImgError} />
@@ -121,7 +121,7 @@ const Index = () => {
                     <h3 className="text-sm font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">{post.title}</h3>
                     <span className="mt-0.5 text-[11px] text-muted-foreground">{timeAgo(post.created_at)} · {formatViews(post.views_count)} views</span>
                   </div>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -189,7 +189,7 @@ const Index = () => {
                 </div>
                 <div className="divide-y divide-border">
                   {latestPosts.slice(0, 5).map((post, i) => (
-                    <a key={post.id} href={`/post/${post.id}`} className="group flex items-start gap-3 p-3 transition-colors hover:bg-muted/50">
+                    <Link key={post.id} to={`/post/${post.id}`} className="group flex items-start gap-3 p-3 transition-colors hover:bg-muted/50">
                       <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-destructive text-xs font-bold text-destructive-foreground">{i + 1}</span>
                       <div className="h-12 w-16 flex-shrink-0 overflow-hidden rounded">
                         <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover" loading="lazy" onError={handleImgError} />
@@ -198,7 +198,7 @@ const Index = () => {
                         <h4 className="text-xs font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">{post.title}</h4>
                         <span className="mt-0.5 block text-[10px] text-muted-foreground">{timeAgo(post.created_at)}</span>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -208,7 +208,7 @@ const Index = () => {
                 </div>
                 <div className="divide-y divide-border">
                   {trendingPosts.slice(0, 5).map((post, i) => (
-                    <a key={post.id} href={`/post/${post.id}`} className="group flex items-start gap-3 p-3 transition-colors hover:bg-muted/50">
+                    <Link key={post.id} to={`/post/${post.id}`} className="group flex items-start gap-3 p-3 transition-colors hover:bg-muted/50">
                       <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-primary text-xs font-bold text-primary-foreground">{i + 1}</span>
                       <div className="h-12 w-16 flex-shrink-0 overflow-hidden rounded">
                         <img src={post.image_url || "/placeholder.svg"} alt={post.title} className="h-full w-full object-cover" loading="lazy" onError={handleImgError} />
@@ -217,7 +217,7 @@ const Index = () => {
                         <h4 className="text-xs font-bold leading-tight text-foreground group-hover:text-primary line-clamp-2">{post.title}</h4>
                         <span className="mt-0.5 block text-[10px] text-muted-foreground">{formatViews(post.views_count)} views</span>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -228,9 +228,9 @@ const Index = () => {
                 <div className="p-3">
                   <div className="flex flex-wrap gap-2">
                     {dbCategories.map((cat) => (
-                      <a key={cat.id} href={`/category/${cat.slug}`} className="rounded-full border border-border bg-muted/50 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:bg-primary hover:text-primary-foreground">
+                      <Link key={cat.id} to={`/category/${cat.slug}`} className="rounded-full border border-border bg-muted/50 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:bg-primary hover:text-primary-foreground">
                         {cat.name}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>

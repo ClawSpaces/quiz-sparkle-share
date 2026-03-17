@@ -8,12 +8,15 @@ interface SEOProps {
   image?: string;
   url?: string;
   type?: "website" | "article" | "quiz";
+  noindex?: boolean;
+  publishedTime?: string;
+  modifiedTime?: string;
 }
 
-const SEO = ({ title, description, image, url, type = "website" }: SEOProps) => {
+const SEO = ({ title, description, image, url, type = "website", noindex = false, publishedTime, modifiedTime }: SEOProps) => {
   const fullTitle = `${title} | Fizzty`;
   const ogImage = image || DEFAULT_OG_IMAGE;
-  const canonical = url || (typeof window !== "undefined" ? window.location.href : "");
+  const canonical = url || (typeof window !== "undefined" ? window.location.href.split("?")[0] : "https://fizzty.com");
 
   return (
     <Helmet>
@@ -21,18 +24,29 @@ const SEO = ({ title, description, image, url, type = "website" }: SEOProps) => 
       <meta name="description" content={description} />
       <link rel="canonical" href={canonical} />
       <meta name="author" content="Fizzty" />
+      {noindex && <meta name="robots" content="noindex, nofollow" />}
 
+      {/* Open Graph */}
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
       <meta property="og:url" content={canonical} />
-      <meta property="og:type" content={type} />
+      <meta property="og:type" content={type === "quiz" ? "website" : type} />
       <meta property="og:site_name" content="Fizzty" />
+      <meta property="og:locale" content="en_US" />
 
+      {/* Article-specific OG tags */}
+      {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+      {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+
+      {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
+      <meta name="twitter:site" content="@Fizzty" />
     </Helmet>
   );
 };
