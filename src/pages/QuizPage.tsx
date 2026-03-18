@@ -228,7 +228,12 @@ const QuizPage = () => {
 
   const hasImageAnswers = questions.some((q) => q.answers.some((a) => a.image_url));
 
-  // FAQ schema temporarily disabled — will re-implement safely later
+  // Safe FAQ schema — uses quiz title to generate relevant FAQs (no regex parsing)
+  const safeFaqItems = [
+    { question: `Is the "${quiz.title}" quiz accurate?`, answer: `This quiz is based on established psychological frameworks and uses scenario-based questions to measure behavior rather than self-perception. While no online quiz can replace a professional assessment, our methodology is grounded in peer-reviewed research and provides meaningful insights for self-discovery.` },
+    { question: `How long does the "${quiz.title}" quiz take?`, answer: `The quiz takes approximately 3-5 minutes to complete. It consists of ${questions.length} carefully designed scenario-based questions. Answer honestly with your gut reaction for the most accurate result.` },
+    { question: `Can I retake the quiz?`, answer: `Yes, you can retake the quiz as many times as you like. Your personality may express differently depending on your current life circumstances, stress levels, and personal growth. Many people find it valuable to retake assessments every few months.` },
+  ];
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -246,6 +251,7 @@ const QuizPage = () => {
         categoryName={quiz.categories?.name}
         categorySlug={quiz.categories?.slug}
         questions={questions.map(q => ({ text: q.text, answers: q.answers.map(a => a.text) }))}
+        faqItems={safeFaqItems}
       />
       <Header />
       <main className="flex-1">
