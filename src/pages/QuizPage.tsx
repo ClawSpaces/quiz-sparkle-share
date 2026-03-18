@@ -79,10 +79,10 @@ const QuizPage = () => {
     const fetchQuiz = async () => {
       // Support both UUID and slug-based lookups
       const lookupField = isUUID(idOrSlug) ? "id" : "slug";
-      const quizRes: any = await supabase
+      const quizRes: any = await (supabase as any)
         .from("quizzes")
         .select("*, categories(name, slug), profiles(name, title, avatar_url)")
-        .eq(lookupField as any, idOrSlug)
+        .eq(lookupField, idOrSlug)
         .single();
 
       if (!quizRes.data) { setLoading(false); return; }
