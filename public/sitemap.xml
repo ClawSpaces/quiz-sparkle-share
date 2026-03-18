@@ -509,12 +509,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fizzty.com/post/a0371a57-ffd3-451d-b365-2103cb921bf9</loc>
-    <lastmod>2026-03-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fizzty.com/post/d0d4fce9-5a17-4b0a-97af-f38e61687fba</loc>
     <lastmod>2026-03-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -571,6 +565,12 @@
   <url>
     <loc>https://fizzty.com/post/4a742881-ce2d-470e-bdcb-bb6ef975c5b4</loc>
     <lastmod>2026-03-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fizzty.com/post/a0371a57-ffd3-451d-b365-2103cb921bf9</loc>
+    <lastmod>2026-03-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -725,18 +725,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fizzty.com/post/b12795a7-1a78-41a8-be4e-5daef701b9e0</loc>
-    <lastmod>2026-03-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fizzty.com/post/73c913fb-a0b7-43da-b5ec-0e38576aee34</loc>
-    <lastmod>2026-03-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fizzty.com/post/a990dab7-4f4e-42c5-b486-e942ec1c492b</loc>
     <lastmod>2026-03-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -756,6 +744,54 @@
   </url>
   <url>
     <loc>https://fizzty.com/post/a5ebc076-24f3-43c3-a792-3f47d6bdf02b</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fizzty.com/post/b12795a7-1a78-41a8-be4e-5daef701b9e0</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fizzty.com/post/73c913fb-a0b7-43da-b5ec-0e38576aee34</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fizzty.com/post/1228ebaa-068a-4180-85e7-58bcc5cddd6f</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fizzty.com/post/80a5af79-3189-4f7d-a13d-9f44b2b022bc</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fizzty.com/post/30cabea2-1b69-465f-8758-f98961b9b848</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fizzty.com/post/1a13d05b-b855-466d-8092-3987ba591365</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fizzty.com/post/ba65ea5d-c0b7-4de4-a918-3cf47ac4c99a</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fizzty.com/post/667ae2bb-f259-4758-a0ca-c0c3c6a378c6</loc>
     <lastmod>2026-03-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
