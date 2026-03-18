@@ -59,11 +59,11 @@ serve(async (req) => {
     const textField = table === "categories" ? "name" : table === "questions" ? "text" : "title";
     const selectCols = `id, ${textField}, image_url`;
 
-    const { data: records, error: fetchError } = await supabase
+    const { data: records, error: fetchError } = await (supabase
       .from(table)
       .select(selectCols)
       .not("image_url", "is", null)
-      .neq("image_url", "");
+      .neq("image_url", "") as any);
 
     if (fetchError) throw fetchError;
     if (!records || records.length === 0) {
