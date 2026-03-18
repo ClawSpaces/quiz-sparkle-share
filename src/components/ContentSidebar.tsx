@@ -11,7 +11,7 @@ const ContentSidebar = () => {
   useEffect(() => {
     const fetchData = async () => {
       const [qRes, cRes, pRes] = await Promise.all([
-        supabase.from("quizzes").select("id, title, image_url, plays_count, categories(name, slug)").eq("is_published", true).order("plays_count", { ascending: false }).limit(5),
+        supabase.from("quizzes").select("id, slug, title, image_url, plays_count, categories(name, slug)").eq("is_published", true).order("plays_count", { ascending: false }).limit(5),
         supabase.from("categories").select("id, name, slug").order("sort_order"),
         supabase.from("posts").select("id, title, image_url, views_count, created_at").eq("is_published", true).order("created_at", { ascending: false }).limit(5),
       ]);

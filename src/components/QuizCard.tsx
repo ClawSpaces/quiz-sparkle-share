@@ -2,6 +2,7 @@ import { Play } from "lucide-react";
 
 interface QuizCardQuiz {
   id: string;
+  slug?: string | null;
   title: string;
   description?: string | null;
   image_url?: string | null;
@@ -29,7 +30,7 @@ const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
 const QuizCard = ({ quiz, variant = "default" }: QuizCardProps) => {
   const image = quiz.image_url || "/placeholder.svg";
   const category = quiz.categories?.name;
-  const href = `/quiz/${quiz.id}`;
+  const href = `/quiz/${quiz.slug || quiz.id}`;
 
   if (variant === "large") {
     return (

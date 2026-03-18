@@ -54,8 +54,11 @@ interface Result {
   image_url: string | null;
 }
 
+const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+
 const QuizPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { idOrSlug } = useParams<{ idOrSlug: string }>();
+  const id = idOrSlug; // keep 'id' alias for backwards compatibility in rest of component
   const [quiz, setQuiz] = useState<QuizData | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [results, setResults] = useState<Result[]>([]);
@@ -72,15 +75,25 @@ const QuizPage = () => {
   const resultRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!id) return;
+    if (!idOrSlug) return;
     const fetchQuiz = async () => {
-      const [quizRes, questionsRes, resultsRes] = await Promise.all([
-        supabase.from("quizzes").select("*, categories(name, slug), profiles(name, title, avatar_url)").eq("id", id).single(),
-        supabase.from("questions").select("*, answers(*)").eq("quiz_id", id).order("sort_order"),
-        supabase.from("results").select("*").eq("quiz_id", id).order("sort_order"),
+      // Support both UUID and slug-based lookups
+      const lookupField = isUUID(idOrSlug) ? "id" : "slug";
+      const quizRes = await supabase
+        .from("quizzes")
+        .select("*, categories(name, slug), profiles(name, title, avatar_url)")
+        .eq(lookupField, idOrSlug)
+        .single();
+
+      if (!quizRes.data) { setLoading(false); return; }
+      const quizId = quizRes.data.id;
+
+      const [questionsRes, resultsRes] = await Promise.all([
+        supabase.from("questions").select("*, answers(*)").eq("quiz_id", quizId).order("sort_order"),
+        supabase.from("results").select("*").eq("quiz_id", quizId).order("sort_order"),
       ]);
 
-      if (quizRes.data) setQuiz(quizRes.data as any);
+      setQuiz(quizRes.data as any);
       if (questionsRes.data) {
         const qs = (questionsRes.data as any[]).map((q) => ({
           ...q,
@@ -92,7 +105,7 @@ const QuizPage = () => {
       setLoading(false);
     };
     fetchQuiz();
-  }, [id]);
+  }, [idOrSlug]);
 
   const answeredCount = Object.keys(answers).length;
 
