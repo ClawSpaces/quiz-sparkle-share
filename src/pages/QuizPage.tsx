@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
@@ -229,10 +229,11 @@ const QuizPage = () => {
   const hasImageAnswers = questions.some((q) => q.answers.some((a) => a.image_url));
 
   // Extract FAQ items from quiz description for FAQPage schema
-  const faqItems = useMemo(() => {
-    if (!quiz.description) return [];
-    const items: { question: string; answer: string }[] = [];
+  // NOTE: Cannot use useMemo here — it's after early returns which violates React hooks rules
+  const faqItems = (() => {
+    if (!quiz.description) return undefined;
     try {
+      const items: { question: string; answer: string }[] = [];
       const faqRegex = /###?\s*Q:\s*(.+?)[\n\r]+([\s\S]*?)(?=###?\s*Q:|---|$)/gi;
       let match;
       while ((match = faqRegex.exec(quiz.description)) !== null) {
@@ -240,11 +241,11 @@ const QuizPage = () => {
         const a = match[2].trim().replace(/\*+/g, "").slice(0, 300);
         if (q && a) items.push({ question: q, answer: a });
       }
+      return items.length > 0 ? items : undefined;
     } catch {
-      // Regex failed — return empty FAQ
+      return undefined;
     }
-    return items;
-  }, [quiz.description]);
+  })();
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
