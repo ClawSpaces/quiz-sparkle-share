@@ -179,6 +179,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://fizzty.com/quiz/d0d3637f-f5cf-4603-bb60-84895b7a67ac</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://fizzty.com/quiz/a6459ee2-f1c7-4ad8-afca-d93308d0a347</loc>
     <lastmod>2026-03-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -228,12 +234,6 @@
   </url>
   <url>
     <loc>https://fizzty.com/quiz/0eecbc0b-f06c-486e-8fe4-b2339dba8a6d</loc>
-    <lastmod>2026-03-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fizzty.com/quiz/d0d3637f-f5cf-4603-bb60-84895b7a67ac</loc>
     <lastmod>2026-03-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -384,6 +384,18 @@
   </url>
   <url>
     <loc>https://fizzty.com/post/53405f17-55c5-4d8e-a4c7-edf960cf830c</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fizzty.com/post/a1fb4682-bdd7-4f8b-ad79-f9e0777a043e</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fizzty.com/post/88648b11-af63-47ce-b583-ffb083fd5331</loc>
     <lastmod>2026-03-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
