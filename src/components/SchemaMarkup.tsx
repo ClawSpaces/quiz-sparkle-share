@@ -5,6 +5,11 @@ interface BreadcrumbItem {
   url?: string;
 }
 
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
 interface QuizSchemaProps {
   type: "quiz";
   title: string;
@@ -13,6 +18,7 @@ interface QuizSchemaProps {
   categoryName?: string;
   categorySlug?: string;
   questions?: { text: string; answers: string[] }[];
+  faqItems?: FAQItem[];
 }
 
 interface ArticleSchemaProps {
@@ -100,6 +106,22 @@ const SchemaMarkup = (props: SchemaProps) => {
       }));
     }
     schemas.push(quizSchema);
+
+    // FAQPage schema — boosts AI Overview visibility by 3.2x
+    if (props.faqItems?.length) {
+      schemas.push({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: props.faqItems.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.answer,
+          },
+        })),
+      });
+    }
 
     const crumbs: BreadcrumbItem[] = [{ name: "Home", url: BASE_URL }];
     if (props.categoryName && props.categorySlug) {
