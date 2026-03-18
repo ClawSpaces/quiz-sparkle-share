@@ -232,12 +232,16 @@ const QuizPage = () => {
   const faqItems = useMemo(() => {
     if (!quiz.description) return [];
     const items: { question: string; answer: string }[] = [];
-    const faqRegex = /###?\s*Q:\s*(.+?)[\n\r]+([\s\S]*?)(?=###?\s*Q:|---|\n##|\Z)/gi;
-    let match;
-    while ((match = faqRegex.exec(quiz.description)) !== null) {
-      const q = match[1].trim().replace(/\*+/g, "");
-      const a = match[2].trim().replace(/\*+/g, "").slice(0, 300);
-      if (q && a) items.push({ question: q, answer: a });
+    try {
+      const faqRegex = /###?\s*Q:\s*(.+?)[\n\r]+([\s\S]*?)(?=###?\s*Q:|---|$)/gi;
+      let match;
+      while ((match = faqRegex.exec(quiz.description)) !== null) {
+        const q = match[1].trim().replace(/\*+/g, "");
+        const a = match[2].trim().replace(/\*+/g, "").slice(0, 300);
+        if (q && a) items.push({ question: q, answer: a });
+      }
+    } catch {
+      // Regex failed — return empty FAQ
     }
     return items;
   }, [quiz.description]);
