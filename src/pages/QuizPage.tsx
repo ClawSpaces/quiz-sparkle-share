@@ -271,9 +271,17 @@ const QuizPage = () => {
               </h1>
 
               {quiz.description && (
-                <p className="mt-3 text-base text-muted-foreground md:text-lg leading-relaxed">
-                  {quiz.description}
-                </p>
+                <div className="mt-3 space-y-4 text-base text-muted-foreground md:text-lg leading-relaxed">
+                  {quiz.description
+                    .replace(/---\s*\*\*You Might Also Like[\s\S]*$/, '')
+                    .replace(/📚\s*\*\*Recommended Read[\s\S]*$/, '')
+                    .split(/\n\n+/)
+                    .filter(p => p.trim().length > 0)
+                    .slice(0, 8)
+                    .map((paragraph, i) => (
+                      <p key={i}>{paragraph.trim()}</p>
+                    ))}
+                </div>
               )}
 
               <div className="mt-4 flex items-center gap-3">
