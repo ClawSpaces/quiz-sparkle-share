@@ -228,24 +228,7 @@ const QuizPage = () => {
 
   const hasImageAnswers = questions.some((q) => q.answers.some((a) => a.image_url));
 
-  // Extract FAQ items from quiz description for FAQPage schema
-  // NOTE: Cannot use useMemo here — it's after early returns which violates React hooks rules
-  const faqItems = (() => {
-    if (!quiz.description) return undefined;
-    try {
-      const items: { question: string; answer: string }[] = [];
-      const faqRegex = /###?\s*Q:\s*(.+?)[\n\r]+([\s\S]*?)(?=###?\s*Q:|---|$)/gi;
-      let match;
-      while ((match = faqRegex.exec(quiz.description)) !== null) {
-        const q = match[1].trim().replace(/\*+/g, "");
-        const a = match[2].trim().replace(/\*+/g, "").slice(0, 300);
-        if (q && a) items.push({ question: q, answer: a });
-      }
-      return items.length > 0 ? items : undefined;
-    } catch {
-      return undefined;
-    }
-  })();
+  // FAQ schema temporarily disabled — will re-implement safely later
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -263,7 +246,6 @@ const QuizPage = () => {
         categoryName={quiz.categories?.name}
         categorySlug={quiz.categories?.slug}
         questions={questions.map(q => ({ text: q.text, answers: q.answers.map(a => a.text) }))}
-        faqItems={faqItems.length > 0 ? faqItems : undefined}
       />
       <Header />
       <main className="flex-1">
