@@ -181,6 +181,44 @@ export type Database = {
         }
         Relationships: []
       }
+      email_captures: {
+        Row: {
+          captured_at: string | null
+          email: string
+          id: string
+          quiz_id: string | null
+          quiz_title: string | null
+          result_title: string | null
+          tags: string[] | null
+        }
+        Insert: {
+          captured_at?: string | null
+          email: string
+          id?: string
+          quiz_id?: string | null
+          quiz_title?: string | null
+          result_title?: string | null
+          tags?: string[] | null
+        }
+        Update: {
+          captured_at?: string | null
+          email?: string
+          id?: string
+          quiz_id?: string | null
+          quiz_title?: string | null
+          result_title?: string | null
+          tags?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_captures_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       post_reactions: {
         Row: {
           count: number
@@ -379,6 +417,7 @@ export type Database = {
           is_published: boolean
           is_trending: boolean
           plays_count: number
+          slug: string | null
           title: string
           type: Database["public"]["Enums"]["quiz_type"]
           updated_at: string
@@ -394,6 +433,7 @@ export type Database = {
           is_published?: boolean
           is_trending?: boolean
           plays_count?: number
+          slug?: string | null
           title: string
           type?: Database["public"]["Enums"]["quiz_type"]
           updated_at?: string
@@ -409,6 +449,7 @@ export type Database = {
           is_published?: boolean
           is_trending?: boolean
           plays_count?: number
+          slug?: string | null
           title?: string
           type?: Database["public"]["Enums"]["quiz_type"]
           updated_at?: string
