@@ -79,11 +79,11 @@ const QuizPage = () => {
     const fetchQuiz = async () => {
       // Support both UUID and slug-based lookups
       const lookupField = isUUID(idOrSlug) ? "id" : "slug";
-      const quizRes = await (supabase
+      const quizRes: any = await supabase
         .from("quizzes")
         .select("*, categories(name, slug), profiles(name, title, avatar_url)")
-        .eq(lookupField, idOrSlug)
-        .single() as any);
+        .eq(lookupField as any, idOrSlug)
+        .single();
 
       if (!quizRes.data) { setLoading(false); return; }
       const quizId = quizRes.data.id;
