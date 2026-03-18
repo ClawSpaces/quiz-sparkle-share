@@ -1,4 +1,4 @@
-import { Facebook, Link2 } from "lucide-react";
+import { Facebook, Link2, Twitter } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface ShareButtonsProps {
@@ -14,27 +14,31 @@ const PinterestIcon = () => (
   </svg>
 );
 
-const BlueskyIcon = () => (
+const WhatsAppIcon = () => (
   <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
-    <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .688.35 5.725.557 6.55.718 2.857 3.276 3.804 5.639 3.469-3.722.572-7.034 2.467-3.903 8.57.84-.075 5.867-.39 7.707-4.34.352-.756.667-1.973.667-1.973V16c0 .002-.001.004-.002.006l.003-.006s.315 1.217.667 1.973c1.84 3.95 6.867 4.265 7.707 4.34 3.131-6.103-.181-7.998-3.903-8.57 2.363.335 4.921-.612 5.639-3.469.207-.825.557-5.862.557-6.55 0-.688-.139-1.86-.902-2.203-.659-.299-1.664-.621-4.3 1.24C13.046 4.747 11.087 8.686 12 10.8z" />
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
   </svg>
 );
 
 const ShareButtons = ({ url, text, imageUrl, className = "" }: ShareButtonsProps) => {
   const shareUrl = url || window.location.href;
+  const shareText = text || "";
 
   const shareFacebook = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, "_blank", "width=600,height=400");
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`, "_blank", "width=600,height=400");
+  };
+
+  const shareTwitter = () => {
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, "_blank", "width=600,height=400");
   };
 
   const sharePinterest = () => {
-    const pinUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&description=${encodeURIComponent(text || "")}&media=${encodeURIComponent(imageUrl || "")}`;
+    const pinUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&description=${encodeURIComponent(shareText)}&media=${encodeURIComponent(imageUrl || "")}`;
     window.open(pinUrl, "_blank", "width=600,height=400");
   };
 
-  const shareBluesky = () => {
-    const bskyUrl = `https://bsky.app/intent/compose?text=${encodeURIComponent(`${text || ""} ${shareUrl}`)}`;
-    window.open(bskyUrl, "_blank", "width=600,height=400");
+  const shareWhatsApp = () => {
+    window.open(`https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`, "_blank");
   };
 
   const copyLink = () => {
@@ -49,11 +53,14 @@ const ShareButtons = ({ url, text, imageUrl, className = "" }: ShareButtonsProps
       <button onClick={shareFacebook} className={btnClass} aria-label="Share on Facebook">
         <Facebook className="h-4 w-4" />
       </button>
+      <button onClick={shareTwitter} className={btnClass} aria-label="Share on X/Twitter">
+        <Twitter className="h-4 w-4" />
+      </button>
+      <button onClick={shareWhatsApp} className={btnClass} aria-label="Share on WhatsApp">
+        <WhatsAppIcon />
+      </button>
       <button onClick={sharePinterest} className={btnClass} aria-label="Share on Pinterest">
         <PinterestIcon />
-      </button>
-      <button onClick={shareBluesky} className={btnClass} aria-label="Share on Bluesky">
-        <BlueskyIcon />
       </button>
       <button onClick={copyLink} className={btnClass} aria-label="Copy link">
         <Link2 className="h-4 w-4" />

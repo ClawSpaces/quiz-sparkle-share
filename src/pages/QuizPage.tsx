@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RotateCcw, Share2, CheckCircle2, XCircle, Sparkles } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+import EmailCaptureGate from "@/components/EmailCaptureGate";
 import CommentsSection from "@/components/CommentsSection";
 import { format } from "date-fns";
 
@@ -477,7 +478,18 @@ const QuizPage = () => {
                             <img src={finalResult.image_url} alt={finalResult.title} className="w-full object-cover" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
                           </div>
                         )}
-                        {finalResult.description && <p className="mt-4 text-muted-foreground leading-relaxed">{finalResult.description}</p>}
+                        {finalResult.description && (
+                          <div className="mt-4">
+                            <EmailCaptureGate
+                              quizId={quiz.id}
+                              quizTitle={quiz.title}
+                              resultTitle={finalResult.title}
+                              resultDescription={finalResult.description}
+                            >
+                              <p className="text-muted-foreground leading-relaxed">{finalResult.description}</p>
+                            </EmailCaptureGate>
+                          </div>
+                        )}
                       </>
                     )}
 
