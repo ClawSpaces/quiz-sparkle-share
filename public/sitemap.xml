@@ -503,12 +503,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fizzty.com/post/c6e479e9-f4f2-4674-94ed-531ce77e3a4d</loc>
-    <lastmod>2026-03-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fizzty.com/post/aaac82fa-627f-457c-a594-660a4ecfc86e</loc>
     <lastmod>2026-03-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -576,12 +570,6 @@
   </url>
   <url>
     <loc>https://fizzty.com/post/4a742881-ce2d-470e-bdcb-bb6ef975c5b4</loc>
-    <lastmod>2026-03-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fizzty.com/post/ed77ee5c-39ee-4909-9d83-2bd810b414bc</loc>
     <lastmod>2026-03-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -660,6 +648,12 @@
   </url>
   <url>
     <loc>https://fizzty.com/post/526b7bc9-f5a7-4d17-928c-0cdffb466bb3</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fizzty.com/post/82fbc16b-886c-4776-916d-7b79c3808e65</loc>
     <lastmod>2026-03-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
