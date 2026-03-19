@@ -8,6 +8,7 @@ import { Play } from "lucide-react";
 
 interface DbQuiz {
   id: string;
+  slug: string | null;
   title: string;
   description: string | null;
   image_url: string | null;
@@ -44,7 +45,7 @@ const QuizzesPage = () => {
   useEffect(() => {
     const fetch = async () => {
       const [qRes, cRes] = await Promise.all([
-        supabase.from("quizzes").select("*, categories(name, slug)").eq("is_published", true).order("created_at", { ascending: false }),
+        supabase.from("quizzes").select("id, slug, title, description, image_url, type, plays_count, is_trending, categories(name, slug)").eq("is_published", true).order("created_at", { ascending: false }),
         supabase.from("categories").select("id, name, slug").order("sort_order"),
       ]);
       if (qRes.data) setQuizzes(qRes.data as any);
@@ -120,7 +121,7 @@ const QuizzesPage = () => {
         {featured && activeFilter === "all" && (
           <section className="container py-8">
             <a
-              href={`/quiz/${featured.id}`}
+              href={`/quiz/${featured.slug || featured.id}`}
               className="group relative block overflow-hidden rounded-2xl bg-card shadow-lg transition-all hover:shadow-xl"
             >
               <div className="aspect-[21/9] overflow-hidden md:aspect-[3/1]">
@@ -139,7 +140,7 @@ const QuizzesPage = () => {
                 <h2 className="font-display text-2xl font-bold leading-tight text-primary-foreground md:text-4xl">
                   {featured.title}
                 </h2>
-                <p className="mt-2 max-w-xl text-sm text-primary-foreground/80 md:text-base">
+                <p className="mt-2 max-w-xl text-sm text-primary-foreground/80 md:text-base line-clamp-2">
                   {featured.description}
                 </p>
                 <div className="mt-3 flex items-center gap-3 text-sm text-primary-foreground/70">
