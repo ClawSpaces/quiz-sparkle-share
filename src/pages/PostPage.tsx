@@ -76,6 +76,8 @@ const PostPage = () => {
     fetchPost();
   }, [id]);
 
+  const renderedContent = useMemo(() => markdownToHtml(post?.content || ""), [post?.content]);
+
   if (loading) {
     return (
       <div className="flex min-h-screen flex-col bg-background">
@@ -102,7 +104,6 @@ const PostPage = () => {
 
   const reactions = reactionsToRecord(post.post_reactions);
   const image = post.image_url || "/placeholder.svg";
-  const renderedContent = useMemo(() => markdownToHtml(post.content || ""), [post.content]);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
