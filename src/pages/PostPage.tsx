@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 import SchemaMarkup from "@/components/SchemaMarkup";
@@ -14,6 +14,45 @@ import MoreFromSite from "@/components/MoreFromSite";
 import ContentSidebar from "@/components/ContentSidebar";
 import ShareButtons from "@/components/ShareButtons";
 import CommentsSection from "@/components/CommentsSection";
+
+/** Lightweight markdown → HTML converter (no external deps) */
+function markdownToHtml(md: string): string {
+  if (!md) return "";
+  // If content already has HTML tags, return as-is
+  if (md.includes("<h2>") || md.includes("<h3>") || md.includes("<p>")) return md;
+
+  let html = md
+    // Headings (must be before bold processing)
+    .replace(/^### (.+)$/gm, "<h3>$1</h3>")
+    .replace(/^## (.+)$/gm, "<h2>$1</h2>")
+    .replace(/^# (.+)$/gm, "<h2>$1</h2>")
+    // Bold and italic
+    .replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>")
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    // Unordered lists
+    .replace(/^- (.+)$/gm, "<li>$1</li>")
+    // Ordered lists
+    .replace(/^\d+\. (.+)$/gm, "<li>$1</li>")
+    // Links
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary underline hover:no-underline">$1</a>');
+
+  // Wrap consecutive <li> in <ul>
+  html = html.replace(/(<li>.*?<\/li>\n?)+/gs, (match) => `<ul class="list-disc pl-6 space-y-1 my-3">${match}</ul>`);
+
+  // Split into paragraphs on double newlines
+  html = html
+    .split(/\n{2,}/)
+    .map((block) => {
+      const trimmed = block.trim();
+      if (!trimmed) return "";
+      if (trimmed.startsWith("<h2>") || trimmed.startsWith("<h3>") || trimmed.startsWith("<ul>") || trimmed.startsWith("<ol>")) return trimmed;
+      return `<p>${trimmed.replace(/\n/g, " ")}</p>`;
+    })
+    .join("\n");
+
+  return html;
+}
 
 const PostPage = () => {
   const { id } = useParams();
@@ -63,6 +102,7 @@ const PostPage = () => {
 
   const reactions = reactionsToRecord(post.post_reactions);
   const image = post.image_url || "/placeholder.svg";
+  const renderedContent = useMemo(() => markdownToHtml(post.content || ""), [post.content]);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -100,13 +140,10 @@ const PostPage = () => {
 
             <div className="mt-4"><AdSlot format="leaderboard" ezoicId={105} /></div>
 
-            <div className="mt-6 text-foreground leading-relaxed">
-              <p className="text-lg">{post.description}</p>
-              {post.content && <div className="mt-4" dangerouslySetInnerHTML={{ __html: post.content }} />}
-              {!post.content && (
-                <p className="mt-4 text-muted-foreground">
-                  This is a placeholder for the full article content. When connected to the database, the full rich text content will be displayed here.
-                </p>
+            <div className="mt-6 text-foreground leading-relaxed prose prose-lg max-w-none prose-headings:font-display prose-headings:font-black prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-p:mb-4 prose-p:leading-relaxed prose-li:mb-1 prose-strong:font-bold prose-a:text-primary">
+              {post.content && <div className="mt-4" dangerouslySetInnerHTML={{ __html: renderedContent }} />}
+              {!post.content && post.description && (
+                <div className="mt-4" dangerouslySetInnerHTML={{ __html: markdownToHtml(post.description) }} />
               )}
             </div>
 
