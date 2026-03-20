@@ -14,7 +14,7 @@ Deno.serve(async () => {
   const baseUrl = "https://fizzty.com";
 
   const [{ data: quizzes }, { data: posts }, { data: categories }] = await Promise.all([
-    supabase.from("quizzes").select("id, updated_at").eq("is_published", true),
+    supabase.from("quizzes").select("slug, updated_at").eq("is_published", true),
     supabase.from("posts").select("id, updated_at").eq("is_published", true),
     supabase.from("categories").select("slug"),
   ]);
@@ -45,7 +45,7 @@ Deno.serve(async () => {
   for (const quiz of quizzes || []) {
     xml += `
   <url>
-    <loc>${baseUrl}/quiz/${quiz.id}</loc>
+    <loc>${baseUrl}/quiz/${quiz.slug}</loc>
     <lastmod>${new Date(quiz.updated_at).toISOString().split("T")[0]}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
