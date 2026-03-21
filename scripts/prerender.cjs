@@ -22,9 +22,10 @@ const DIST_DIR = path.resolve(__dirname, '../dist');
 const args = process.argv.slice(2);
 let LIMIT = 50;
 let OFFSET = 0;
+let ALL = true; // Default: fetch ALL quizzes in batches
 for (let i = 0; i < args.length; i++) {
-  if (args[i] === '--limit' && args[i + 1]) LIMIT = parseInt(args[i + 1]);
-  if (args[i] === '--offset' && args[i + 1]) OFFSET = parseInt(args[i + 1]);
+  if (args[i] === '--limit' && args[i + 1]) { LIMIT = parseInt(args[i + 1]); ALL = false; }
+  if (args[i] === '--offset' && args[i + 1]) { OFFSET = parseInt(args[i + 1]); ALL = false; }
 }
 
 async function fetchQuizzes(limit, offset) {
@@ -230,19 +231,7 @@ function generateQuizHtml(template, quiz, questions, category) {
   return html;
 }
 
-async function main() {
-  // Read the compiled index.html as template
-  const templatePath = path.join(DIST_DIR, 'index.html');
-  if (!fs.existsSync(templatePath)) {
-    console.error('ERROR: dist/index.html not found. Run `vite build` first.');
-    process.exit(1);
-  }
-  const template = fs.readFileSync(templatePath, 'utf8');
-
-  console.log(`Fetching quizzes (limit=${LIMIT}, offset=${OFFSET})...`);
-  const quizzes = await fetchQuizzes(LIMIT, OFFSET);
-  console.log(`Got ${quizzes.length} quizzes`);
-
+async function processQuizzes(template, quizzes) {
   let success = 0;
   let skipped = 0;
 
@@ -257,25 +246,16 @@ async function main() {
 
     // Skip if already pre-rendered
     if (fs.existsSync(outFile)) {
-      console.log(`  SKIP ${quiz.slug} (already exists)`);
       skipped++;
       continue;
     }
 
     try {
-      // Fetch questions for this quiz
       const questions = await fetchQuizQuestions(quiz.id);
-
-      // Get category info
       const category = quiz.categories || null;
-
-      // Generate HTML
       const html = generateQuizHtml(template, quiz, questions, category);
-
-      // Write file
       fs.mkdirSync(outDir, { recursive: true });
       fs.writeFileSync(outFile, html, 'utf8');
-
       success++;
       console.log(`  OK ${quiz.slug} (${questions.length}Q)`);
     } catch (err) {
@@ -283,8 +263,53 @@ async function main() {
     }
   }
 
-  console.log(`\nDone! ${success} pre-rendered, ${skipped} skipped.`);
-  console.log(`Total files in dist/quiz/: ${fs.readdirSync(path.join(DIST_DIR, 'quiz')).length}`);
+  return { success, skipped };
+}
+
+async function main() {
+  const templatePath = path.join(DIST_DIR, 'index.html');
+  if (!fs.existsSync(templatePath)) {
+    console.error('ERROR: dist/index.html not found. Run `vite build` first.');
+    process.exit(1);
+  }
+  const template = fs.readFileSync(templatePath, 'utf8');
+
+  let totalSuccess = 0;
+  let totalSkipped = 0;
+
+  if (ALL) {
+    // Fetch ALL quizzes in batches of 50
+    let offset = 0;
+    const batchSize = 50;
+    let batch = 1;
+
+    while (true) {
+      console.log(`Batch ${batch}: fetching quizzes (offset=${offset})...`);
+      const quizzes = await fetchQuizzes(batchSize, offset);
+      if (quizzes.length === 0) break;
+
+      const { success, skipped } = await processQuizzes(template, quizzes);
+      totalSuccess += success;
+      totalSkipped += skipped;
+
+      if (quizzes.length < batchSize) break; // Last batch
+      offset += batchSize;
+      batch++;
+    }
+  } else {
+    // Single batch with custom limit/offset
+    console.log(`Fetching quizzes (limit=${LIMIT}, offset=${OFFSET})...`);
+    const quizzes = await fetchQuizzes(LIMIT, OFFSET);
+    console.log(`Got ${quizzes.length} quizzes`);
+    const { success, skipped } = await processQuizzes(template, quizzes);
+    totalSuccess = success;
+    totalSkipped = skipped;
+  }
+
+  const quizDir = path.join(DIST_DIR, 'quiz');
+  const total = fs.existsSync(quizDir) ? fs.readdirSync(quizDir).length : 0;
+  console.log(`\nDone! ${totalSuccess} pre-rendered, ${totalSkipped} skipped.`);
+  console.log(`Total files in dist/quiz/: ${total}`);
 }
 
 main().catch(console.error);
