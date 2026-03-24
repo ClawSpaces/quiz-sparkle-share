@@ -450,6 +450,43 @@ async function main() {
   }
   console.log(`Loaded ${ALL_ARTICLES.length} articles for cross-linking`);
 
+  // Pre-render static pages with proper meta tags
+  console.log('\nPre-rendering static pages...');
+  const staticPages = [
+    { path: 'quizzes', title: 'Free Personality Quizzes & Trivia | Fizzty', desc: 'Take free personality quizzes, trivia challenges, and self-assessments. 470+ quizzes on psychology, health, career, and entertainment. Instant results!', priority: 'high' },
+    { path: 'categories', title: 'Quiz Categories — Personality, Health, Career & More | Fizzty', desc: 'Browse quiz categories: personality tests, health assessments, career quizzes, entertainment trivia, and more. Find the perfect quiz for you.' },
+    { path: 'trending', title: 'Trending Quizzes — Most Popular Right Now | Fizzty', desc: 'See what quizzes are trending right now. The most popular personality tests, trivia challenges, and self-assessments on Fizzty.' },
+    { path: 'about', title: 'About Fizzty — Our Mission & Editorial Standards', desc: 'Learn about Fizzty, our editorial standards, and how we create research-informed personality quizzes and health assessments.' },
+    { path: 'contact', title: 'Contact Fizzty — Get in Touch', desc: 'Have a question or suggestion? Contact the Fizzty team. We\'d love to hear from you.' },
+    { path: 'privacy-policy', title: 'Privacy Policy | Fizzty', desc: 'Read Fizzty\'s privacy policy. Learn how we collect, use, and protect your data.' },
+    { path: 'terms', title: 'Terms of Service | Fizzty', desc: 'Read Fizzty\'s terms of service and conditions of use.' },
+  ];
+
+  for (const page of staticPages) {
+    const outDir = path.join(DIST_DIR, page.path);
+    const outFile = path.join(outDir, 'index.html');
+    if (fs.existsSync(outFile)) continue;
+
+    let html = template;
+    html = html.replace(/<title>.*?<\/title>/, `<title>${escapeHtml(page.title)}</title>`);
+    html = html.replace(
+      /<meta name="description" content="[^"]*" \/>/,
+      `<meta name="description" content="${escapeHtml(page.desc)}" />`
+    );
+    const canonical = `${BASE_URL}/${page.path}`;
+    const seoTags = `
+    <link rel="canonical" href="${canonical}" />
+    <meta property="og:title" content="${escapeHtml(page.title)}" />
+    <meta property="og:description" content="${escapeHtml(page.desc)}" />
+    <meta property="og:url" content="${canonical}" />
+    <meta property="og:type" content="website" />
+  `;
+    html = html.replace('</head>', `${seoTags}\n  </head>`);
+    fs.mkdirSync(outDir, { recursive: true });
+    fs.writeFileSync(outFile, html, 'utf8');
+  }
+  console.log(`Static pages: ${staticPages.length} pre-rendered`);
+
   if (ALL) {
     // Process ALL quizzes in batches of 50
     let offset = 0;

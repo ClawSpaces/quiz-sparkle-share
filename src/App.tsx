@@ -4,30 +4,37 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import { lazy, Suspense } from "react";
+
+// Core pages (loaded immediately)
 import Index from "./pages/Index";
-import CategoryPage from "./pages/CategoryPage";
-import CategoriesPage from "./pages/CategoriesPage";
-import TrendingPage from "./pages/TrendingPage";
-import ShoppingPage from "./pages/ShoppingPage";
-import CelebrityPage from "./pages/CelebrityPage";
-import BuzzChatPage from "./pages/BuzzChatPage";
-import QuizzesPage from "./pages/QuizzesPage";
 import QuizPage from "./pages/QuizPage";
 import PostPage from "./pages/PostPage";
-import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
-import TermsPage from "./pages/TermsPage";
-import AboutPage from "./pages/AboutPage";
-import ContactPage from "./pages/ContactPage";
 import NotFound from "./pages/NotFound";
-import AdminLogin from "./pages/admin/AdminLogin";
-import AdminLayout from "./components/admin/AdminLayout";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminPosts from "./pages/admin/AdminPosts";
-import AdminPostForm from "./pages/admin/AdminPostForm";
-import AdminQuizzes from "./pages/admin/AdminQuizzes";
-import AdminQuizForm from "./pages/admin/AdminQuizForm";
-import AdminCategories from "./pages/admin/AdminCategories";
-import AdminBuzzChats from "./pages/admin/AdminBuzzChats";
+
+// Lazy-loaded pages (loaded on demand)
+const CategoryPage = lazy(() => import("./pages/CategoryPage"));
+const CategoriesPage = lazy(() => import("./pages/CategoriesPage"));
+const TrendingPage = lazy(() => import("./pages/TrendingPage"));
+const ShoppingPage = lazy(() => import("./pages/ShoppingPage"));
+const CelebrityPage = lazy(() => import("./pages/CelebrityPage"));
+const BuzzChatPage = lazy(() => import("./pages/BuzzChatPage"));
+const QuizzesPage = lazy(() => import("./pages/QuizzesPage"));
+const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
+const TermsPage = lazy(() => import("./pages/TermsPage"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+
+// Admin pages (lazy - rarely accessed)
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminPosts = lazy(() => import("./pages/admin/AdminPosts"));
+const AdminPostForm = lazy(() => import("./pages/admin/AdminPostForm"));
+const AdminQuizzes = lazy(() => import("./pages/admin/AdminQuizzes"));
+const AdminQuizForm = lazy(() => import("./pages/admin/AdminQuizForm"));
+const AdminCategories = lazy(() => import("./pages/admin/AdminCategories"));
+const AdminBuzzChats = lazy(() => import("./pages/admin/AdminBuzzChats"));
 import CookieConsent from "./components/CookieConsent";
 
 const queryClient = new QueryClient();
@@ -40,6 +47,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <CookieConsent />
+        <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" /></div>}>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/category/:slug" element={<CategoryPage />} />
@@ -72,6 +80,7 @@ const App = () => (
 
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
