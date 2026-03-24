@@ -37,6 +37,17 @@ async function fetchQuizzes(limit, offset) {
   return res.json();
 }
 
+// Store all quizzes for related quiz linking
+let ALL_QUIZZES = [];
+
+async function fetchRelatedQuizzes(quiz) {
+  // Return up to 6 related quizzes: same category first, then popular ones
+  const sameCat = ALL_QUIZZES.filter(q => q.id !== quiz.id && q.category_id === quiz.category_id).slice(0, 4);
+  const otherIds = new Set([quiz.id, ...sameCat.map(q => q.id)]);
+  const others = ALL_QUIZZES.filter(q => !otherIds.has(q.id)).slice(0, 6 - sameCat.length);
+  return [...sameCat, ...others];
+}
+
 async function fetchQuizQuestions(quizId) {
   const url = `${SUPABASE_URL}/rest/v1/questions?quiz_id=eq.${quizId}&select=text,answers(text)&order=sort_order.asc`;
   const res = await fetch(url, {
@@ -128,10 +139,26 @@ function buildSchemaJson(quiz, questions, category) {
     })),
   });
 
+  // FAQPage schema
+  const faqItems = [
+    { q: `Is the "${quiz.title}" quiz accurate?`, a: `This quiz uses scenario-based questions grounded in established psychological frameworks. While no online quiz replaces professional assessment, our methodology provides meaningful insights for self-discovery.` },
+    { q: `How long does this quiz take?`, a: `The quiz takes approximately 3-5 minutes to complete. It consists of ${questions.length} carefully designed questions. Answer honestly with your gut reaction for the most accurate result.` },
+    { q: `Can I retake the quiz?`, a: `Yes, you can retake the quiz as many times as you like. Your answers may vary depending on your current life circumstances and personal growth.` },
+  ];
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  });
+
   return schemas.map((s) => JSON.stringify(s)).join('\n');
 }
 
-function generateQuizHtml(template, quiz, questions, category) {
+function generateQuizHtml(template, quiz, questions, category, relatedQuizzes) {
   const title = `${quiz.title} | Fizzty`;
   const description = truncate(quiz.description, 160);
   const canonical = `${BASE_URL}/quiz/${quiz.slug}`;
@@ -220,6 +247,24 @@ function generateQuizHtml(template, quiz, questions, category) {
             : ''
         }
         <p style="margin-top:24px"><a href="/quiz/${quiz.slug}" style="display:inline-block;padding:12px 32px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold">Take This Quiz</a></p>
+        ${relatedQuizzes.length > 0 ? `
+        <section style="margin-top:40px;padding-top:24px;border-top:1px solid #e5e7eb">
+          <h2 style="font-size:24px;font-weight:bold;color:#1a1a2e;margin-bottom:16px">You Might Also Like</h2>
+          <ul style="list-style:none;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+            ${relatedQuizzes.map(rq => `<li><a href="/quiz/${escapeHtml(rq.slug)}" style="display:block;padding:12px;border:1px solid #e5e7eb;border-radius:8px;text-decoration:none;color:#7c3aed;font-weight:600">${escapeHtml(rq.title)}</a></li>`).join('\n            ')}
+          </ul>
+        </section>` : ''}
+        <section style="margin-top:32px;padding-top:24px;border-top:1px solid #e5e7eb">
+          <h2 style="font-size:20px;font-weight:bold;color:#1a1a2e;margin-bottom:12px">Frequently Asked Questions</h2>
+          <div>
+            <h3 style="font-size:16px;font-weight:600;color:#1a1a2e;margin-top:12px">Is this quiz accurate?</h3>
+            <p style="color:#444;line-height:1.6">This quiz uses scenario-based questions grounded in established psychological frameworks. While no online quiz replaces professional assessment, our methodology provides meaningful insights for self-discovery.</p>
+            <h3 style="font-size:16px;font-weight:600;color:#1a1a2e;margin-top:12px">How long does this quiz take?</h3>
+            <p style="color:#444;line-height:1.6">The quiz takes approximately 3-5 minutes to complete. It consists of ${questions.length} carefully designed questions. Answer honestly with your gut reaction for the most accurate result.</p>
+            <h3 style="font-size:16px;font-weight:600;color:#1a1a2e;margin-top:12px">Can I retake the quiz?</h3>
+            <p style="color:#444;line-height:1.6">Yes, you can retake the quiz as many times as you like. Your answers may vary depending on your current life circumstances and personal growth.</p>
+          </div>
+        </section>
       </article>
     `;
 
@@ -253,7 +298,8 @@ async function processQuizzes(template, quizzes) {
     try {
       const questions = await fetchQuizQuestions(quiz.id);
       const category = quiz.categories || null;
-      const html = generateQuizHtml(template, quiz, questions, category);
+      const relatedQuizzes = await fetchRelatedQuizzes(quiz);
+      const html = generateQuizHtml(template, quiz, questions, category, relatedQuizzes);
       fs.mkdirSync(outDir, { recursive: true });
       fs.writeFileSync(outFile, html, 'utf8');
       success++;
@@ -277,22 +323,36 @@ async function main() {
   let totalSuccess = 0;
   let totalSkipped = 0;
 
+  // Pre-fetch all quizzes for related quiz linking
+  console.log('Pre-fetching all quizzes for internal linking...');
+  {
+    let off = 0;
+    while (true) {
+      const batch = await fetchQuizzes(100, off);
+      if (batch.length === 0) break;
+      ALL_QUIZZES.push(...batch);
+      if (batch.length < 100) break;
+      off += 100;
+    }
+  }
+  console.log(`Loaded ${ALL_QUIZZES.length} quizzes for internal linking`);
+
   if (ALL) {
-    // Fetch ALL quizzes in batches of 50
+    // Process ALL quizzes in batches of 50
     let offset = 0;
     const batchSize = 50;
     let batch = 1;
 
     while (true) {
-      console.log(`Batch ${batch}: fetching quizzes (offset=${offset})...`);
-      const quizzes = await fetchQuizzes(batchSize, offset);
+      console.log(`Batch ${batch}: processing quizzes (offset=${offset})...`);
+      const quizzes = ALL_QUIZZES.slice(offset, offset + batchSize);
       if (quizzes.length === 0) break;
 
       const { success, skipped } = await processQuizzes(template, quizzes);
       totalSuccess += success;
       totalSkipped += skipped;
 
-      if (quizzes.length < batchSize) break; // Last batch
+      if (quizzes.length < batchSize) break;
       offset += batchSize;
       batch++;
     }
