@@ -15,9 +15,31 @@ import ContentSidebar from "@/components/ContentSidebar";
 import ShareButtons from "@/components/ShareButtons";
 import CommentsSection from "@/components/CommentsSection";
 
+/** Strip meta/frontmatter sections that shouldn't be visible to users */
+function stripMeta(md: string): string {
+  if (!md) return "";
+  return md
+    // Remove META section block (## META or # META through next heading or ---)
+    .replace(/^#{1,3}\s*META\s*\n[\s\S]*?(?=^#{1,3}\s[^M]|^---\s*$)/gm, '')
+    // Remove standalone meta lines
+    .replace(/^\*?\*?Meta (Title|Description)\*?\*?:.*$/gm, '')
+    // Remove ARTICLE CONTENT header
+    .replace(/^#{1,3}\s*ARTICLE CONTENT\s*$/gm, '')
+    // Remove QUIZ CTA section
+    .replace(/^#{1,3}\s*QUIZ CTA\s*\n[\s\S]*?(?=^#{1,3}\s|$)/gm, '')
+    // Remove INTERNAL LINKING NOTES
+    .replace(/^#{1,3}\s*INTERNAL LINKING NOTES\s*\n[\s\S]*$/gm, '')
+    .replace(/^- Links? OUT to:.*$/gm, '')
+    .replace(/^- Should be linked FROM:.*$/gm, '')
+    // Clean up extra blank lines
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
 /** Lightweight markdown → HTML converter (no external deps) */
 function markdownToHtml(md: string): string {
   if (!md) return "";
+  md = stripMeta(md);
   // If content already has HTML tags, return as-is
   if (md.includes("<h2>") || md.includes("<h3>") || md.includes("<p>")) return md;
 
