@@ -35,6 +35,29 @@ async function fetchAllQuizzes() {
   return allQuizzes;
 }
 
+async function fetchAllArticles() {
+  let allArticles = [];
+  let offset = 0;
+  const batchSize = 100;
+
+  while (true) {
+    const url = `${SUPABASE_URL}/rest/v1/posts?select=id,slug,updated_at,created_at&is_published=eq.true&slug=not.is.null&order=created_at.asc&limit=${batchSize}&offset=${offset}`;
+    const res = await fetch(url, {
+      headers: { apikey: SUPABASE_ANON_KEY },
+    });
+    if (!res.ok) return allArticles;
+
+    const articles = await res.json();
+    if (articles.length === 0) break;
+
+    allArticles = allArticles.concat(articles);
+    if (articles.length < batchSize) break;
+    offset += batchSize;
+  }
+
+  return allArticles;
+}
+
 async function fetchAllCategories() {
   const url = `${SUPABASE_URL}/rest/v1/categories?select=slug,updated_at,created_at&order=created_at.asc`;
   const res = await fetch(url, {
@@ -61,7 +84,7 @@ function escapeXml(str) {
   });
 }
 
-function generateSitemap(quizzes, categories) {
+function generateSitemap(quizzes, categories, articles) {
   const now = new Date().toISOString().split('T')[0];
   
   // Static pages
@@ -92,7 +115,15 @@ function generateSitemap(quizzes, categories) {
     changefreq: 'monthly'
   }));
 
-  const allUrls = [...staticPages, ...categoryPages, ...quizPages];
+  // Article pages
+  const articlePages = articles.filter(a => a.slug).map(article => ({
+    loc: `${BASE_URL}/article/${escapeXml(article.slug)}`,
+    lastmod: formatDate(article.updated_at || article.created_at),
+    priority: '0.7',
+    changefreq: 'monthly'
+  }));
+
+  const allUrls = [...staticPages, ...categoryPages, ...quizPages, ...articlePages];
 
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
@@ -113,19 +144,20 @@ function generateSitemap(quizzes, categories) {
 async function main() {
   console.log('Fetching quizzes and categories...');
   
-  const [quizzes, categories] = await Promise.all([
+  const [quizzes, categories, articles] = await Promise.all([
     fetchAllQuizzes(),
-    fetchAllCategories()
+    fetchAllCategories(),
+    fetchAllArticles()
   ]);
 
-  console.log(`Found ${quizzes.length} quizzes, ${categories.length} categories`);
+  console.log(`Found ${quizzes.length} quizzes, ${categories.length} categories, ${articles.length} articles`);
 
-  const sitemap = generateSitemap(quizzes, categories);
+  const sitemap = generateSitemap(quizzes, categories, articles);
   const outputPath = path.join(DIST_DIR, 'sitemap.xml');
   
   fs.writeFileSync(outputPath, sitemap, 'utf8');
   console.log(`Sitemap generated: ${outputPath}`);
-  console.log(`Total URLs: ${quizzes.length + categories.length + 8}`);
+  console.log(`Total URLs: ${quizzes.length + categories.length + articles.length + 8}`);
 }
 
 main().catch(console.error);

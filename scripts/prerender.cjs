@@ -433,8 +433,126 @@ async function main() {
 
   const quizDir = path.join(DIST_DIR, 'quiz');
   const total = fs.existsSync(quizDir) ? fs.readdirSync(quizDir).length : 0;
-  console.log(`\nDone! ${totalSuccess} pre-rendered, ${totalSkipped} skipped.`);
+  console.log(`\nQuizzes: ${totalSuccess} pre-rendered, ${totalSkipped} skipped.`);
   console.log(`Total files in dist/quiz/: ${total}`);
+
+  // Pre-render articles
+  console.log('\nPre-rendering articles...');
+  let articleSuccess = 0;
+  let articleSkipped = 0;
+  let articleOffset = 0;
+  const articleBatchSize = 100;
+
+  while (true) {
+    const url = `${SUPABASE_URL}/rest/v1/posts?select=id,title,slug,description,content,image_url,category_id,created_at,updated_at,categories(name,slug)&is_published=eq.true&slug=not.is.null&order=created_at.asc&limit=${articleBatchSize}&offset=${articleOffset}`;
+    const res = await fetch(url, { headers: { apikey: SUPABASE_ANON_KEY } });
+    if (!res.ok) break;
+    const articles = await res.json();
+    if (articles.length === 0) break;
+
+    for (const article of articles) {
+      if (!article.slug) { articleSkipped++; continue; }
+      const outDir = path.join(DIST_DIR, 'article', article.slug);
+      const outFile = path.join(outDir, 'index.html');
+      if (fs.existsSync(outFile)) { articleSkipped++; continue; }
+
+      try {
+        const artTitle = `${article.title} | Fizzty`;
+        const artDesc = truncate(article.description || article.title, 160);
+        const canonical = `${BASE_URL}/article/${article.slug}`;
+        const image = article.image_url || `${BASE_URL}/favicon.png`;
+        const category = article.categories || null;
+
+        // Clean content for display
+        let cleanContent = (article.content || '').substring(0, 3000);
+        // Strip meta sections
+        cleanContent = cleanContent
+          .replace(/^#{1,3}\s*(META|ARTICLE META|QUIZ BRIEF|ARTICLE CONTENT|QUIZ CTA|INTERNAL LINKING NOTES).*$/gm, '')
+          .replace(/^\*?\*?(Meta Title|Meta Description|Target Keyword|Secondary Keywords?|OG Image|Slug|Category|Type).*$/gm, '')
+          .replace(/^- Links? OUT to:.*$/gm, '')
+          .replace(/^- Should be linked FROM:.*$/gm, '')
+          .replace(/^---\s*$/gm, '')
+          .replace(/\n{3,}/g, '\n\n')
+          .trim();
+
+        const contentHtml = cleanContent
+          .split(/\n\n+/)
+          .filter(p => p.trim())
+          .slice(0, 6)
+          .map(p => `<p>${escapeHtml(p.trim())}</p>`)
+          .join('\n        ');
+
+        // Build article schema
+        const articleSchema = JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: article.title,
+          description: artDesc,
+          image: image,
+          url: canonical,
+          datePublished: article.created_at,
+          dateModified: article.updated_at || article.created_at,
+          publisher: { '@type': 'Organization', name: 'Fizzty', url: BASE_URL },
+          author: { '@type': 'Organization', name: 'Fizzty Editorial Team' },
+        });
+
+        let html = template;
+        html = html.replace(/<title>.*?<\/title>/, `<title>${escapeHtml(artTitle)}</title>`);
+        html = html.replace(
+          /<meta name="description" content="[^"]*" \/>/,
+          `<meta name="description" content="${escapeHtml(artDesc)}" />`
+        );
+
+        const seoTags = `
+    <link rel="canonical" href="${canonical}" />
+    <meta property="og:title" content="${escapeHtml(artTitle)}" />
+    <meta property="og:description" content="${escapeHtml(artDesc)}" />
+    <meta property="og:image" content="${escapeHtml(image)}" />
+    <meta property="og:url" content="${canonical}" />
+    <meta property="og:type" content="article" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${escapeHtml(artTitle)}" />
+    <meta name="twitter:description" content="${escapeHtml(artDesc)}" />
+    <meta name="twitter:image" content="${escapeHtml(image)}" />
+    <script type="application/ld+json">${articleSchema}</script>
+  `;
+        html = html.replace('</head>', `${seoTags}\n  </head>`);
+
+        const visibleContent = `
+      <article style="max-width:800px;margin:0 auto;padding:20px;font-family:system-ui,sans-serif">
+        <nav aria-label="breadcrumb" style="margin-bottom:16px;font-size:14px;color:#666">
+          <a href="/" style="color:#7c3aed;text-decoration:none">Home</a>
+          ${category ? ` &rsaquo; <a href="/category/${category.slug}" style="color:#7c3aed;text-decoration:none">${escapeHtml(category.name)}</a>` : ''}
+          &rsaquo; <span>${escapeHtml(article.title)}</span>
+        </nav>
+        <h1 style="font-size:32px;font-weight:bold;color:#1a1a2e;margin-bottom:16px">${escapeHtml(article.title)}</h1>
+        ${image ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(article.title)}" width="800" height="400" style="width:100%;height:auto;border-radius:12px;margin-bottom:20px" />` : ''}
+        <div style="color:#444;line-height:1.7">
+        ${contentHtml}
+        </div>
+        <p style="margin-top:24px"><a href="/article/${article.slug}" style="display:inline-block;padding:12px 32px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold">Read Full Article</a></p>
+      </article>
+    `;
+
+        html = html.replace('<div id="root"></div>', `<div id="root">${visibleContent}</div>`);
+
+        fs.mkdirSync(outDir, { recursive: true });
+        fs.writeFileSync(outFile, html, 'utf8');
+        articleSuccess++;
+        if (articleSuccess % 20 === 0) console.log(`  ${articleSuccess} articles pre-rendered...`);
+      } catch (err) {
+        console.error(`  ERR article ${article.slug}: ${err.message}`);
+      }
+    }
+
+    if (articles.length < articleBatchSize) break;
+    articleOffset += articleBatchSize;
+  }
+
+  const articleDir = path.join(DIST_DIR, 'article');
+  const totalArticles = fs.existsSync(articleDir) ? fs.readdirSync(articleDir).length : 0;
+  console.log(`Articles: ${articleSuccess} pre-rendered, ${articleSkipped} skipped.`);
+  console.log(`Total files in dist/article/: ${totalArticles}`);
 }
 
 main().catch(console.error);

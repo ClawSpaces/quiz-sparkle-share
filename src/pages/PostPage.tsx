@@ -94,26 +94,30 @@ function markdownToHtml(md: string): string {
 }
 
 const PostPage = () => {
-  const { id } = useParams();
+  const { id, slug } = useParams();
+  const idOrSlug = slug || id;
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!id) return;
+    if (!idOrSlug) return;
     const fetchPost = async () => {
+      // Support both UUID and slug-based lookups
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
+      const lookupField = isUUID ? "id" : "slug";
       const { data } = await supabase
         .from("posts")
         .select("*, post_reactions(emoji, count)")
-        .eq("id", id)
+        .eq(lookupField, idOrSlug)
         .single();
       if (data) {
         setPost(data as any);
-        supabase.rpc("increment_views", { post_id_param: id });
+        supabase.rpc("increment_views", { post_id_param: data.id });
       }
       setLoading(false);
     };
     fetchPost();
-  }, [id]);
+  }, [idOrSlug]);
 
   const renderedContent = useMemo(() => markdownToHtml(post?.content || ""), [post?.content]);
 
@@ -199,15 +203,15 @@ const PostPage = () => {
 
             <div className="mt-4"><AdSlot format="rectangle" ezoicId={106} /></div>
 
-            <CommentsSection contentType="post" contentId={id!} />
+            <CommentsSection contentType="post" contentId={post.id} />
           </div>
 
           <ContentSidebar />
         </div>
 
         <div className="container max-w-5xl space-y-10 pb-12">
-          <ReadyForMore currentId={id!} type="post" />
-          <MoreFromSite currentId={id!} currentType="post" />
+          <ReadyForMore currentId={post.id} type="post" />
+          <MoreFromSite currentId={post.id} currentType="post" />
         </div>
       </main>
       <Footer />
