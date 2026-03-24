@@ -17,3 +17,23 @@ Allow: /
 Disallow: /admin/
 
 Sitemap: https://fizzty.com/sitemap.xml
+
+# AI Crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+# LLMs.txt — AI-readable content index
+# https://fizzty.com/llms.txt
+# https://fizzty.com/llms-full.txt
