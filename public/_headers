@@ -9,12 +9,14 @@
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Cache images
-*.jpg
+# Cache images (Netlify requires path-based rules, not extension wildcards)
+/images/*
   Cache-Control: public, max-age=86400
-*.png
+/*.jpg
   Cache-Control: public, max-age=86400
-*.webp
+/*.png
   Cache-Control: public, max-age=86400
-*.svg
+/*.webp
+  Cache-Control: public, max-age=86400
+/*.svg
   Cache-Control: public, max-age=86400
