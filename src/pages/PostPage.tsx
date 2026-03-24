@@ -19,10 +19,23 @@ import CommentsSection from "@/components/CommentsSection";
 function stripMeta(md: string): string {
   if (!md) return "";
   return md
-    // Remove META section block (## META or # META through next heading or ---)
+    // Remove full META section block (## META through next --- or heading)
     .replace(/^#{1,3}\s*META\s*\n[\s\S]*?(?=^#{1,3}\s[^M]|^---\s*$)/gm, '')
-    // Remove standalone meta lines
+    // Remove ARTICLE META section block
+    .replace(/^#{1,3}\s*ARTICLE META\s*\n[\s\S]*?(?=^#{1,3}\s|^---\s*$)/gm, '')
+    // Remove QUIZ BRIEF section block
+    .replace(/^#{1,3}\s*QUIZ BRIEF\s*\n[\s\S]*?(?=^#{1,3}\s|^---\s*$)/gm, '')
+    // Remove standalone meta lines (bold or plain)
     .replace(/^\*?\*?Meta (Title|Description)\*?\*?:.*$/gm, '')
+    .replace(/^\*?\*?Target Keyword\*?\*?:.*$/gm, '')
+    .replace(/^\*?\*?Secondary Keywords?\*?\*?:.*$/gm, '')
+    .replace(/^\*?\*?Related Quiz\*?\*?:.*$/gm, '')
+    .replace(/^\*?\*?OG Image Description\*?\*?:.*$/gm, '')
+    .replace(/^\*?\*?Slug\*?\*?:.*$/gm, '')
+    .replace(/^\*?\*?Category\*?\*?:.*$/gm, '')
+    .replace(/^\*?\*?Type\*?\*?:.*$/gm, '')
+    .replace(/^\*?\*?Difficulty\*?\*?:.*$/gm, '')
+    .replace(/^\*?\*?Estimated Time\*?\*?:.*$/gm, '')
     // Remove ARTICLE CONTENT header
     .replace(/^#{1,3}\s*ARTICLE CONTENT\s*$/gm, '')
     // Remove QUIZ CTA section
@@ -31,6 +44,10 @@ function stripMeta(md: string): string {
     .replace(/^#{1,3}\s*INTERNAL LINKING NOTES\s*\n[\s\S]*$/gm, '')
     .replace(/^- Links? OUT to:.*$/gm, '')
     .replace(/^- Should be linked FROM:.*$/gm, '')
+    // Fix wrong quiz links: /quizzes/category/slug → /quiz/slug
+    .replace(/\/quizzes\/[a-z-]+\/([a-z0-9-]+)/g, '/quiz/$1')
+    // Clean up --- dividers that are left orphaned
+    .replace(/^---\s*$/gm, '')
     // Clean up extra blank lines
     .replace(/\n{3,}/g, '\n\n')
     .trim();
