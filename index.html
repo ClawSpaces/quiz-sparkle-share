@@ -32,9 +32,6 @@
       gtag('config', 'G-3J90MQBDLR');
     </script>
 
-    <!-- Ezoic Privacy / Consent -->
-    <script src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false"></script>
-
     <!-- Ezoic Ad Script -->
     <script src="https://the.gateway.operatorezoic.com/ezoic/sa.min.js" async></script>
 
@@ -52,5 +49,8 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Ezoic Privacy / Consent — moved to body to avoid render-blocking -->
+    <script src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false"></script>
   </body>
 </html>
