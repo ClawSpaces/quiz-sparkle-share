@@ -1,11 +1,31 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import { Helmet } from "react-helmet-async";
 
 const AboutPage = () => {
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Fizzty",
+    url: "https://fizzty.com",
+    logo: "https://fizzty.com/favicon.png",
+    description: "Fizzty creates research-informed personality quizzes, trivia challenges, and wellness assessments. Our health content is based on published clinical frameworks and peer-reviewed studies.",
+    sameAs: [],
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: "john.nedev@gmail.com",
+      contactType: "customer service",
+    },
+    publishingPrinciples: "https://fizzty.com/about",
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      <SEO title="About Fizzty — Who We Are" description="Learn about Fizzty, your destination for fun personality quizzes, trivia challenges, and trending content." />
+      <SEO title="About Fizzty — Who We Are" description="Learn about Fizzty, your destination for fun personality quizzes, trivia challenges, and trending content. See our editorial standards and research methodology." />
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(orgSchema)}</script>
+      </Helmet>
       <Header />
       <main className="container max-w-3xl py-10">
         <h1 className="font-display text-3xl font-black text-foreground mb-6">About Fizzty</h1>
@@ -32,6 +52,17 @@ const AboutPage = () => {
               <li><strong>Trivia Challenges:</strong> Test your knowledge on everything from movies and music to science and history.</li>
               <li><strong>Trending Content:</strong> Stay in the loop with the latest viral stories, celebrity news, and pop culture moments.</li>
               <li><strong>Community:</strong> Join millions of quiz-takers who share, compare, and discuss their results.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="font-display text-xl font-bold text-foreground">Our Editorial Standards</h2>
+            <p>We take content accuracy seriously — especially for health and wellness topics. Our editorial process includes:</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li><strong>Research-Based Content:</strong> All health-related quizzes are informed by published research, clinical screening tools, and peer-reviewed studies (e.g., AQ, RAADS-R, SCOFF).</li>
+              <li><strong>Clear Sourcing:</strong> Health quizzes include a Sources &amp; References section linking to organizations like the WHO, NIH, CDC, and relevant academic publications.</li>
+              <li><strong>Medical Disclaimers:</strong> Every health quiz prominently states that it is not a diagnostic tool and encourages users to consult qualified healthcare providers.</li>
+              <li><strong>Regular Reviews:</strong> Content is periodically reviewed and updated to reflect current research and best practices.</li>
             </ul>
           </section>
 

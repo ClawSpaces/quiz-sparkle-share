@@ -155,7 +155,60 @@ function buildSchemaJson(quiz, questions, category) {
     })),
   });
 
+  // MedicalWebPage schema for health quizzes
+  const HEALTH_CATEGORY_ID = 'ffb0f553-d361-4050-b4c3-ccfb40065514';
+  if (quiz.category_id === HEALTH_CATEGORY_ID) {
+    schemas.push({
+      '@context': 'https://schema.org',
+      '@type': 'MedicalWebPage',
+      name: quiz.title,
+      description: truncate(quiz.description, 300),
+      url: `${BASE_URL}/quiz/${quiz.slug}`,
+      lastReviewed: (quiz.updated_at || quiz.created_at || new Date().toISOString()).split('T')[0],
+      reviewedBy: {
+        '@type': 'Organization',
+        name: 'Fizzty Editorial Team',
+        url: `${BASE_URL}/about`,
+      },
+      mainContentOfPage: {
+        '@type': 'WebPageElement',
+        cssSelector: 'article',
+      },
+      specialty: 'Health',
+    });
+  }
+
   return schemas.map((s) => JSON.stringify(s)).join('\n');
+}
+
+function getSourcesForQuiz(slug) {
+  const sources = {
+    'endometriosis-quiz': [
+      '<li><a href="https://www.who.int/news-room/fact-sheets/detail/endometriosis" style="color:#7c3aed">WHO — Endometriosis Fact Sheet</a></li>',
+      '<li><a href="https://www.nichd.nih.gov/health/topics/endometri" style="color:#7c3aed">NIH — Endometriosis Information</a></li>',
+      '<li>Nnoaham KE, et al. (2011). Impact of endometriosis on quality of life and work productivity. <em>Fertility and Sterility</em>, 96(2), 366-373.</li>',
+      '<li><a href="https://endometriosisassn.org/" style="color:#7c3aed">Endometriosis Association</a></li>',
+    ],
+    'eating-disorder-quiz': [
+      '<li><a href="https://www.nationaleatingdisorders.org/screening-tool" style="color:#7c3aed">NEDA — Eating Disorder Screening Tool</a></li>',
+      '<li>Morgan JF, Reid F, Lacey JH (1999). The SCOFF questionnaire. <em>BMJ</em>, 319(7223), 1467-1468.</li>',
+      '<li><a href="https://www.nimh.nih.gov/health/topics/eating-disorders" style="color:#7c3aed">NIMH — Eating Disorders</a></li>',
+      '<li>American Psychiatric Association. <em>DSM-5</em> Feeding and Eating Disorders criteria.</li>',
+    ],
+    'autistic-quiz': [
+      '<li>Baron-Cohen S, et al. (2001). The Autism-Spectrum Quotient (AQ). <em>Journal of Autism and Developmental Disorders</em>, 31(1), 5-17.</li>',
+      '<li>Ritvo RA, et al. (2011). The RAADS-R: A reliable instrument for diagnosing adults on the autism spectrum. <em>Journal of Autism and Developmental Disorders</em>, 41(8), 1076-1085.</li>',
+      '<li><a href="https://www.cdc.gov/autism/" style="color:#7c3aed">CDC — Autism Spectrum Disorder</a></li>',
+      '<li><a href="https://www.autism.org/" style="color:#7c3aed">National Autism Association</a></li>',
+    ],
+  };
+  // Default sources for other health quizzes
+  const defaults = [
+    '<li>Based on established psychological and health research frameworks.</li>',
+    '<li><a href="https://www.who.int/" style="color:#7c3aed">World Health Organization</a></li>',
+    '<li><a href="https://www.nih.gov/" style="color:#7c3aed">National Institutes of Health</a></li>',
+  ];
+  return (sources[slug] || defaults).join('\n            ');
 }
 
 function generateQuizHtml(template, quiz, questions, category, relatedQuizzes) {
@@ -253,6 +306,18 @@ function generateQuizHtml(template, quiz, questions, category, relatedQuizzes) {
           <ul style="list-style:none;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
             ${relatedQuizzes.map(rq => `<li><a href="/quiz/${escapeHtml(rq.slug)}" style="display:block;padding:12px;border:1px solid #e5e7eb;border-radius:8px;text-decoration:none;color:#7c3aed;font-weight:600">${escapeHtml(rq.title)}</a></li>`).join('\n            ')}
           </ul>
+        </section>` : ''}
+        ${quiz.category_id === 'ffb0f553-d361-4050-b4c3-ccfb40065514' ? `
+        <section style="margin-top:32px;padding:16px;background:#fef3c7;border-radius:8px;border:1px solid #f59e0b">
+          <p style="font-size:14px;color:#92400e;margin:0"><strong>⚕️ Medical Disclaimer:</strong> This quiz is for educational and self-reflection purposes only. It is not a diagnostic tool and does not replace professional medical advice, diagnosis, or treatment. If you have concerns about your health, please consult a qualified healthcare provider.</p>
+        </section>
+        <section style="margin-top:24px;padding-top:24px;border-top:1px solid #e5e7eb">
+          <h2 style="font-size:20px;font-weight:bold;color:#1a1a2e;margin-bottom:12px">Sources &amp; References</h2>
+          <p style="font-size:14px;color:#666;margin-bottom:8px">This quiz was developed using questions informed by the following research and clinical frameworks:</p>
+          <ul style="font-size:14px;color:#444;line-height:1.8;padding-left:20px">
+            ${getSourcesForQuiz(quiz.slug)}
+          </ul>
+          <p style="font-size:13px;color:#888;margin-top:12px">Content prepared by the <a href="/about" style="color:#7c3aed">Fizzty Editorial Team</a> based on published research. Last reviewed: ${(quiz.updated_at || quiz.created_at || new Date().toISOString()).split('T')[0]}.</p>
         </section>` : ''}
         <section style="margin-top:32px;padding-top:24px;border-top:1px solid #e5e7eb">
           <h2 style="font-size:20px;font-weight:bold;color:#1a1a2e;margin-bottom:12px">Frequently Asked Questions</h2>
