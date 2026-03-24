@@ -37,8 +37,31 @@ async function fetchQuizzes(limit, offset) {
   return res.json();
 }
 
-// Store all quizzes for related quiz linking
+// Store all quizzes and articles for cross-linking
 let ALL_QUIZZES = [];
+let ALL_ARTICLES = [];
+
+function findRelatedArticles(quiz) {
+  // Find articles related to this quiz by category + keyword matching
+  const quizWords = new Set(quiz.title.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(/\s+/).filter(w => w.length > 3));
+  
+  return ALL_ARTICLES
+    .filter(a => a.slug) // must have slug
+    .map(a => {
+      let score = 0;
+      // Same category = +3
+      if (a.category_id === quiz.category_id) score += 3;
+      // Word overlap in title
+      const artWords = a.title.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(/\s+/).filter(w => w.length > 3);
+      for (const w of artWords) {
+        if (quizWords.has(w)) score += 2;
+      }
+      return { ...a, score };
+    })
+    .filter(a => a.score >= 3)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+}
 
 async function fetchRelatedQuizzes(quiz) {
   // Return up to 6 related quizzes: same category first, then popular ones
@@ -211,7 +234,7 @@ function getSourcesForQuiz(slug) {
   return (sources[slug] || defaults).join('\n            ');
 }
 
-function generateQuizHtml(template, quiz, questions, category, relatedQuizzes) {
+function generateQuizHtml(template, quiz, questions, category, relatedQuizzes, relatedArticles) {
   const title = `${quiz.title} | Fizzty`;
   const description = truncate(quiz.description, 160);
   const canonical = `${BASE_URL}/quiz/${quiz.slug}`;
@@ -307,6 +330,13 @@ function generateQuizHtml(template, quiz, questions, category, relatedQuizzes) {
             ${relatedQuizzes.map(rq => `<li><a href="/quiz/${escapeHtml(rq.slug)}" style="display:block;padding:12px;border:1px solid #e5e7eb;border-radius:8px;text-decoration:none;color:#7c3aed;font-weight:600">${escapeHtml(rq.title)}</a></li>`).join('\n            ')}
           </ul>
         </section>` : ''}
+        ${relatedArticles.length > 0 ? `
+        <section style="margin-top:24px;padding-top:24px;border-top:1px solid #e5e7eb">
+          <h2 style="font-size:20px;font-weight:bold;color:#1a1a2e;margin-bottom:12px">📚 Recommended Reading</h2>
+          <ul style="list-style:none;padding:0">
+            ${relatedArticles.map(a => `<li style="margin-bottom:8px"><a href="/article/${escapeHtml(a.slug)}" style="color:#7c3aed;font-weight:600;text-decoration:none">${escapeHtml(a.title)}</a></li>`).join('\n            ')}
+          </ul>
+        </section>` : ''}
         ${quiz.category_id === 'ffb0f553-d361-4050-b4c3-ccfb40065514' ? `
         <section style="margin-top:32px;padding:16px;background:#fef3c7;border-radius:8px;border:1px solid #f59e0b">
           <p style="font-size:14px;color:#92400e;margin:0"><strong>⚕️ Medical Disclaimer:</strong> This quiz is for educational and self-reflection purposes only. It is not a diagnostic tool and does not replace professional medical advice, diagnosis, or treatment. If you have concerns about your health, please consult a qualified healthcare provider.</p>
@@ -364,7 +394,8 @@ async function processQuizzes(template, quizzes) {
       const questions = await fetchQuizQuestions(quiz.id);
       const category = quiz.categories || null;
       const relatedQuizzes = await fetchRelatedQuizzes(quiz);
-      const html = generateQuizHtml(template, quiz, questions, category, relatedQuizzes);
+      const relatedArticles = findRelatedArticles(quiz);
+      const html = generateQuizHtml(template, quiz, questions, category, relatedQuizzes, relatedArticles);
       fs.mkdirSync(outDir, { recursive: true });
       fs.writeFileSync(outFile, html, 'utf8');
       success++;
@@ -401,6 +432,23 @@ async function main() {
     }
   }
   console.log(`Loaded ${ALL_QUIZZES.length} quizzes for internal linking`);
+
+  // Pre-fetch all articles for quiz↔article cross-linking
+  console.log('Pre-fetching articles for cross-linking...');
+  {
+    let off = 0;
+    while (true) {
+      const url = `${SUPABASE_URL}/rest/v1/posts?select=id,title,slug,category_id&is_published=eq.true&slug=not.is.null&limit=100&offset=${off}`;
+      const res = await fetch(url, { headers: { apikey: SUPABASE_ANON_KEY } });
+      if (!res.ok) break;
+      const batch = await res.json();
+      if (batch.length === 0) break;
+      ALL_ARTICLES.push(...batch);
+      if (batch.length < 100) break;
+      off += 100;
+    }
+  }
+  console.log(`Loaded ${ALL_ARTICLES.length} articles for cross-linking`);
 
   if (ALL) {
     // Process ALL quizzes in batches of 50

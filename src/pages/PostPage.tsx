@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import Header from "@/components/Header";
 import SEO from "@/components/SEO";
@@ -95,6 +95,8 @@ function markdownToHtml(md: string): string {
 
 const PostPage = () => {
   const { id, slug } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const idOrSlug = slug || id;
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
@@ -111,6 +113,11 @@ const PostPage = () => {
         .eq(lookupField, idOrSlug)
         .single();
       if (data) {
+        // Redirect /post/UUID to /article/slug for SEO
+        if (isUUID && data.slug && location.pathname.startsWith("/post/")) {
+          navigate(`/article/${data.slug}`, { replace: true });
+          return;
+        }
         setPost(data as any);
         supabase.rpc("increment_views", { post_id_param: data.id });
       }
