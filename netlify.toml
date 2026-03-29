@@ -2,6 +2,15 @@
   command = "npm run build"
   publish = "dist"
 
+# Edge Function: SEO prerender for crawlers on quiz/article pages
+[[edge_functions]]
+  function = "seo-prerender"
+  path = "/quiz/*"
+
+[[edge_functions]]
+  function = "seo-prerender"
+  path = "/article/*"
+
 # SPA fallback — all routes go to index.html
 [[redirects]]
   from = "/*"
