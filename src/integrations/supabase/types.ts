@@ -255,10 +255,15 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          image_alt: string | null
           image_url: string | null
           is_published: boolean
           is_trending: boolean
+          llm_summary: string | null
+          meta_description: string | null
+          meta_title: string | null
           post_type: Database["public"]["Enums"]["post_type"]
+          primary_keyword: string | null
           title: string
           updated_at: string
           views_count: number
@@ -269,10 +274,15 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          image_alt?: string | null
           image_url?: string | null
           is_published?: boolean
           is_trending?: boolean
+          llm_summary?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
           post_type?: Database["public"]["Enums"]["post_type"]
+          primary_keyword?: string | null
           title: string
           updated_at?: string
           views_count?: number
@@ -283,10 +293,15 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          image_alt?: string | null
           image_url?: string | null
           is_published?: boolean
           is_trending?: boolean
+          llm_summary?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
           post_type?: Database["public"]["Enums"]["post_type"]
+          primary_keyword?: string | null
           title?: string
           updated_at?: string
           views_count?: number

@@ -4,10 +4,17 @@ export interface Post {
   description: string | null;
   content?: string | null;
   image_url: string | null;
+  image_alt?: string | null;
+  meta_title?: string | null;
+  meta_description?: string | null;
+  primary_keyword?: string | null;
+  llm_summary?: string | null;
   post_type: "article" | "shopping" | "celebrity" | "trending_news";
   views_count: number;
   is_trending: boolean;
   created_at: string;
+  updated_at?: string;
+  slug?: string;
   reactions?: Record<string, number>;
   post_reactions?: { emoji: string; count: number }[];
 }

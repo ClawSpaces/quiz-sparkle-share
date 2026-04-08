@@ -15,6 +15,31 @@ import ContentSidebar from "@/components/ContentSidebar";
 import ShareButtons from "@/components/ShareButtons";
 import CommentsSection from "@/components/CommentsSection";
 
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+/** Extract FAQ items from markdown content (## FAQ or ## Frequently Asked Questions sections) */
+function extractFAQ(md: string): FAQItem[] {
+  if (!md) return [];
+  // Match FAQ section: starts with ## FAQ or ## Frequently Asked Questions
+  const faqMatch = md.match(/^#{2,3}\s*(?:FAQ|Frequently Asked Questions)\s*\n([\s\S]*?)(?=^#{1,2}\s|\Z)/mi);
+  if (!faqMatch) return [];
+  const faqBlock = faqMatch[1];
+  const items: FAQItem[] = [];
+  // Match Q&A pairs: ### question followed by answer text
+  const pairs = faqBlock.matchAll(/^#{3,4}\s*(.+?)\s*\n([\s\S]*?)(?=^#{3,4}\s|$)/gm);
+  for (const pair of pairs) {
+    const question = pair[1].replace(/^\*\*|\*\*$/g, '').trim();
+    const answer = pair[2].replace(/\n{2,}/g, ' ').trim();
+    if (question && answer) {
+      items.push({ question, answer });
+    }
+  }
+  return items;
+}
+
 /** Strip meta/frontmatter sections that shouldn't be visible to users */
 function stripMeta(md: string): string {
   if (!md) return "";
@@ -127,6 +152,8 @@ const PostPage = () => {
   }, [idOrSlug]);
 
   const renderedContent = useMemo(() => markdownToHtml(post?.content || ""), [post?.content]);
+  const faqItems = useMemo(() => extractFAQ(post?.content || ""), [post?.content]);
+  const isNewsArticle = post?.post_type === "trending_news";
 
   if (loading) {
     return (
@@ -161,24 +188,31 @@ const PostPage = () => {
         title={post.title}
         description={(post.description || "Read this article on Fizzty!").slice(0, 155)}
         image={post.image_url || undefined}
+        imageAlt={post.image_alt || undefined}
         type="article"
         publishedTime={post.created_at}
-        modifiedTime={post.created_at}
+        modifiedTime={post.updated_at || post.created_at}
+        metaTitle={post.meta_title || undefined}
+        metaDescription={post.meta_description || undefined}
       />
       <SchemaMarkup
         type="article"
-        title={post.title}
-        description={post.description}
+        title={post.meta_title || post.title}
+        description={post.meta_description || post.description}
         image={post.image_url}
+        imageAlt={post.image_alt || undefined}
         datePublished={post.created_at}
-        dateModified={post.created_at}
+        dateModified={post.updated_at || post.created_at}
+        isNewsArticle={isNewsArticle}
+        primaryKeyword={post.primary_keyword || undefined}
+        faqItems={faqItems.length > 0 ? faqItems : undefined}
       />
       <Header />
       <main className="flex-1">
         <div className="container py-8 md:flex md:gap-6">
           <div className="flex-1 min-w-0 max-w-3xl">
             <div className="aspect-[16/9] overflow-hidden rounded-xl">
-              <img src={image} alt={post.title} className="h-full w-full object-cover" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
+              <img src={image} alt={post.image_alt || post.title} className="h-full w-full object-cover" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
             </div>
 
             <div className="mt-6">

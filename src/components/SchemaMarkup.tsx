@@ -26,10 +26,14 @@ interface ArticleSchemaProps {
   title: string;
   description: string | null;
   image: string | null;
+  imageAlt?: string;
   datePublished: string;
   dateModified: string;
   categoryName?: string;
   categorySlug?: string;
+  isNewsArticle?: boolean;
+  primaryKeyword?: string;
+  faqItems?: FAQItem[];
 }
 
 interface WebsiteSchemaProps {
@@ -132,12 +136,11 @@ const SchemaMarkup = (props: SchemaProps) => {
   }
 
   if (props.type === "article") {
-    schemas.push({
+    const articleSchema: Record<string, unknown> = {
       "@context": "https://schema.org",
-      "@type": "Article",
+      "@type": props.isNewsArticle ? "NewsArticle" : "Article",
       headline: props.title,
       description: props.description || undefined,
-      image: props.image || undefined,
       author: PUBLISHER,
       publisher: PUBLISHER,
       datePublished: props.datePublished,
@@ -146,7 +149,34 @@ const SchemaMarkup = (props: SchemaProps) => {
         "@type": "WebPage",
         "@id": typeof window !== "undefined" ? window.location.href : BASE_URL,
       },
-    });
+    };
+    if (props.image) {
+      articleSchema.image = {
+        "@type": "ImageObject",
+        url: props.image,
+        ...(props.imageAlt ? { caption: props.imageAlt } : {}),
+      };
+    }
+    if (props.primaryKeyword) {
+      articleSchema.keywords = props.primaryKeyword;
+    }
+    schemas.push(articleSchema);
+
+    // FAQPage schema for articles with FAQ sections
+    if (props.faqItems?.length) {
+      schemas.push({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: props.faqItems.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.answer,
+          },
+        })),
+      });
+    }
 
     const crumbs: BreadcrumbItem[] = [{ name: "Home", url: BASE_URL }];
     if (props.categoryName && props.categorySlug) {

@@ -6,30 +6,37 @@ interface SEOProps {
   title: string;
   description: string;
   image?: string;
+  imageAlt?: string;
   url?: string;
   type?: "website" | "article" | "quiz";
   noindex?: boolean;
   publishedTime?: string;
   modifiedTime?: string;
+  metaTitle?: string;
+  metaDescription?: string;
 }
 
-const SEO = ({ title, description, image, url, type = "website", noindex = false, publishedTime, modifiedTime }: SEOProps) => {
-  const fullTitle = `${title} | Fizzty`;
+const SEO = ({ title, description, image, imageAlt, url, type = "website", noindex = false, publishedTime, modifiedTime, metaTitle, metaDescription }: SEOProps) => {
+  const displayTitle = metaTitle || title;
+  const fullTitle = displayTitle.includes("Fizzty") ? displayTitle : `${displayTitle} | Fizzty`;
+  const displayDescription = metaDescription || description;
   const ogImage = image || DEFAULT_OG_IMAGE;
+  const ogImageAlt = imageAlt || displayTitle;
   const canonical = url || (typeof window !== "undefined" ? window.location.href.split("?")[0] : "https://fizzty.com");
 
   return (
     <Helmet>
       <title>{fullTitle}</title>
-      <meta name="description" content={description} />
+      <meta name="description" content={displayDescription} />
       <link rel="canonical" href={canonical} />
       <meta name="author" content="Fizzty" />
       {noindex && <meta name="robots" content="noindex, nofollow" />}
 
       {/* Open Graph */}
       <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={description} />
+      <meta property="og:description" content={displayDescription} />
       <meta property="og:image" content={ogImage} />
+      <meta property="og:image:alt" content={ogImageAlt} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:url" content={canonical} />
@@ -44,8 +51,9 @@ const SEO = ({ title, description, image, url, type = "website", noindex = false
       {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
-      <meta name="twitter:description" content={description} />
+      <meta name="twitter:description" content={displayDescription} />
       <meta name="twitter:image" content={ogImage} />
+      <meta name="twitter:image:alt" content={ogImageAlt} />
       <meta name="twitter:site" content="@Fizzty" />
     </Helmet>
   );
