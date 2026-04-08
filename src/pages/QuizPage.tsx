@@ -113,8 +113,8 @@ const QuizPage = () => {
   const handleAnswer = useCallback((question: Question, answer: Answer) => {
     if (answers[question.id]) return;
 
-    if (!playsIncremented) {
-      supabase.rpc("increment_plays", { quiz_id_param: id! });
+    if (!playsIncremented && quiz?.id) {
+      supabase.rpc("increment_plays", { quiz_id_param: quiz.id });
       setPlaysIncremented(true);
     }
 
@@ -138,7 +138,7 @@ const QuizPage = () => {
     } else {
       setTimeout(() => computeResult(newAnswers, answer), quiz?.type === "trivia" ? 800 : 400);
     }
-  }, [answers, questions, quiz, id, playsIncremented]);
+  }, [answers, questions, quiz, playsIncremented]);
 
   const computeResult = (allAnswers: Record<string, string>, lastAnswer: Answer) => {
     let resultId: string | null = null;
