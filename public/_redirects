@@ -1,2 +1,2 @@
-/sitemap.xml  https://gymwbfevlbbyanobpiwr.supabase.co/functions/v1/sitemap  200
-/*    /index.html   200
+# All redirects are managed in netlify.toml
+# Do NOT add rules here — _redirects takes priority over static files

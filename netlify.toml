@@ -11,7 +11,16 @@
   function = "seo-prerender"
   path = "/article/*"
 
+# Proxy sitemap to Supabase edge function (dynamic, real-time)
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "https://gymwbfevlbbyanobpiwr.supabase.co/functions/v1/sitemap"
+  status = 200
+  force = true
+
 # SPA fallback — all routes go to index.html
+# Static prerendered files (dist/quiz/*/index.html, dist/article/*/index.html)
+# take priority over this rule because force is NOT set (default: false)
 [[redirects]]
   from = "/*"
   to = "/index.html"
