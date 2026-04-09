@@ -24,6 +24,8 @@ const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
 const TermsPage = lazy(() => import("./pages/TermsPage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
+const AuthorPage = lazy(() => import("./pages/AuthorPage"));
+const TopicHubPage = lazy(() => import("./pages/TopicHubPage"));
 
 // Admin pages (lazy - rarely accessed)
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
@@ -63,6 +65,8 @@ const App = () => (
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/author/:slug" element={<AuthorPage />} />
+          <Route path="/topic/:slug" element={<TopicHubPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
 

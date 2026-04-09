@@ -7,17 +7,31 @@ const AboutPage = () => {
   const orgSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": "https://fizzty.com/#organization",
     name: "Fizzty",
     url: "https://fizzty.com",
-    logo: "https://fizzty.com/favicon.png",
+    logo: { "@type": "ImageObject", url: "https://fizzty.com/favicon.png", width: 512, height: 512 },
     description: "Fizzty creates research-informed personality quizzes, trivia challenges, and wellness assessments. Our health content is based on published clinical frameworks and peer-reviewed studies.",
-    sameAs: [],
+    foundingDate: "2025",
+    knowsAbout: ["personality quizzes", "psychology", "self-discovery", "mental health", "wellness assessments"],
+    sameAs: [
+      "https://www.facebook.com/fizztyquizzes",
+      "https://x.com/FizztyWorld",
+    ],
     contactPoint: {
       "@type": "ContactPoint",
       email: "john.nedev@gmail.com",
       contactType: "customer service",
     },
     publishingPrinciples: "https://fizzty.com/about",
+    member: [
+      {
+        "@type": "Person",
+        name: "Fizzty Editorial Team",
+        description: "Psychology & Self-Discovery Experts",
+        knowsAbout: ["psychology", "personality types", "mental health", "behavioral science"],
+      },
+    ],
   };
 
   return (
@@ -63,6 +77,16 @@ const AboutPage = () => {
               <li><strong>Clear Sourcing:</strong> Health quizzes include a Sources &amp; References section linking to organizations like the WHO, NIH, CDC, and relevant academic publications.</li>
               <li><strong>Medical Disclaimers:</strong> Every health quiz prominently states that it is not a diagnostic tool and encourages users to consult qualified healthcare providers.</li>
               <li><strong>Regular Reviews:</strong> Content is periodically reviewed and updated to reflect current research and best practices.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="font-display text-xl font-bold text-foreground">Our Team</h2>
+            <p>Fizzty is built by a team of psychology enthusiasts, data scientists, and content creators who are passionate about self-discovery. Our editorial team combines expertise in behavioral psychology, personality science, and digital wellness to create quizzes and articles that are both engaging and grounded in research.</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li><strong>Editorial Team:</strong> Psychology & self-discovery experts who research, write, and fact-check every quiz and article.</li>
+              <li><strong>Research Advisors:</strong> We consult published frameworks (Big Five, MBTI, Enneagram, attachment theory) and cite peer-reviewed studies in our content.</li>
+              <li><strong>Data & Analytics:</strong> Our team analyzes quiz-taker patterns to surface genuine insights about personality and behavior.</li>
             </ul>
           </section>
 

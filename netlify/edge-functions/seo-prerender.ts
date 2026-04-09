@@ -527,16 +527,150 @@ export default async function handler(request: Request) {
         },
       });
     }
+    // Author pages
+    const authorMatch = path.match(/^\/author\/([a-z0-9-]+)$/);
+    if (authorMatch) {
+      const authorSlug = authorMatch[1];
+      const authorData = await supabaseFetch(
+        `authors?slug=eq.${authorSlug}&select=name,slug,bio,credentials,image_url,social_links,expertise&limit=1`
+      );
+      const author = authorData?.[0];
+      if (!author) return;
+
+      const canonical = `${BASE_URL}/author/${author.slug}`;
+      const title = `${author.name}${author.credentials ? `, ${author.credentials}` : ''} | Fizzty`;
+      const description = truncate(author.bio || `Articles and quizzes by ${author.name} on Fizzty`, 155);
+
+      const personSchema = {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "@id": `${canonical}#person`,
+        name: author.name,
+        url: canonical,
+        description: author.credentials || undefined,
+        image: author.image_url || undefined,
+        knowsAbout: author.expertise || ["psychology", "personality types"],
+        sameAs: [
+          ...(author.social_links?.linkedin ? [author.social_links.linkedin] : []),
+          ...(author.social_links?.twitter ? [author.social_links.twitter] : []),
+        ],
+      };
+
+      return new Response(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${escapeHtml(title)}</title>
+    <meta name="description" content="${escapeHtml(description)}" />
+    <link rel="canonical" href="${canonical}" />
+    <meta property="og:title" content="${escapeHtml(title)}" />
+    <meta property="og:description" content="${escapeHtml(description)}" />
+    ${author.image_url ? `<meta property="og:image" content="${escapeHtml(author.image_url)}" />` : ""}
+    <meta property="og:url" content="${canonical}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="${escapeHtml(title)}" />
+    <script type="application/ld+json">${JSON.stringify(personSchema)}</script>
+</head>
+<body>
+    <div style="max-width:800px;margin:0 auto;padding:20px;font-family:system-ui,sans-serif">
+        <h1>${escapeHtml(author.name)}</h1>
+        ${author.credentials ? `<p style="color:#666">${escapeHtml(author.credentials)}</p>` : ""}
+        ${author.bio ? `<p>${escapeHtml(author.bio)}</p>` : ""}
+    </div>
+</body>
+</html>`, {
+        status: 200,
+        headers: {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "public, max-age=3600, s-maxage=3600",
+          "x-robots-tag": "index, follow",
+          "x-prerender": "edge-function",
+        },
+      });
+    }
   } catch (err) {
     // On any error, passthrough to origin so the SPA still works
     console.error("SEO prerender error:", err);
     return;
   }
 
-  // Not a quiz or article path — passthrough
+    // Topic hub pages
+    const topicMatch = path.match(/^\/topic\/([a-z0-9-]+)$/);
+    if (topicMatch) {
+      const topicSlug = topicMatch[1];
+      const hubData = await supabaseFetch(
+        `topic_hubs?slug=eq.${topicSlug}&select=title,slug,description,niche&limit=1`
+      );
+      const hub = hubData?.[0];
+      if (!hub) return;
+
+      const canonical = `${BASE_URL}/topic/${hub.slug}`;
+      const title = `${hub.title} | Fizzty`;
+      const description = truncate(hub.description || `Explore ${hub.title} articles and quizzes on Fizzty`, 155);
+
+      const collectionSchema = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "@id": `${canonical}#collection`,
+        name: hub.title,
+        description,
+        url: canonical,
+        isPartOf: { "@id": `${BASE_URL}/#organization` },
+      };
+      const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: BASE_URL },
+          { "@type": "ListItem", position: 2, name: hub.title },
+        ],
+      };
+
+      return new Response(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${escapeHtml(title)}</title>
+    <meta name="description" content="${escapeHtml(description)}" />
+    <link rel="canonical" href="${canonical}" />
+    <meta property="og:title" content="${escapeHtml(title)}" />
+    <meta property="og:description" content="${escapeHtml(description)}" />
+    <meta property="og:url" content="${canonical}" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="${escapeHtml(title)}" />
+    <script type="application/ld+json">${JSON.stringify(collectionSchema)}</script>
+    <script type="application/ld+json">${JSON.stringify(breadcrumbSchema)}</script>
+</head>
+<body>
+    <div style="max-width:800px;margin:0 auto;padding:20px;font-family:system-ui,sans-serif">
+        <nav style="font-size:14px;color:#666;margin-bottom:16px"><a href="/" style="color:#7c3aed">Home</a> &rsaquo; ${escapeHtml(hub.title)}</nav>
+        <h1>${escapeHtml(hub.title)}</h1>
+        ${hub.description ? `<p>${escapeHtml(hub.description)}</p>` : ""}
+    </div>
+</body>
+</html>`, {
+        status: 200,
+        headers: {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "public, max-age=3600, s-maxage=3600",
+          "x-robots-tag": "index, follow",
+          "x-prerender": "edge-function",
+        },
+      });
+    }
+  } catch (err) {
+    // On any error, passthrough to origin so the SPA still works
+    console.error("SEO prerender error:", err);
+    return;
+  }
+
+  // Not a recognized path — passthrough
   return;
 }
 
 export const config = {
-  path: ["/quiz/*", "/article/*"],
+  path: ["/quiz/*", "/article/*", "/author/*", "/topic/*"],
 };

@@ -295,7 +295,7 @@ const QuizPage = () => {
                   <>
                     <div className="h-9 w-9 overflow-hidden rounded-full bg-muted">
                       {quiz.profiles.avatar_url ? (
-                        <img src={quiz.profiles.avatar_url} alt={quiz.profiles.name} className="h-full w-full object-cover" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
+                        <img src={quiz.profiles.avatar_url} alt={quiz.profiles.name} width={36} height={36} className="h-full w-full object-cover" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center text-sm font-bold text-muted-foreground">
                           {quiz.profiles.name.charAt(0)}
@@ -361,7 +361,7 @@ const QuizPage = () => {
 
                       {q.image_url && (
                         <div className="mb-4 overflow-hidden rounded-lg">
-                          <img src={q.image_url} alt="" className="w-full object-cover max-h-80" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
+                          <img src={q.image_url} alt="" width={800} height={400} className="w-full object-cover max-h-80" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
                         </div>
                       )}
 
@@ -393,7 +393,7 @@ const QuizPage = () => {
                               >
                                 {ans.image_url && (
                                   <div className="aspect-square overflow-hidden">
-                                    <img src={ans.image_url} alt={ans.text} className="h-full w-full object-cover transition-transform group-hover:scale-105" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
+                                    <img src={ans.image_url} alt={ans.text} width={400} height={400} className="h-full w-full object-cover transition-transform group-hover:scale-105" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
                                   </div>
                                 )}
                                 <div className="flex items-center justify-between p-2.5">
@@ -491,7 +491,7 @@ const QuizPage = () => {
                         <h2 className="font-display text-2xl font-bold text-foreground md:text-3xl">{finalResult.title}</h2>
                         {finalResult.image_url && (
                           <div className="mt-4 overflow-hidden rounded-lg">
-                            <img src={finalResult.image_url} alt={finalResult.title} className="w-full object-cover" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
+                            <img src={finalResult.image_url} alt={finalResult.title} width={800} height={400} className="w-full object-cover" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
                           </div>
                         )}
                         {finalResult.description && (

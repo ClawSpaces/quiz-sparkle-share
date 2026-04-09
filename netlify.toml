@@ -11,6 +11,14 @@
   function = "seo-prerender"
   path = "/article/*"
 
+[[edge_functions]]
+  function = "seo-prerender"
+  path = "/author/*"
+
+[[edge_functions]]
+  function = "seo-prerender"
+  path = "/topic/*"
+
 # Proxy sitemap to Supabase edge function (dynamic, real-time)
 [[redirects]]
   from = "/sitemap.xml"

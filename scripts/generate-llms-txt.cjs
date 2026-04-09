@@ -32,13 +32,14 @@ async function fetchAll(table, select, filter = '') {
 async function main() {
   console.log('Generating llms.txt files...');
 
-  const [quizzes, articles, categories] = await Promise.all([
+  const [quizzes, articles, categories, authors] = await Promise.all([
     fetchAll('quizzes', 'title,slug,description,category_id,categories(name)', '&is_published=eq.true&order=created_at.desc'),
-    fetchAll('posts', 'title,slug,description,content,category_id,categories(name)', '&is_published=eq.true&slug=not.is.null&order=created_at.desc'),
+    fetchAll('posts', 'title,slug,description,content,category_id,niche,categories(name)', '&is_published=eq.true&slug=not.is.null&order=created_at.desc'),
     fetchAll('categories', 'name,slug', '&order=name.asc'),
+    fetchAll('authors', 'name,slug,credentials,expertise', ''),
   ]);
 
-  console.log(`Fetched ${quizzes.length} quizzes, ${articles.length} articles, ${categories.length} categories`);
+  console.log(`Fetched ${quizzes.length} quizzes, ${articles.length} articles, ${categories.length} categories, ${authors.length} authors`);
 
   // ===== llms.txt (overview + index) =====
   let llms = `# Fizzty — Free Personality Quizzes & Self-Assessments
@@ -70,6 +71,27 @@ ${quizzes.map(q => {
 ${articles.map(a => {
   const desc = (a.description || '').replace(/\n/g, ' ').substring(0, 150);
   return `- [${a.title}](${BASE_URL}/article/${a.slug}): ${desc}...`;
+}).join('\n')}
+
+## Articles by Niche
+
+${(() => {
+  const niches = {};
+  for (const a of articles) {
+    const niche = a.niche || 'general';
+    if (!niches[niche]) niches[niche] = [];
+    niches[niche].push(a);
+  }
+  return Object.entries(niches).map(([niche, items]) =>
+    `### ${niche.charAt(0).toUpperCase() + niche.slice(1)} (${items.length})\n${items.map(a => `- [${a.title}](${BASE_URL}/article/${a.slug})`).join('\n')}`
+  ).join('\n\n');
+})()}
+
+## Authors
+
+${authors.map(a => {
+  const expertise = a.expertise ? a.expertise.join(', ') : '';
+  return `- [${a.name}](${BASE_URL}/author/${a.slug})${a.credentials ? ` — ${a.credentials}` : ''}${expertise ? `. Expertise: ${expertise}` : ''}`;
 }).join('\n')}
 
 ## Optional

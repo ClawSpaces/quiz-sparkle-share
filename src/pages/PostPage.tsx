@@ -8,7 +8,8 @@ import ReactionBar from "@/components/ReactionBar";
 import AdSlot from "@/components/AdSlot";
 import { supabase } from "@/integrations/supabase/client";
 import { formatViews, timeAgo, reactionsToRecord, type Post } from "@/data/samplePosts";
-import { Eye, Calendar } from "lucide-react";
+import { Eye, Calendar, User } from "lucide-react";
+import { Link } from "react-router-dom";
 import ReadyForMore from "@/components/ReadyForMore";
 import MoreFromSite from "@/components/MoreFromSite";
 import ContentSidebar from "@/components/ContentSidebar";
@@ -18,6 +19,34 @@ import CommentsSection from "@/components/CommentsSection";
 interface FAQItem {
   question: string;
   answer: string;
+}
+
+interface Author {
+  name: string;
+  slug: string;
+  credentials: string | null;
+  image_url: string | null;
+}
+
+interface TocItem {
+  id: string;
+  text: string;
+  level: number;
+}
+
+/** Extract H2/H3 headings for Table of Contents */
+function extractToc(html: string): TocItem[] {
+  const items: TocItem[] = [];
+  const regex = /<h([23])>(.*?)<\/h[23]>/gi;
+  let match;
+  while ((match = regex.exec(html)) !== null) {
+    const text = match[2].replace(/<[^>]+>/g, '').trim();
+    if (text) {
+      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      items.push({ id, text, level: parseInt(match[1]) });
+    }
+  }
+  return items;
 }
 
 /** Extract FAQ items from markdown content (## FAQ or ## Frequently Asked Questions sections) */
@@ -86,10 +115,10 @@ function markdownToHtml(md: string): string {
   if (md.includes("<h2>") || md.includes("<h3>") || md.includes("<p>")) return md;
 
   let html = md
-    // Headings (must be before bold processing)
-    .replace(/^### (.+)$/gm, "<h3>$1</h3>")
-    .replace(/^## (.+)$/gm, "<h2>$1</h2>")
-    .replace(/^# (.+)$/gm, "<h2>$1</h2>")
+    // Headings with auto-generated IDs for ToC linking
+    .replace(/^### (.+)$/gm, (_, t) => `<h3 id="${t.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}">${t}</h3>`)
+    .replace(/^## (.+)$/gm, (_, t) => `<h2 id="${t.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}">${t}</h2>`)
+    .replace(/^# (.+)$/gm, (_, t) => `<h2 id="${t.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}">${t}</h2>`)
     // Bold and italic
     .replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>")
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
@@ -124,6 +153,7 @@ const PostPage = () => {
   const location = useLocation();
   const idOrSlug = slug || id;
   const [post, setPost] = useState<Post | null>(null);
+  const [author, setAuthor] = useState<Author | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -145,6 +175,15 @@ const PostPage = () => {
         }
         setPost(data as any);
         supabase.rpc("increment_views", { post_id_param: data.id });
+        // Fetch author if linked
+        if ((data as any).author_person_id) {
+          const { data: authorData } = await supabase
+            .from("authors")
+            .select("name, slug, credentials, image_url")
+            .eq("id", (data as any).author_person_id)
+            .single();
+          if (authorData) setAuthor(authorData as Author);
+        }
       }
       setLoading(false);
     };
@@ -153,6 +192,8 @@ const PostPage = () => {
 
   const renderedContent = useMemo(() => markdownToHtml(post?.content || ""), [post?.content]);
   const faqItems = useMemo(() => extractFAQ(post?.content || ""), [post?.content]);
+  const tocItems = useMemo(() => extractToc(renderedContent), [renderedContent]);
+  const showToc = tocItems.length >= 3;
   const isNewsArticle = post?.post_type === "trending_news";
 
   if (loading) {
@@ -217,13 +258,39 @@ const PostPage = () => {
 
             <div className="mt-6">
               <h1 className="font-display text-2xl font-black leading-tight text-foreground md:text-4xl">{post.title}</h1>
-              <div className="mt-3 flex items-center gap-4 text-sm text-muted-foreground">
+              <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                {author && (
+                  <Link to={`/author/${author.slug}`} className="flex items-center gap-2 hover:text-foreground transition-colors">
+                    {author.image_url ? (
+                      <img src={author.image_url} alt={author.name} width={24} height={24} className="h-6 w-6 rounded-full object-cover" />
+                    ) : (
+                      <User className="h-4 w-4" />
+                    )}
+                    <span>{author.name}{author.credentials ? `, ${author.credentials}` : ''}</span>
+                  </Link>
+                )}
                 <span className="flex items-center gap-1"><Eye className="h-4 w-4" /> {formatViews(post.views_count)} views</span>
                 <span className="flex items-center gap-1"><Calendar className="h-4 w-4" /> {post.created_at.split("T")[0]}</span>
+                {post.updated_at && post.updated_at !== post.created_at && (
+                  <span className="text-xs">Updated: {post.updated_at.split("T")[0]}</span>
+                )}
               </div>
             </div>
 
             <div className="mt-4"><AdSlot format="leaderboard" ezoicId={105} /></div>
+
+            {showToc && (
+              <nav className="mt-6 rounded-xl border bg-card p-4">
+                <p className="mb-2 text-sm font-bold text-foreground">In This Article</p>
+                <ul className="space-y-1">
+                  {tocItems.map((item) => (
+                    <li key={item.id} className={item.level === 3 ? "pl-4" : ""}>
+                      <a href={`#${item.id}`} className="text-sm text-muted-foreground hover:text-primary transition-colors">{item.text}</a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )}
 
             <div className="mt-6 text-foreground leading-relaxed prose prose-lg max-w-none prose-headings:font-display prose-headings:font-black prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-p:mb-4 prose-p:leading-relaxed prose-li:mb-1 prose-strong:font-bold prose-a:text-primary">
               {post.content && <div className="mt-4" dangerouslySetInnerHTML={{ __html: renderedContent }} />}
