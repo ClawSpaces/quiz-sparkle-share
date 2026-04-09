@@ -94,11 +94,20 @@ function buildQuizSchema(quiz: any, questions: any[], category: any) {
     url: `${BASE_URL}/quiz/${quiz.slug}`,
     publisher: {
       "@type": "Organization",
+      "@id": `${BASE_URL}/#organization`,
       name: "Fizzty",
       url: BASE_URL,
-      logo: { "@type": "ImageObject", url: `${BASE_URL}/favicon.ico` },
+      logo: { "@type": "ImageObject", url: `${BASE_URL}/favicon.png`, width: 512, height: 512 },
     },
     provider: { "@type": "Organization", name: "Fizzty", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/quiz/${quiz.slug}` },
+    datePublished: quiz.created_at,
+    dateModified: quiz.updated_at || quiz.created_at,
+    author: {
+      "@type": "Person",
+      "@id": `${BASE_URL}/author/fizzty-editorial#person`,
+      name: "Fizzty Editorial Team",
+    },
   };
 
   if (category) {
@@ -315,7 +324,7 @@ function renderQuizHtml(quiz: any, questions: any[], category: any, relatedQuizz
 
 async function fetchArticleBySlug(slug: string) {
   const data = await supabaseFetch(
-    `posts?slug=eq.${slug}&is_published=eq.true&select=id,title,slug,description,content,image_url,category_id,created_at,updated_at,categories(name,slug)&limit=1`
+    `posts?slug=eq.${slug}&is_published=eq.true&select=id,title,slug,description,content,image_url,category_id,created_at,updated_at,primary_keyword,meta_title,meta_description,niche,categories(name,slug)&limit=1`
   );
   return data?.[0] || null;
 }
@@ -349,18 +358,38 @@ function renderArticleHtml(article: any, category: any): string {
     })
     .join("\n        ");
 
-  const articleSchema = {
+  const isNews = article.slug?.startsWith('news-');
+  const articleSchema: any = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": isNews ? "NewsArticle" : "Article",
+    "@id": `${canonical}#article`,
     headline: article.title,
     description,
-    image,
+    image: { "@type": "ImageObject", url: image, width: 1200, height: 630 },
     url: canonical,
+    mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
     datePublished: article.created_at,
     dateModified: article.updated_at || article.created_at,
-    publisher: { "@type": "Organization", name: "Fizzty", url: BASE_URL },
-    author: { "@type": "Organization", name: "Fizzty Editorial Team" },
+    isAccessibleForFree: true,
+    publisher: {
+      "@type": "Organization",
+      "@id": `${BASE_URL}/#organization`,
+      name: "Fizzty",
+      url: BASE_URL,
+      logo: { "@type": "ImageObject", url: `${BASE_URL}/favicon.png`, width: 512, height: 512 },
+    },
+    author: {
+      "@type": "Person",
+      "@id": `${BASE_URL}/author/fizzty-editorial#person`,
+      name: "Fizzty Editorial Team",
+      url: `${BASE_URL}/about`,
+      description: "Psychology & Self-Discovery Experts",
+      knowsAbout: ["psychology", "personality types", "self-discovery", "mental health"],
+    },
   };
+  if (article.primary_keyword) {
+    articleSchema.keywords = article.primary_keyword;
+  }
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -400,6 +429,7 @@ function renderArticleHtml(article: any, category: any): string {
     <meta property="og:locale" content="en_US" />
     <meta property="article:published_time" content="${article.created_at}" />
     ${article.updated_at ? `<meta property="article:modified_time" content="${article.updated_at}" />` : ""}
+    ${isNews && article.primary_keyword ? `<meta name="news_keywords" content="${escapeHtml(article.primary_keyword)}" />` : ""}
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />

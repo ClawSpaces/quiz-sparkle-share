@@ -17,6 +17,7 @@
 
     <!-- AI/LLM content index -->
     <link rel="alternate" type="text/plain" href="/llms.txt" title="LLMs.txt - AI readable content index" />
+    <link rel="alternate" type="application/rss+xml" title="Fizzty News" href="/feed.xml" />
 
     <!-- Default meta tags — overridden per page by react-helmet-async -->
     <title>Fizzty — Quizzes, Trending & Fun</title>
@@ -25,6 +26,28 @@
     <meta property="og:site_name" content="Fizzty" />
     <meta property="og:locale" content="en_US" />
     <meta name="twitter:site" content="@Fizzty" />
+
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "@id": "https://fizzty.com/#organization",
+      "name": "Fizzty",
+      "url": "https://fizzty.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://fizzty.com/favicon.png",
+        "width": 512,
+        "height": 512
+      },
+      "sameAs": [
+        "https://www.facebook.com/fizztyquizzes"
+      ],
+      "knowsAbout": ["personality quizzes", "psychology", "self-discovery", "mental health", "behavioral science"],
+      "description": "Fizzty creates science-backed personality quizzes and trending news articles covering psychology, health, finance, and technology."
+    }
+    </script>
 
     <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-3J90MQBDLR"></script>
@@ -55,5 +78,16 @@
 
     <!-- Ezoic Privacy / Consent — moved to body to avoid render-blocking -->
     <script src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false"></script>
+
+    <!-- Web Vitals monitoring -->
+    <script type="module">
+      import {onCLS, onINP, onLCP} from 'https://unpkg.com/web-vitals@4/dist/web-vitals.js?module';
+      function sendToGA4({name, value, delta, id}) {
+        if (typeof gtag === 'function') {
+          gtag('event', name, { value: Math.round(name === 'CLS' ? delta * 1000 : delta), event_label: id, non_interaction: true });
+        }
+      }
+      onCLS(sendToGA4); onINP(sendToGA4); onLCP(sendToGA4);
+    </script>
   </body>
 </html>

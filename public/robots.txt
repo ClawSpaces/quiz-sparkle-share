@@ -17,6 +17,7 @@ Allow: /
 Disallow: /admin/
 
 Sitemap: https://fizzty.com/sitemap.xml
+Sitemap: https://fizzty.com/sitemap-news.xml
 
 # AI Crawlers
 User-agent: GPTBot

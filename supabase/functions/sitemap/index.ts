@@ -15,7 +15,7 @@ Deno.serve(async () => {
 
   const [{ data: quizzes }, { data: posts }, { data: categories }] = await Promise.all([
     supabase.from("quizzes").select("slug, updated_at").eq("is_published", true),
-    supabase.from("posts").select("id, updated_at").eq("is_published", true),
+    supabase.from("posts").select("id, slug, updated_at").eq("is_published", true),
     supabase.from("categories").select("slug"),
   ]);
 
@@ -53,9 +53,10 @@ Deno.serve(async () => {
   }
 
   for (const post of posts || []) {
+    if (!post.slug) continue;
     xml += `
   <url>
-    <loc>${baseUrl}/post/${post.id}</loc>
+    <loc>${baseUrl}/article/${post.slug}</loc>
     <lastmod>${new Date(post.updated_at).toISOString().split("T")[0]}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

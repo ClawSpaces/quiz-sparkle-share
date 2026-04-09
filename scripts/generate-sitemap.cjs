@@ -84,6 +84,41 @@ function escapeXml(str) {
   });
 }
 
+async function fetchNewsArticles() {
+  const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+  const url = `${SUPABASE_URL}/rest/v1/posts?select=title,slug,created_at,primary_keyword&is_published=eq.true&slug=like.news-*&created_at=gte.${fortyEightHoursAgo}&order=created_at.desc`;
+  const res = await fetch(url, {
+    headers: { apikey: SUPABASE_ANON_KEY },
+  });
+  if (!res.ok) return [];
+  return res.json();
+}
+
+function generateNewsSitemap(articles) {
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n';
+  xml += '        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">\n';
+
+  for (const article of articles) {
+    if (!article.slug) continue;
+    xml += '  <url>\n';
+    xml += `    <loc>${BASE_URL}/article/${escapeXml(article.slug)}</loc>\n`;
+    xml += '    <news:news>\n';
+    xml += '      <news:publication>\n';
+    xml += '        <news:name>Fizzty</news:name>\n';
+    xml += '        <news:language>en</news:language>\n';
+    xml += '      </news:publication>\n';
+    xml += `      <news:publication_date>${new Date(article.created_at).toISOString()}</news:publication_date>\n`;
+    xml += `      <news:title>${escapeXml(article.title || '')}</news:title>\n`;
+    xml += `      <news:keywords>${escapeXml(article.primary_keyword || '')}</news:keywords>\n`;
+    xml += '    </news:news>\n';
+    xml += '  </url>\n';
+  }
+
+  xml += '</urlset>';
+  return xml;
+}
+
 function generateSitemap(quizzes, categories, articles) {
   const now = new Date().toISOString().split('T')[0];
   
@@ -158,6 +193,13 @@ async function main() {
   fs.writeFileSync(outputPath, sitemap, 'utf8');
   console.log(`Sitemap generated: ${outputPath}`);
   console.log(`Total URLs: ${quizzes.length + categories.length + articles.length + 8}`);
+
+  // Generate Google News sitemap
+  const newsArticles = await fetchNewsArticles();
+  const newsSitemap = generateNewsSitemap(newsArticles);
+  const newsOutputPath = path.join(DIST_DIR, 'sitemap-news.xml');
+  fs.writeFileSync(newsOutputPath, newsSitemap, 'utf8');
+  console.log(`News sitemap generated: ${newsOutputPath} (${newsArticles.length} articles)`);
 }
 
 main().catch(console.error);

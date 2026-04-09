@@ -212,7 +212,7 @@ const PostPage = () => {
         <div className="container py-8 md:flex md:gap-6">
           <div className="flex-1 min-w-0 max-w-3xl">
             <div className="aspect-[16/9] overflow-hidden rounded-xl">
-              <img src={image} alt={post.image_alt || post.title} className="h-full w-full object-cover" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
+              <img src={image} alt={post.image_alt || post.title} width={1200} height={630} fetchPriority="high" className="h-full w-full object-cover" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
             </div>
 
             <div className="mt-6">

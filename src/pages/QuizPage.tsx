@@ -324,7 +324,7 @@ const QuizPage = () => {
 
               {quiz.image_url && (
                 <div className="mt-6 overflow-hidden rounded-xl">
-                  <img src={quiz.image_url} alt={quiz.title} className="w-full object-cover" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
+                  <img src={quiz.image_url} alt={quiz.title} width={1200} height={630} fetchPriority="high" className="w-full object-cover" onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }} />
                 </div>
               )}
 
