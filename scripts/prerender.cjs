@@ -381,8 +381,8 @@ async function processQuizzes(template, quizzes) {
       continue;
     }
 
-    const outDir = path.join(DIST_DIR, 'quiz', quiz.slug);
-    const outFile = path.join(outDir, 'index.html');
+    const quizDir = path.join(DIST_DIR, 'quiz');
+    const outFile = path.join(quizDir, `${quiz.slug}.html`);
 
     // Skip if already pre-rendered
     if (fs.existsSync(outFile)) {
@@ -396,7 +396,7 @@ async function processQuizzes(template, quizzes) {
       const relatedQuizzes = await fetchRelatedQuizzes(quiz);
       const relatedArticles = findRelatedArticles(quiz);
       const html = generateQuizHtml(template, quiz, questions, category, relatedQuizzes, relatedArticles);
-      fs.mkdirSync(outDir, { recursive: true });
+      fs.mkdirSync(quizDir, { recursive: true });
       fs.writeFileSync(outFile, html, 'utf8');
       success++;
       console.log(`  OK ${quiz.slug} (${questions.length}Q)`);
@@ -463,8 +463,7 @@ async function main() {
   ];
 
   for (const page of staticPages) {
-    const outDir = path.join(DIST_DIR, page.path);
-    const outFile = path.join(outDir, 'index.html');
+    const outFile = path.join(DIST_DIR, `${page.path}.html`);
     if (fs.existsSync(outFile)) continue;
 
     let html = template;
@@ -482,7 +481,6 @@ async function main() {
     <meta property="og:type" content="website" />
   `;
     html = html.replace('</head>', `${seoTags}\n  </head>`);
-    fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(outFile, html, 'utf8');
   }
   console.log(`Static pages: ${staticPages.length} pre-rendered`);
@@ -516,8 +514,8 @@ async function main() {
     totalSkipped = skipped;
   }
 
-  const quizDir = path.join(DIST_DIR, 'quiz');
-  const total = fs.existsSync(quizDir) ? fs.readdirSync(quizDir).length : 0;
+  const quizDirCount = path.join(DIST_DIR, 'quiz');
+  const total = fs.existsSync(quizDirCount) ? fs.readdirSync(quizDirCount).filter(f => f.endsWith('.html')).length : 0;
   console.log(`\nQuizzes: ${totalSuccess} pre-rendered, ${totalSkipped} skipped.`);
   console.log(`Total files in dist/quiz/: ${total}`);
 
@@ -537,8 +535,8 @@ async function main() {
 
     for (const article of articles) {
       if (!article.slug) { articleSkipped++; continue; }
-      const outDir = path.join(DIST_DIR, 'article', article.slug);
-      const outFile = path.join(outDir, 'index.html');
+      const artDir = path.join(DIST_DIR, 'article');
+      const outFile = path.join(artDir, `${article.slug}.html`);
       if (fs.existsSync(outFile)) { articleSkipped++; continue; }
 
       try {
@@ -621,7 +619,7 @@ async function main() {
 
         html = html.replace('<div id="root"></div>', `<div id="root">${visibleContent}</div>`);
 
-        fs.mkdirSync(outDir, { recursive: true });
+        fs.mkdirSync(artDir, { recursive: true });
         fs.writeFileSync(outFile, html, 'utf8');
         articleSuccess++;
         if (articleSuccess % 20 === 0) console.log(`  ${articleSuccess} articles pre-rendered...`);
@@ -634,8 +632,8 @@ async function main() {
     articleOffset += articleBatchSize;
   }
 
-  const articleDir = path.join(DIST_DIR, 'article');
-  const totalArticles = fs.existsSync(articleDir) ? fs.readdirSync(articleDir).length : 0;
+  const articleDirCount = path.join(DIST_DIR, 'article');
+  const totalArticles = fs.existsSync(articleDirCount) ? fs.readdirSync(articleDirCount).filter(f => f.endsWith('.html')).length : 0;
   console.log(`Articles: ${articleSuccess} pre-rendered, ${articleSkipped} skipped.`);
   console.log(`Total files in dist/article/: ${totalArticles}`);
 }
