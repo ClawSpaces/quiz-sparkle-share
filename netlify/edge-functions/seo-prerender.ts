@@ -589,11 +589,6 @@ export default async function handler(request: Request) {
         },
       });
     }
-  } catch (err) {
-    // On any error, passthrough to origin so the SPA still works
-    console.error("SEO prerender error:", err);
-    return;
-  }
 
     // Topic hub pages
     const topicMatch = path.match(/^\/topic\/([a-z0-9-]+)$/);
@@ -666,9 +661,6 @@ export default async function handler(request: Request) {
     console.error("SEO prerender error:", err);
     return;
   }
-
-  // Not a recognized path — passthrough
-  return;
 }
 
 export const config = {
