@@ -1,14 +1,12 @@
 /**
- * Vercel Edge Middleware: SEO Prerender
+ * Vercel Edge Function: SEO Prerender
  *
- * Intercepts crawler requests to /quiz/*, /article/*, /author/*, /topic/* paths.
+ * Called via conditional rewrites (vercel.json "has" user-agent matching).
  * Fetches data from Supabase and serves fully-rendered HTML with
- * OG tags, structured data, and visible content.
- *
- * Normal users get the SPA as usual (passthrough via next()).
+ * OG tags, structured data, and visible content for crawlers.
  */
 
-import { next } from "@vercel/edge";
+export const config = { runtime: "edge" };
 
 const SUPABASE_URL = "https://gymwbfevlbbyanobpiwr.supabase.co";
 const SUPABASE_ANON_KEY =
@@ -17,21 +15,7 @@ const BASE_URL = "https://fizzty.com";
 const DEFAULT_OG_IMAGE =
   "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/99afa513-9269-40cd-9fe9-523dd8068d1f/id-preview-cdc0fd3f--822a068a-b79b-4c77-b043-2d6475162f04.lovable.app-1773066915015.png";
 
-const CRAWLER_PATTERNS = [
-  "googlebot", "bingbot", "yandexbot", "duckduckbot", "baiduspider",
-  "facebookexternalhit", "twitterbot", "linkedinbot", "telegrambot",
-  "whatsapp", "slackbot", "discordbot", "pinterestbot",
-  "gptbot", "chatgpt-user", "claude-web", "perplexitybot", "amazonbot",
-  "applebot", "semrushbot", "ahrefsbot", "mj12bot",
-  "rogerbot", "embedly", "showyoubot", "outbrain", "quora",
-];
-
 const HEALTH_CATEGORY_ID = "ffb0f553-d361-4050-b4c3-ccfb40065514";
-
-function isCrawler(userAgent: string): boolean {
-  const ua = userAgent.toLowerCase();
-  return CRAWLER_PATTERNS.some((p) => ua.includes(p));
-}
 
 function escapeHtml(str: string): string {
   if (!str) return "";
@@ -57,7 +41,19 @@ async function supabaseFetch(path: string) {
   return res.json();
 }
 
-// ── Quiz rendering ──────────────────────────────────────────────
+function htmlResponse(html: string): Response {
+  return new Response(html, {
+    status: 200,
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      "cache-control": "public, max-age=3600, s-maxage=3600",
+      "x-robots-tag": "index, follow",
+      "x-prerender": "vercel-edge-function",
+    },
+  });
+}
+
+// ── Quiz ────────────────────────────────────────────────────────
 
 async function fetchQuizBySlug(slug: string) {
   const data = await supabaseFetch(
@@ -135,7 +131,6 @@ function buildQuizSchema(quiz: any, questions: any[], category: any) {
 
   schemas.push(quizSchema);
 
-  // Breadcrumb
   const crumbs = [{ name: "Home", url: BASE_URL }];
   if (category) {
     crumbs.push({ name: category.name, url: `${BASE_URL}/category/${category.slug}` });
@@ -153,7 +148,6 @@ function buildQuizSchema(quiz: any, questions: any[], category: any) {
     })),
   });
 
-  // FAQ
   schemas.push({
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -185,7 +179,6 @@ function buildQuizSchema(quiz: any, questions: any[], category: any) {
     ],
   });
 
-  // MedicalWebPage for health quizzes
   if (quiz.category_id === HEALTH_CATEGORY_ID) {
     schemas.push({
       "@context": "https://schema.org",
@@ -323,7 +316,7 @@ function renderQuizHtml(quiz: any, questions: any[], category: any, relatedQuizz
 </html>`;
 }
 
-// ── Article rendering ───────────────────────────────────────────
+// ── Article ─────────────────────────────────────────────────────
 
 async function fetchArticleBySlug(slug: string) {
   const data = await supabaseFetch(
@@ -468,99 +461,29 @@ function renderArticleHtml(article: any, category: any): string {
 </html>`;
 }
 
-// ── Main handler ────────────────────────────────────────────────
+// ── Author ──────────────────────────────────────────────────────
 
-export default async function middleware(request: Request) {
-  const url = new URL(request.url);
-  const path = url.pathname.replace(/\/+$/, "");
+function renderAuthorHtml(author: any): string {
+  const canonical = `${BASE_URL}/author/${author.slug}`;
+  const title = `${author.name}${author.credentials ? `, ${author.credentials}` : ""} | Fizzty`;
+  const description = truncate(author.bio || `Articles and quizzes by ${author.name} on Fizzty`, 155);
 
-  const userAgent = request.headers.get("user-agent") || "";
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": `${canonical}#person`,
+    name: author.name,
+    url: canonical,
+    description: author.credentials || undefined,
+    image: author.image_url || undefined,
+    knowsAbout: author.expertise || ["psychology", "personality types"],
+    sameAs: [
+      ...(author.social_links?.linkedin ? [author.social_links.linkedin] : []),
+      ...(author.social_links?.twitter ? [author.social_links.twitter] : []),
+    ],
+  };
 
-  // Only intercept crawlers — let real users through to the SPA
-  if (!isCrawler(userAgent)) {
-    return next();
-  }
-
-  try {
-    // Quiz pages
-    const quizMatch = path.match(/^\/quiz\/([a-z0-9-]+)$/);
-    if (quizMatch) {
-      const slug = quizMatch[1];
-      const quiz = await fetchQuizBySlug(slug);
-      if (!quiz) return next();
-
-      const [questions, relatedQuizzes] = await Promise.all([
-        fetchQuizQuestions(quiz.id),
-        fetchRelatedQuizzes(quiz),
-      ]);
-
-      const category = quiz.categories || null;
-      const schemas = buildQuizSchema(quiz, questions, category);
-      const html = renderQuizHtml(quiz, questions, category, relatedQuizzes, schemas);
-
-      return new Response(html, {
-        status: 200,
-        headers: {
-          "content-type": "text/html; charset=utf-8",
-          "cache-control": "public, max-age=3600, s-maxage=3600",
-          "x-robots-tag": "index, follow",
-          "x-prerender": "vercel-middleware",
-        },
-      });
-    }
-
-    // Article pages
-    const articleMatch = path.match(/^\/article\/([a-z0-9-]+)$/);
-    if (articleMatch) {
-      const slug = articleMatch[1];
-      const article = await fetchArticleBySlug(slug);
-      if (!article) return next();
-
-      const category = article.categories || null;
-      const html = renderArticleHtml(article, category);
-
-      return new Response(html, {
-        status: 200,
-        headers: {
-          "content-type": "text/html; charset=utf-8",
-          "cache-control": "public, max-age=3600, s-maxage=3600",
-          "x-robots-tag": "index, follow",
-          "x-prerender": "vercel-middleware",
-        },
-      });
-    }
-
-    // Author pages
-    const authorMatch = path.match(/^\/author\/([a-z0-9-]+)$/);
-    if (authorMatch) {
-      const authorSlug = authorMatch[1];
-      const authorData = await supabaseFetch(
-        `authors?slug=eq.${authorSlug}&select=name,slug,bio,credentials,image_url,social_links,expertise&limit=1`
-      );
-      const author = authorData?.[0];
-      if (!author) return next();
-
-      const canonical = `${BASE_URL}/author/${author.slug}`;
-      const title = `${author.name}${author.credentials ? `, ${author.credentials}` : ""} | Fizzty`;
-      const description = truncate(author.bio || `Articles and quizzes by ${author.name} on Fizzty`, 155);
-
-      const personSchema = {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "@id": `${canonical}#person`,
-        name: author.name,
-        url: canonical,
-        description: author.credentials || undefined,
-        image: author.image_url || undefined,
-        knowsAbout: author.expertise || ["psychology", "personality types"],
-        sameAs: [
-          ...(author.social_links?.linkedin ? [author.social_links.linkedin] : []),
-          ...(author.social_links?.twitter ? [author.social_links.twitter] : []),
-        ],
-      };
-
-      return new Response(
-        `<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -583,53 +506,35 @@ export default async function middleware(request: Request) {
         ${author.bio ? `<p>${escapeHtml(author.bio)}</p>` : ""}
     </div>
 </body>
-</html>`,
-        {
-          status: 200,
-          headers: {
-            "content-type": "text/html; charset=utf-8",
-            "cache-control": "public, max-age=3600, s-maxage=3600",
-            "x-robots-tag": "index, follow",
-            "x-prerender": "vercel-middleware",
-          },
-        }
-      );
-    }
+</html>`;
+}
 
-    // Topic hub pages
-    const topicMatch = path.match(/^\/topic\/([a-z0-9-]+)$/);
-    if (topicMatch) {
-      const topicSlug = topicMatch[1];
-      const hubData = await supabaseFetch(
-        `topic_hubs?slug=eq.${topicSlug}&select=title,slug,description,niche&limit=1`
-      );
-      const hub = hubData?.[0];
-      if (!hub) return next();
+// ── Topic ───────────────────────────────────────────────────────
 
-      const canonical = `${BASE_URL}/topic/${hub.slug}`;
-      const title = `${hub.title} | Fizzty`;
-      const description = truncate(hub.description || `Explore ${hub.title} articles and quizzes on Fizzty`, 155);
+function renderTopicHtml(hub: any): string {
+  const canonical = `${BASE_URL}/topic/${hub.slug}`;
+  const title = `${hub.title} | Fizzty`;
+  const description = truncate(hub.description || `Explore ${hub.title} articles and quizzes on Fizzty`, 155);
 
-      const collectionSchema = {
-        "@context": "https://schema.org",
-        "@type": "CollectionPage",
-        "@id": `${canonical}#collection`,
-        name: hub.title,
-        description,
-        url: canonical,
-        isPartOf: { "@id": `${BASE_URL}/#organization` },
-      };
-      const breadcrumbSchema = {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: BASE_URL },
-          { "@type": "ListItem", position: 2, name: hub.title },
-        ],
-      };
+  const collectionSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${canonical}#collection`,
+    name: hub.title,
+    description,
+    url: canonical,
+    isPartOf: { "@id": `${BASE_URL}/#organization` },
+  };
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: hub.title },
+    ],
+  };
 
-      return new Response(
-        `<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -653,26 +558,66 @@ export default async function middleware(request: Request) {
         ${hub.description ? `<p>${escapeHtml(hub.description)}</p>` : ""}
     </div>
 </body>
-</html>`,
-        {
-          status: 200,
-          headers: {
-            "content-type": "text/html; charset=utf-8",
-            "cache-control": "public, max-age=3600, s-maxage=3600",
-            "x-robots-tag": "index, follow",
-            "x-prerender": "vercel-middleware",
-          },
-        }
-      );
-    }
-  } catch (err) {
-    console.error("SEO prerender error:", err);
-    return next();
-  }
-
-  return next();
+</html>`;
 }
 
-export const config = {
-  matcher: ["/quiz/:path*", "/article/:path*", "/author/:path*", "/topic/:path*"],
-};
+// ── Main handler ────────────────────────────────────────────────
+
+export default async function handler(request: Request) {
+  const url = new URL(request.url);
+  const type = url.searchParams.get("type");
+  const slug = url.searchParams.get("slug");
+
+  if (!type || !slug) {
+    return new Response("Missing type or slug", { status: 400 });
+  }
+
+  try {
+    if (type === "quiz") {
+      const quiz = await fetchQuizBySlug(slug);
+      if (!quiz) return new Response("Not found", { status: 404 });
+
+      const [questions, relatedQuizzes] = await Promise.all([
+        fetchQuizQuestions(quiz.id),
+        fetchRelatedQuizzes(quiz),
+      ]);
+
+      const category = quiz.categories || null;
+      const schemas = buildQuizSchema(quiz, questions, category);
+      return htmlResponse(renderQuizHtml(quiz, questions, category, relatedQuizzes, schemas));
+    }
+
+    if (type === "article") {
+      const article = await fetchArticleBySlug(slug);
+      if (!article) return new Response("Not found", { status: 404 });
+
+      const category = article.categories || null;
+      return htmlResponse(renderArticleHtml(article, category));
+    }
+
+    if (type === "author") {
+      const authorData = await supabaseFetch(
+        `authors?slug=eq.${slug}&select=name,slug,bio,credentials,image_url,social_links,expertise&limit=1`
+      );
+      const author = authorData?.[0];
+      if (!author) return new Response("Not found", { status: 404 });
+
+      return htmlResponse(renderAuthorHtml(author));
+    }
+
+    if (type === "topic") {
+      const hubData = await supabaseFetch(
+        `topic_hubs?slug=eq.${slug}&select=title,slug,description,niche&limit=1`
+      );
+      const hub = hubData?.[0];
+      if (!hub) return new Response("Not found", { status: 404 });
+
+      return htmlResponse(renderTopicHtml(hub));
+    }
+
+    return new Response("Unknown type", { status: 400 });
+  } catch (err) {
+    console.error("SEO prerender error:", err);
+    return new Response("Internal error", { status: 500 });
+  }
+}

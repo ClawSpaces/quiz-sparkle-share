@@ -4,6 +4,50 @@
   "framework": "vite",
   "cleanUrls": true,
   "rewrites": [
+    {
+      "source": "/quiz/:slug",
+      "destination": "/api/seo-prerender?type=quiz&slug=:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(googlebot|bingbot|yandexbot|duckduckbot|baiduspider|facebookexternalhit|twitterbot|linkedinbot|telegrambot|whatsapp|slackbot|discordbot|pinterestbot|gptbot|chatgpt-user|claude-web|perplexitybot|amazonbot|applebot|semrushbot|ahrefsbot|mj12bot|rogerbot|embedly|showyoubot|outbrain|quora).*"
+        }
+      ]
+    },
+    {
+      "source": "/article/:slug",
+      "destination": "/api/seo-prerender?type=article&slug=:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(googlebot|bingbot|yandexbot|duckduckbot|baiduspider|facebookexternalhit|twitterbot|linkedinbot|telegrambot|whatsapp|slackbot|discordbot|pinterestbot|gptbot|chatgpt-user|claude-web|perplexitybot|amazonbot|applebot|semrushbot|ahrefsbot|mj12bot|rogerbot|embedly|showyoubot|outbrain|quora).*"
+        }
+      ]
+    },
+    {
+      "source": "/author/:slug",
+      "destination": "/api/seo-prerender?type=author&slug=:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(googlebot|bingbot|yandexbot|duckduckbot|baiduspider|facebookexternalhit|twitterbot|linkedinbot|telegrambot|whatsapp|slackbot|discordbot|pinterestbot|gptbot|chatgpt-user|claude-web|perplexitybot|amazonbot|applebot|semrushbot|ahrefsbot|mj12bot|rogerbot|embedly|showyoubot|outbrain|quora).*"
+        }
+      ]
+    },
+    {
+      "source": "/topic/:slug",
+      "destination": "/api/seo-prerender?type=topic&slug=:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(googlebot|bingbot|yandexbot|duckduckbot|baiduspider|facebookexternalhit|twitterbot|linkedinbot|telegrambot|whatsapp|slackbot|discordbot|pinterestbot|gptbot|chatgpt-user|claude-web|perplexitybot|amazonbot|applebot|semrushbot|ahrefsbot|mj12bot|rogerbot|embedly|showyoubot|outbrain|quora).*"
+        }
+      ]
+    },
     { "source": "/post/:id", "destination": "/api/redirect-post?id=:id" },
     { "source": "/(.*)", "destination": "/" }
   ],
