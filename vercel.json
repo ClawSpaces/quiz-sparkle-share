@@ -4,6 +4,7 @@
   "framework": "vite",
   "cleanUrls": true,
   "rewrites": [
+    { "source": "/post/:id", "destination": "/api/redirect-post?id=:id" },
     { "source": "/(.*)", "destination": "/" }
   ],
   "headers": [
