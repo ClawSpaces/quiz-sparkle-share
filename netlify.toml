@@ -13,6 +13,10 @@
 
 [[edge_functions]]
   function = "seo-prerender"
+  path = "/post/*"
+
+[[edge_functions]]
+  function = "seo-prerender"
   path = "/author/*"
 
 [[edge_functions]]

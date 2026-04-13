@@ -469,15 +469,34 @@ function renderArticleHtml(article: any, category: any): string {
 // ── Main handler ────────────────────────────────────────────────
 
 export default async function handler(request: Request) {
+  const url = new URL(request.url);
+  const path = url.pathname.replace(/\/+$/, ""); // strip trailing slash
+
+  // Legacy /post/:id → /article/:slug 301 redirect (for ALL visitors, not just crawlers)
+  const postMatch = path.match(/^\/post\/([a-z0-9-]+)$/);
+  if (postMatch) {
+    const idOrSlug = postMatch[1];
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(idOrSlug);
+    const query = isUUID
+      ? `posts?id=eq.${idOrSlug}&select=slug&limit=1`
+      : `posts?slug=eq.${idOrSlug}&select=slug&limit=1`;
+    const posts = await supabaseFetch(query);
+    const post = posts?.[0];
+    if (post?.slug) {
+      return new Response(null, {
+        status: 301,
+        headers: { "Location": `${BASE_URL}/article/${post.slug}` },
+      });
+    }
+    return; // not found, passthrough to SPA
+  }
+
   const userAgent = request.headers.get("user-agent") || "";
 
   // Only intercept crawlers — let real users through to the SPA
   if (!isCrawler(userAgent)) {
     return; // passthrough to origin (SPA)
   }
-
-  const url = new URL(request.url);
-  const path = url.pathname.replace(/\/+$/, ""); // strip trailing slash
 
   try {
     // Quiz pages
