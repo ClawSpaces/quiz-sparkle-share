@@ -116,6 +116,13 @@ const QuizPage = () => {
     if (!playsIncremented && quiz?.id) {
       supabase.rpc("increment_plays", { quiz_id_param: quiz.id });
       setPlaysIncremented(true);
+      // Meta Pixel: Quiz Started
+      if (typeof window.fbq === 'function') {
+        window.fbq('track', 'StartTrial', {
+          content_name: quiz.title,
+          content_category: 'quiz',
+        });
+      }
     }
 
     const newAnswers = { ...answers, [question.id]: answer.id };
@@ -175,6 +182,17 @@ const QuizPage = () => {
     });
 
     setFinished(true);
+
+    // Meta Pixel: Quiz Completed
+    if (typeof window.fbq === 'function') {
+      const fr = results.find((r) => r.id === resultId) || results[0];
+      window.fbq('track', 'CompleteRegistration', {
+        content_name: quiz?.title,
+        content_category: 'quiz',
+        status: fr?.title || 'unknown',
+      });
+    }
+
     setTimeout(() => {
       resultRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 300);
