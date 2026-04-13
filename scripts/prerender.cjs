@@ -450,8 +450,108 @@ async function main() {
   }
   console.log(`Loaded ${ALL_ARTICLES.length} articles for cross-linking`);
 
-  // Pre-render static pages with proper meta tags
-  console.log('\nPre-rendering static pages...');
+  // Pre-render static pages with proper meta tags AND visible content + internal links
+  console.log('\nPre-rendering static pages with internal links...');
+
+  // Group quizzes by category for listing pages
+  const quizzesByCategory = {};
+  const categoryMap = {};
+  for (const q of ALL_QUIZZES) {
+    const cat = q.categories || { name: 'Other', slug: 'other' };
+    if (!quizzesByCategory[cat.slug]) quizzesByCategory[cat.slug] = [];
+    quizzesByCategory[cat.slug].push(q);
+    categoryMap[cat.slug] = cat;
+  }
+
+  function generateListingContent(pagePath) {
+    if (pagePath === 'quizzes') {
+      // All quizzes grouped by category with links
+      let sections = '';
+      for (const [catSlug, quizzes] of Object.entries(quizzesByCategory)) {
+        const cat = categoryMap[catSlug];
+        const catName = cat ? escapeHtml(cat.name) : 'Other';
+        const quizLinks = quizzes.slice(0, 30).map(q =>
+          `<li style="margin-bottom:8px"><a href="/quiz/${escapeHtml(q.slug)}" style="color:#7c3aed;text-decoration:none;font-weight:500">${escapeHtml(q.title)}</a></li>`
+        ).join('\n              ');
+        sections += `
+          <section style="margin-bottom:32px">
+            <h2 style="font-size:22px;color:#1a1a2e;margin-bottom:12px"><a href="/category/${escapeHtml(catSlug)}" style="color:#1a1a2e;text-decoration:none">${catName}</a> <span style="color:#999;font-size:14px">(${quizzes.length} quizzes)</span></h2>
+            <ul style="list-style:none;padding:0">
+              ${quizLinks}
+            </ul>
+          </section>`;
+      }
+      return `
+      <div style="max-width:900px;margin:0 auto;padding:20px;font-family:system-ui,sans-serif">
+        <nav style="margin-bottom:16px;font-size:14px;color:#666"><a href="/" style="color:#7c3aed;text-decoration:none">Home</a> &rsaquo; <span>All Quizzes</span></nav>
+        <h1 style="font-size:32px;font-weight:bold;color:#1a1a2e;margin-bottom:8px">Free Personality Quizzes & Trivia</h1>
+        <p style="color:#666;margin-bottom:24px">Take ${ALL_QUIZZES.length}+ free personality quizzes, trivia challenges, and self-assessments. Instant results!</p>
+        ${sections}
+        ${ALL_ARTICLES.length > 0 ? `
+        <section style="margin-top:40px;padding-top:24px;border-top:1px solid #e5e7eb">
+          <h2 style="font-size:22px;color:#1a1a2e;margin-bottom:12px">Latest Articles</h2>
+          <ul style="list-style:none;padding:0">
+            ${ALL_ARTICLES.slice(-10).reverse().map(a => `<li style="margin-bottom:8px"><a href="/article/${escapeHtml(a.slug)}" style="color:#7c3aed;text-decoration:none;font-weight:500">${escapeHtml(a.title)}</a></li>`).join('\n            ')}
+          </ul>
+        </section>` : ''}
+      </div>`;
+    }
+
+    if (pagePath === 'categories') {
+      const catCards = Object.entries(quizzesByCategory).map(([catSlug, quizzes]) => {
+        const cat = categoryMap[catSlug];
+        const catName = cat ? escapeHtml(cat.name) : 'Other';
+        const sampleLinks = quizzes.slice(0, 5).map(q =>
+          `<li><a href="/quiz/${escapeHtml(q.slug)}" style="color:#7c3aed;text-decoration:none;font-size:14px">${escapeHtml(q.title)}</a></li>`
+        ).join('\n                ');
+        return `
+            <div style="border:1px solid #e5e7eb;border-radius:12px;padding:20px">
+              <h2 style="font-size:20px;margin-bottom:8px"><a href="/category/${escapeHtml(catSlug)}" style="color:#1a1a2e;text-decoration:none">${catName}</a></h2>
+              <p style="color:#666;font-size:14px;margin-bottom:12px">${quizzes.length} quizzes</p>
+              <ul style="list-style:none;padding:0">
+                ${sampleLinks}
+              </ul>
+              <a href="/category/${escapeHtml(catSlug)}" style="display:inline-block;margin-top:12px;color:#7c3aed;font-weight:600;text-decoration:none">View all &rarr;</a>
+            </div>`;
+      }).join('\n');
+      return `
+      <div style="max-width:900px;margin:0 auto;padding:20px;font-family:system-ui,sans-serif">
+        <nav style="margin-bottom:16px;font-size:14px;color:#666"><a href="/" style="color:#7c3aed;text-decoration:none">Home</a> &rsaquo; <span>Categories</span></nav>
+        <h1 style="font-size:32px;font-weight:bold;color:#1a1a2e;margin-bottom:8px">Quiz Categories</h1>
+        <p style="color:#666;margin-bottom:24px">Browse personality tests, health assessments, career quizzes, and more.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px">
+          ${catCards}
+        </div>
+      </div>`;
+    }
+
+    if (pagePath === 'trending') {
+      // Show most recent quizzes as "trending" + recent articles
+      const recentQuizzes = ALL_QUIZZES.slice(-20).reverse();
+      const quizLinks = recentQuizzes.map(q =>
+        `<li style="margin-bottom:12px"><a href="/quiz/${escapeHtml(q.slug)}" style="color:#7c3aed;text-decoration:none;font-weight:500;font-size:16px">${escapeHtml(q.title)}</a>${q.categories ? `<span style="color:#999;font-size:13px;margin-left:8px">${escapeHtml(q.categories.name)}</span>` : ''}</li>`
+      ).join('\n            ');
+      return `
+      <div style="max-width:900px;margin:0 auto;padding:20px;font-family:system-ui,sans-serif">
+        <nav style="margin-bottom:16px;font-size:14px;color:#666"><a href="/" style="color:#7c3aed;text-decoration:none">Home</a> &rsaquo; <span>Trending</span></nav>
+        <h1 style="font-size:32px;font-weight:bold;color:#1a1a2e;margin-bottom:8px">Trending Quizzes</h1>
+        <p style="color:#666;margin-bottom:24px">The most popular personality tests and self-assessments right now.</p>
+        <ul style="list-style:none;padding:0">
+          ${quizLinks}
+        </ul>
+        ${ALL_ARTICLES.length > 0 ? `
+        <section style="margin-top:40px;padding-top:24px;border-top:1px solid #e5e7eb">
+          <h2 style="font-size:22px;color:#1a1a2e;margin-bottom:12px">Latest Articles</h2>
+          <ul style="list-style:none;padding:0">
+            ${ALL_ARTICLES.slice(-8).reverse().map(a => `<li style="margin-bottom:8px"><a href="/article/${escapeHtml(a.slug)}" style="color:#7c3aed;text-decoration:none;font-weight:500">${escapeHtml(a.title)}</a></li>`).join('\n            ')}
+          </ul>
+        </section>` : ''}
+      </div>`;
+    }
+
+    return ''; // about, contact, privacy, terms — no quiz links needed
+  }
+
   const staticPages = [
     { path: 'quizzes', title: 'Free Personality Quizzes & Trivia | Fizzty', desc: 'Take free personality quizzes, trivia challenges, and self-assessments. 470+ quizzes on psychology, health, career, and entertainment. Instant results!', priority: 'high' },
     { path: 'categories', title: 'Quiz Categories — Personality, Health, Career & More | Fizzty', desc: 'Browse quiz categories: personality tests, health assessments, career quizzes, entertainment trivia, and more. Find the perfect quiz for you.' },
@@ -481,9 +581,80 @@ async function main() {
     <meta property="og:type" content="website" />
   `;
     html = html.replace('</head>', `${seoTags}\n  </head>`);
+
+    // Inject visible content with internal links for listing pages
+    const listingContent = generateListingContent(page.path);
+    if (listingContent) {
+      html = html.replace('<div id="root"></div>', `<div id="root">${listingContent}</div>`);
+    }
+
     fs.writeFileSync(outFile, html, 'utf8');
   }
-  console.log(`Static pages: ${staticPages.length} pre-rendered`);
+  console.log(`Static pages: ${staticPages.length} pre-rendered (with internal links)`);
+
+  // Pre-render individual category pages with quiz links
+  console.log('Pre-rendering category pages...');
+  let catCount = 0;
+  for (const [catSlug, quizzes] of Object.entries(quizzesByCategory)) {
+    const catDir = path.join(DIST_DIR, 'category');
+    const outFile = path.join(catDir, `${catSlug}.html`);
+    if (fs.existsSync(outFile)) continue;
+
+    const cat = categoryMap[catSlug];
+    const catName = cat ? cat.name : catSlug;
+    const catTitle = `${catName} Quizzes — Free ${catName} Personality Tests | Fizzty`;
+    const catDesc = `Take free ${catName.toLowerCase()} quizzes and personality tests. ${quizzes.length} quizzes with instant results on Fizzty.`;
+
+    let html = template;
+    html = html.replace(/<title>.*?<\/title>/, `<title>${escapeHtml(catTitle)}</title>`);
+    html = html.replace(
+      /<meta name="description" content="[^"]*" \/>/,
+      `<meta name="description" content="${escapeHtml(catDesc)}" />`
+    );
+    const canonical = `${BASE_URL}/category/${catSlug}`;
+    const seoTags = `
+    <link rel="canonical" href="${canonical}" />
+    <meta property="og:title" content="${escapeHtml(catTitle)}" />
+    <meta property="og:description" content="${escapeHtml(catDesc)}" />
+    <meta property="og:url" content="${canonical}" />
+    <meta property="og:type" content="website" />
+  `;
+    html = html.replace('</head>', `${seoTags}\n  </head>`);
+
+    const quizLinks = quizzes.map(q =>
+      `<li style="margin-bottom:10px"><a href="/quiz/${escapeHtml(q.slug)}" style="color:#7c3aed;text-decoration:none;font-weight:500;font-size:16px">${escapeHtml(q.title)}</a></li>`
+    ).join('\n            ');
+
+    // Find articles in this category
+    const catArticles = ALL_ARTICLES.filter(a => a.category_id === (cat && quizzes[0] ? quizzes[0].category_id : null)).slice(0, 6);
+
+    const catContent = `
+      <div style="max-width:900px;margin:0 auto;padding:20px;font-family:system-ui,sans-serif">
+        <nav style="margin-bottom:16px;font-size:14px;color:#666">
+          <a href="/" style="color:#7c3aed;text-decoration:none">Home</a>
+          &rsaquo; <a href="/categories" style="color:#7c3aed;text-decoration:none">Categories</a>
+          &rsaquo; <span>${escapeHtml(catName)}</span>
+        </nav>
+        <h1 style="font-size:32px;font-weight:bold;color:#1a1a2e;margin-bottom:8px">${escapeHtml(catName)} Quizzes</h1>
+        <p style="color:#666;margin-bottom:24px">${quizzes.length} free ${escapeHtml(catName.toLowerCase())} personality quizzes and self-assessments.</p>
+        <ul style="list-style:none;padding:0">
+          ${quizLinks}
+        </ul>
+        ${catArticles.length > 0 ? `
+        <section style="margin-top:40px;padding-top:24px;border-top:1px solid #e5e7eb">
+          <h2 style="font-size:22px;color:#1a1a2e;margin-bottom:12px">Related Articles</h2>
+          <ul style="list-style:none;padding:0">
+            ${catArticles.map(a => `<li style="margin-bottom:8px"><a href="/article/${escapeHtml(a.slug)}" style="color:#7c3aed;text-decoration:none;font-weight:500">${escapeHtml(a.title)}</a></li>`).join('\n            ')}
+          </ul>
+        </section>` : ''}
+      </div>`;
+
+    html = html.replace('<div id="root"></div>', `<div id="root">${catContent}</div>`);
+    fs.mkdirSync(catDir, { recursive: true });
+    fs.writeFileSync(outFile, html, 'utf8');
+    catCount++;
+  }
+  console.log(`Category pages: ${catCount} pre-rendered with quiz links`);
 
   if (ALL) {
     // Process ALL quizzes in batches of 50
@@ -614,6 +785,45 @@ async function main() {
         ${contentHtml}
         </div>
         <p style="margin-top:24px"><a href="/article/${article.slug}" style="display:inline-block;padding:12px 32px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold">Read Full Article</a></p>
+        ${(() => {
+          // Find related quizzes for this article
+          const artWords = new Set(article.title.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(/\s+/).filter(w => w.length > 3));
+          const relQuizzes = ALL_QUIZZES
+            .map(q => {
+              let score = 0;
+              if (q.category_id === article.category_id) score += 3;
+              const qWords = q.title.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(/\s+/).filter(w => w.length > 3);
+              for (const w of qWords) { if (artWords.has(w)) score += 2; }
+              return { ...q, score };
+            })
+            .filter(q => q.score >= 3)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 6);
+          const relArticles = ALL_ARTICLES
+            .filter(a => a.id !== article.id && a.slug)
+            .filter(a => a.category_id === article.category_id)
+            .slice(0, 4);
+          let html = '';
+          if (relQuizzes.length > 0) {
+            html += `
+        <section style="margin-top:40px;padding-top:24px;border-top:1px solid #e5e7eb">
+          <h2 style="font-size:24px;font-weight:bold;color:#1a1a2e;margin-bottom:16px">Related Quizzes</h2>
+          <ul style="list-style:none;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+            ${relQuizzes.map(q => `<li><a href="/quiz/${escapeHtml(q.slug)}" style="display:block;padding:12px;border:1px solid #e5e7eb;border-radius:8px;text-decoration:none;color:#7c3aed;font-weight:600">${escapeHtml(q.title)}</a></li>`).join('\n            ')}
+          </ul>
+        </section>`;
+          }
+          if (relArticles.length > 0) {
+            html += `
+        <section style="margin-top:24px;padding-top:24px;border-top:1px solid #e5e7eb">
+          <h2 style="font-size:20px;font-weight:bold;color:#1a1a2e;margin-bottom:12px">More Articles</h2>
+          <ul style="list-style:none;padding:0">
+            ${relArticles.map(a => `<li style="margin-bottom:8px"><a href="/article/${escapeHtml(a.slug)}" style="color:#7c3aed;font-weight:600;text-decoration:none">${escapeHtml(a.title)}</a></li>`).join('\n            ')}
+          </ul>
+        </section>`;
+          }
+          return html;
+        })()}
       </article>
     `;
 
@@ -636,6 +846,89 @@ async function main() {
   const totalArticles = fs.existsSync(articleDirCount) ? fs.readdirSync(articleDirCount).filter(f => f.endsWith('.html')).length : 0;
   console.log(`Articles: ${articleSuccess} pre-rendered, ${articleSkipped} skipped.`);
   console.log(`Total files in dist/article/: ${totalArticles}`);
+
+  // Pre-render homepage with visible content + internal links (CRITICAL for Googlebot)
+  console.log('\nPre-rendering homepage with internal links...');
+  {
+    let homepageHtml = template;
+    const homeTitle = 'Fizzty — Free Personality Quizzes, Trivia & Self-Discovery';
+    const homeDesc = 'Take free personality quizzes, trivia challenges, and self-assessments. Discover your personality type, test your knowledge, and explore trending quizzes. Instant results!';
+    homepageHtml = homepageHtml.replace(/<title>.*?<\/title>/, `<title>${escapeHtml(homeTitle)}</title>`);
+    homepageHtml = homepageHtml.replace(
+      /<meta name="description" content="[^"]*" \/>/,
+      `<meta name="description" content="${escapeHtml(homeDesc)}" />`
+    );
+    const homeSeoTags = `
+    <link rel="canonical" href="${BASE_URL}/" />
+    <meta property="og:title" content="${escapeHtml(homeTitle)}" />
+    <meta property="og:description" content="${escapeHtml(homeDesc)}" />
+    <meta property="og:url" content="${BASE_URL}/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="${BASE_URL}/favicon.png" />
+  `;
+    homepageHtml = homepageHtml.replace('</head>', `${homeSeoTags}\n  </head>`);
+
+    // Build homepage visible content: featured quizzes + categories + articles
+    const featuredQuizzes = ALL_QUIZZES.slice(-12).reverse();
+    const categories = Object.entries(quizzesByCategory);
+    const recentArticles = ALL_ARTICLES.slice(-6).reverse();
+
+    const homeContent = `
+      <div style="max-width:1000px;margin:0 auto;padding:20px;font-family:system-ui,sans-serif">
+        <header style="text-align:center;margin-bottom:40px">
+          <h1 style="font-size:36px;font-weight:bold;color:#1a1a2e">Fizzty</h1>
+          <p style="font-size:18px;color:#666;max-width:600px;margin:8px auto">Free personality quizzes, trivia challenges, and self-discovery assessments. ${ALL_QUIZZES.length}+ quizzes with instant results.</p>
+        </header>
+
+        <section style="margin-bottom:40px">
+          <h2 style="font-size:24px;font-weight:bold;color:#1a1a2e;margin-bottom:16px">Popular Quizzes</h2>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px">
+            ${featuredQuizzes.map(q => `
+            <a href="/quiz/${escapeHtml(q.slug)}" style="display:block;border:1px solid #e5e7eb;border-radius:12px;padding:16px;text-decoration:none">
+              <h3 style="font-size:16px;font-weight:600;color:#7c3aed;margin-bottom:4px">${escapeHtml(q.title)}</h3>
+              ${q.categories ? `<span style="font-size:13px;color:#999">${escapeHtml(q.categories.name)}</span>` : ''}
+            </a>`).join('\n')}
+          </div>
+          <p style="margin-top:16px"><a href="/quizzes" style="color:#7c3aed;font-weight:600;text-decoration:none">Browse all ${ALL_QUIZZES.length} quizzes &rarr;</a></p>
+        </section>
+
+        <section style="margin-bottom:40px">
+          <h2 style="font-size:24px;font-weight:bold;color:#1a1a2e;margin-bottom:16px">Categories</h2>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+            ${categories.map(([slug, quizzes]) => {
+              const cat = categoryMap[slug];
+              return `<a href="/category/${escapeHtml(slug)}" style="display:block;padding:16px;border:1px solid #e5e7eb;border-radius:8px;text-decoration:none">
+              <span style="font-weight:600;color:#1a1a2e">${escapeHtml(cat ? cat.name : slug)}</span>
+              <span style="display:block;font-size:13px;color:#999;margin-top:4px">${quizzes.length} quizzes</span>
+            </a>`;
+            }).join('\n')}
+          </div>
+          <p style="margin-top:16px"><a href="/categories" style="color:#7c3aed;font-weight:600;text-decoration:none">View all categories &rarr;</a></p>
+        </section>
+
+        ${recentArticles.length > 0 ? `
+        <section style="margin-bottom:40px">
+          <h2 style="font-size:24px;font-weight:bold;color:#1a1a2e;margin-bottom:16px">Latest Articles</h2>
+          <ul style="list-style:none;padding:0">
+            ${recentArticles.map(a => `<li style="margin-bottom:12px"><a href="/article/${escapeHtml(a.slug)}" style="color:#7c3aed;font-weight:600;text-decoration:none;font-size:16px">${escapeHtml(a.title)}</a></li>`).join('\n            ')}
+          </ul>
+        </section>` : ''}
+
+        <nav style="margin-top:24px;padding-top:24px;border-top:1px solid #e5e7eb">
+          <p style="color:#666;font-size:14px">
+            <a href="/quizzes" style="color:#7c3aed;margin-right:16px">All Quizzes</a>
+            <a href="/categories" style="color:#7c3aed;margin-right:16px">Categories</a>
+            <a href="/trending" style="color:#7c3aed;margin-right:16px">Trending</a>
+            <a href="/about" style="color:#7c3aed;margin-right:16px">About</a>
+            <a href="/contact" style="color:#7c3aed">Contact</a>
+          </p>
+        </nav>
+      </div>`;
+
+    homepageHtml = homepageHtml.replace('<div id="root"></div>', `<div id="root">${homeContent}</div>`);
+    fs.writeFileSync(path.join(DIST_DIR, 'index.html'), homepageHtml, 'utf8');
+    console.log('Homepage pre-rendered with internal links to all content');
+  }
 
   // Generate /post/:id → /article/:slug 301 redirects
   // Google indexed old /post/UUID URLs; this transfers ranking equity to canonical URLs
