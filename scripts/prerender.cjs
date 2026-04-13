@@ -636,6 +636,34 @@ async function main() {
   const totalArticles = fs.existsSync(articleDirCount) ? fs.readdirSync(articleDirCount).filter(f => f.endsWith('.html')).length : 0;
   console.log(`Articles: ${articleSuccess} pre-rendered, ${articleSkipped} skipped.`);
   console.log(`Total files in dist/article/: ${totalArticles}`);
+
+  // Generate /post/:id → /article/:slug 301 redirects
+  // Google indexed old /post/UUID URLs; this transfers ranking equity to canonical URLs
+  console.log('\nGenerating /post/ → /article/ redirects...');
+  const redirectLines = ['# Legacy /post/:id → /article/:slug redirects (SEO consolidation)'];
+  let redirectCount = 0;
+
+  // Fetch all posts with their UUIDs for redirect mapping
+  let redirOffset = 0;
+  while (true) {
+    const url = `${SUPABASE_URL}/rest/v1/posts?select=id,slug&is_published=eq.true&slug=not.is.null&limit=100&offset=${redirOffset}`;
+    const res = await fetch(url, { headers: { apikey: SUPABASE_ANON_KEY } });
+    if (!res.ok) break;
+    const batch = await res.json();
+    if (batch.length === 0) break;
+    for (const post of batch) {
+      if (post.id && post.slug) {
+        redirectLines.push(`/post/${post.id} /article/${post.slug} 301`);
+        redirectCount++;
+      }
+    }
+    if (batch.length < 100) break;
+    redirOffset += 100;
+  }
+
+  const redirectsPath = path.join(DIST_DIR, '_redirects');
+  fs.writeFileSync(redirectsPath, redirectLines.join('\n') + '\n', 'utf8');
+  console.log(`Generated ${redirectCount} post→article redirects in _redirects`);
 }
 
 main().catch(console.error);
