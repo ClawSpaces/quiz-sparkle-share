@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import { useEffect } from "react";
 
 interface BreadcrumbItem {
   name: string;
@@ -185,6 +186,22 @@ const SchemaMarkup = (props: SchemaProps) => {
     crumbs.push({ name: props.title });
     schemas.push(buildBreadcrumbs(crumbs));
   }
+
+  // Remove prerender-injected JSON-LD to avoid duplicates with Helmet-managed ones
+  useEffect(() => {
+    const typesToRemove = new Set(
+      schemas.map((s) => (s as Record<string, unknown>)["@type"] as string).filter(Boolean)
+    );
+    document.querySelectorAll('head > script[type="application/ld+json"]').forEach((el) => {
+      if (el.hasAttribute("data-rh")) return; // keep Helmet-managed
+      try {
+        const data = JSON.parse(el.textContent || "");
+        if (typesToRemove.has(data["@type"])) {
+          el.remove();
+        }
+      } catch { /* skip unparseable */ }
+    });
+  }, []);
 
   if (schemas.length === 0) return null;
 

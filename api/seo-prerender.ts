@@ -568,11 +568,79 @@ export default async function handler(request: Request) {
   const type = url.searchParams.get("type");
   const slug = url.searchParams.get("slug");
 
-  if (!type || !slug) {
-    return new Response("Missing type or slug", { status: 400 });
+  if (!type) {
+    return new Response("Missing type", { status: 400 });
   }
 
   try {
+    if (type === "home") {
+      const [quizzes, articles] = await Promise.all([
+        supabaseFetch(
+          "quizzes?is_published=eq.true&select=title,slug,description,image_url&order=created_at.desc&limit=12"
+        ),
+        supabaseFetch(
+          "articles?is_published=eq.true&select=title,slug,description,image_url&order=published_at.desc&limit=12"
+        ),
+      ]);
+
+      const quizList = (quizzes || [])
+        .map(
+          (q: any) =>
+            `<li><a href="/quiz/${escapeHtml(q.slug)}">${escapeHtml(q.title)}</a>${q.description ? `<p>${escapeHtml(truncate(q.description, 120))}</p>` : ""}</li>`
+        )
+        .join("");
+
+      const articleList = (articles || [])
+        .map(
+          (a: any) =>
+            `<li><a href="/article/${escapeHtml(a.slug)}">${escapeHtml(a.title)}</a>${a.description ? `<p>${escapeHtml(truncate(a.description, 120))}</p>` : ""}</li>`
+        )
+        .join("");
+
+      const homeHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Fizzty — Personality Quizzes & Trending News</title>
+    <meta name="description" content="Discover yourself through science-backed personality quizzes and stay informed with trending news on psychology, career, health, and technology."/>
+    <link rel="canonical" href="${BASE_URL}/"/>
+    <meta property="og:title" content="Fizzty — Personality Quizzes & Trending News"/>
+    <meta property="og:description" content="Science-backed personality quizzes and trending news on psychology, career, health, and technology."/>
+    <meta property="og:url" content="${BASE_URL}/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="${DEFAULT_OG_IMAGE}"/>
+    <meta property="og:site_name" content="Fizzty"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <script type="application/ld+json">${JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "Fizzty",
+      url: BASE_URL,
+      description: "Science-backed personality quizzes and trending news.",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${BASE_URL}/search?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    })}</script>
+</head>
+<body>
+    <div style="max-width:800px;margin:0 auto;padding:20px;font-family:system-ui,sans-serif">
+        <h1>Fizzty — Personality Quizzes & Trending News</h1>
+        <p>Discover yourself through science-backed personality quizzes and stay informed with trending news on psychology, career, health, and technology.</p>
+        ${quizList ? `<h2>Latest Quizzes</h2><ul>${quizList}</ul>` : ""}
+        ${articleList ? `<h2>Latest Articles</h2><ul>${articleList}</ul>` : ""}
+    </div>
+</body>
+</html>`;
+
+      return htmlResponse(homeHtml);
+    }
+
+    if (!slug) {
+      return new Response("Missing slug", { status: 400 });
+    }
+
     if (type === "quiz") {
       const quiz = await fetchQuizBySlug(slug);
       if (!quiz) return new Response("Not found", { status: 404 });

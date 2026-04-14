@@ -48,6 +48,17 @@
         }
       ]
     },
+    {
+      "source": "/",
+      "destination": "/api/seo-prerender?type=home&slug=index",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(googlebot|bingbot|yandexbot|duckduckbot|baiduspider|facebookexternalhit|twitterbot|linkedinbot|telegrambot|whatsapp|slackbot|discordbot|pinterestbot|gptbot|chatgpt-user|claude-web|perplexitybot|amazonbot|applebot|semrushbot|ahrefsbot|mj12bot|rogerbot|embedly|showyoubot|outbrain|quora).*"
+        }
+      ]
+    },
     { "source": "/post/:id", "destination": "/api/redirect-post?id=:id" },
     { "source": "/(.*)", "destination": "/" }
   ],
